@@ -1,0 +1,42 @@
+[
+    {
+        "id": "p1",
+        "name": "Lampa LED Enduro",
+        "price": 199.99,
+        "image_url": "/assets/logo.png",
+        "stock": 10,
+        "category": "moto",
+        "featured": true,
+        "description": "Najwyższej jakości lampa LED o zwiększonej mocy. Idealna do jazdy Enduro."
+    },
+    {
+        "id": "p2",
+        "name": "Zestaw Naklejek Moto",
+        "price": 59.99,
+        "image_url": "/assets/logo.png",
+        "stock": 5,
+        "category": "accessories",
+        "featured": true,
+        "description": "Kompletny zestaw trwałych naklejek na Twój motocykl. Odporne na warunki atmosferyczne."
+    },
+    {
+        "id": "p3",
+        "name": "Osłona Tarczy Hamulcowej",
+        "price": 129.50,
+        "image_url": "/assets/logo.png",
+        "stock": 8,
+        "category": "moto",
+        "featured": false,
+        "description": "Wytrzymała osłona aluminiowa, chroniąca tarczę hamulcową przed uderzeniami i błotem."
+    },
+    {
+        "id": "p4",
+        "name": "Brelok VibeRush 3D",
+        "price": 25.00,
+        "image_url": "/assets/logo.png",
+        "stock": 20,
+        "category": "accessories",
+        "featured": false,
+        "description": "Personalizowany brelok drukowany w 3D. Wybierz swój kolor i wzór!"
+    }
+]
