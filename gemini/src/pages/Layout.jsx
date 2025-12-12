@@ -45,7 +45,7 @@ const translations = {
       shipping: "Wysyłka",
       in48h: "w 48h",
       payments: "Płatności",
-      przelewy24: "Stripe", // ZMIENIONE NA STRIPE
+      przelewy24: "Stripe", // POPRAWIONE
       homologation: "Homologacja",
       road: "Drogowa",
       highestQuality: "Najwyższa Jakość",
@@ -84,7 +84,7 @@ const translations = {
       privacy: "Polityka Prywatności",
       returns: "Zwroty i Reklamacje",
       copyright: "© 2024 VibeRush.pl",
-      premiumParts: "VibeRush"
+      premiumParts: "VibeRush Final Fix" // ZMIENIONY TEKST DLA ZŁAMANIA CACHE
     }
   },
   en: {
@@ -112,7 +112,7 @@ const translations = {
       shipping: "Shipping",
       in48h: "in 48h",
       payments: "Payments",
-      przelewy24: "Stripe", // ZMIENIONE NA STRIPE
+      przelewy24: "Stripe", // POPRAWIONE
       homologation: "Homologation",
       road: "Road",
       highestQuality: "Highest Quality",
@@ -151,7 +151,7 @@ const translations = {
       privacy: "Privacy Policy",
       returns: "Returns & Complaints",
       copyright: "© 2024 VibeRush.pl",
-      premiumParts: "VibeRush"
+      premiumParts: "VibeRush Final Fix" // ZMIENIONY TEKST DLA ZŁAMANIA CACHE
     }
   }
 };
@@ -168,11 +168,11 @@ export function LanguageProvider({ children }) {
     // Set page title
     document.title = 'VibeRush';
     
-    // Set favicon - ZMIENIONY LINK NA LOKALNY
+    // Set favicon - ZMIENIONY LINK NA LOKALNY ZASÓB
     const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
     link.type = 'image/png';
     link.rel = 'icon';
-    link.href = '/assets/logo.png'; // ZMIENIONY NA LOKALNY ZASÓB
+    link.href = '/assets/logo.png'; // POPRAWIONE
     document.getElementsByTagName('head')[0].appendChild(link);
   }, []);
 
@@ -200,7 +200,6 @@ export function LanguageProvider({ children }) {
   );
 }
 
-// Ten useLanguage jest używany przez inne pliki w /pages/
 export function useLanguage() {
   const context = React.useContext(LanguageContext);
   if (!context) {
