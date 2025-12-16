@@ -1,14 +1,14 @@
 import './App.css'
 import Pages from "@/pages/index.jsx"
-import { Toaster } from "@/components/ui/toaster"
+// USUNIĘTO: import { Toaster } from "@/components/ui/toaster"
 
 function App() {
   return (
     <>
       <Pages />
-      <Toaster />
+      {/* USUNIĘTO: <Toaster /> - już jest w Layout.jsx */}
     </>
   )
 }
 
-export default App 
+export default App
