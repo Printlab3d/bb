@@ -1,24 +1,16 @@
 import Stripe from 'stripe';
 
-// Inicjalizacja Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const handler = async (event) => {
-    // 1. Obsługa CORS (pozwala frontendowi łączyć się z backendem)
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST, OPTIONS'
     };
 
-    // 2. Obsługa zapytań wstępnych przeglądarki (pre-flight)
     if (event.httpMethod === 'OPTIONS') {
         return { statusCode: 200, headers, body: '' };
-    }
-
-    // 3. Tylko metoda POST jest dozwolona
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, headers, body: 'Method Not Allowed' };
     }
 
     try {
@@ -48,7 +40,7 @@ export const handler = async (event) => {
         }
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'], // Dodaj 'blik', 'p24' jeśli włączyłeś w panelu Stripe
+            payment_method_types: ['card'],
             line_items: lineItems,
             mode: 'payment',
             success_url: `${process.env.URL}/Success`,
