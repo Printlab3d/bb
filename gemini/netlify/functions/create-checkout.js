@@ -1,21 +1,22 @@
-// netlify/functions/create-checkout.js
 import Stripe from 'stripe';
 
+// Inicjalizacja Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const handler = async (event) => {
-    // Nagłówki dla CORS (żeby frontend mógł gadać z backendem)
+    // 1. Obsługa CORS (pozwala frontendowi łączyć się z backendem)
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST, OPTIONS'
     };
 
-    // Obsługa pre-flight request (dla przeglądarek)
+    // 2. Obsługa zapytań wstępnych przeglądarki (pre-flight)
     if (event.httpMethod === 'OPTIONS') {
         return { statusCode: 200, headers, body: '' };
     }
 
+    // 3. Tylko metoda POST jest dozwolona
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, headers, body: 'Method Not Allowed' };
     }
@@ -23,7 +24,6 @@ export const handler = async (event) => {
     try {
         const { items, customerInfo, shipping } = JSON.parse(event.body);
 
-        // Tworzenie listy produktów
         const lineItems = items.map(item => ({
             price_data: {
                 currency: 'pln',
@@ -36,7 +36,6 @@ export const handler = async (event) => {
             quantity: item.quantity,
         }));
 
-        // Dodanie kosztu wysyłki
         if (shipping > 0) {
             lineItems.push({
                 price_data: {
@@ -48,17 +47,13 @@ export const handler = async (event) => {
             });
         }
 
-        /* UWAGA: BLIK i P24 wymagają włączenia w panelu Stripe!
-           Dla bezpieczeństwa zostawiłem na razie tylko 'card'.
-           Jeśli włączyłeś BLIK w Stripe, dodaj go z powrotem do tablicy.
-        */
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'], 
+            payment_method_types: ['card'], // Dodaj 'blik', 'p24' jeśli włączyłeś w panelu Stripe
             line_items: lineItems,
             mode: 'payment',
-            success_url: `${process.env.URL}/Success`, 
-            cancel_url: `${process.env.URL}/Cart`, 
-            customer_email: customerInfo.email, // Automatycznie wypełni email w Stripe
+            success_url: `${process.env.URL}/Success`,
+            cancel_url: `${process.env.URL}/Cart`,
+            customer_email: customerInfo.email,
             metadata: {
                 customer_name: customerInfo.name,
                 delivery_address: customerInfo.address,
