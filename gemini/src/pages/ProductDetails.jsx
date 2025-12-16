@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import productsData from "@/data/products.json";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+imp ort { motion } from "framer-motion";
+import { Butt on } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ShoppingCart, Package, CheckCircle, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { useToast } from "@/components/ui/use-toast";
+imp ort { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "../components/ui/add-to-cart-toast";
 import { useLanguage } from "./Layout.jsx"; // POPRAWIONY IMPORT: w tym samym folderze!
 
