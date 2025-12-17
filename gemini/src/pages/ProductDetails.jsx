@@ -6,10 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
-// USUNIĘTO BŁĘDNY IMPORT: useLanguage
 
-// Przykładowa baza produktów (musi tu być, żeby strona wiedziała co wyświetlić po ID)
-// W idealnym świecie brałbyś to z products.json, ale tutaj hardcodujemy dla pewności działania
 const ALL_PRODUCTS = [
   {
     id: 1,
@@ -66,21 +63,13 @@ export default function ProductDetails() {
     const params = new URLSearchParams(search);
     const id = parseInt(params.get("id"));
     const foundProduct = ALL_PRODUCTS.find(p => p.id === id);
-    
-    if (foundProduct) {
-      setProduct(foundProduct);
-    } else {
-      // Jeśli nie znaleziono, wróć do sklepu (opcjonalnie)
-      // navigate("/Moto");
-    }
+    if (foundProduct) setProduct(foundProduct);
   }, [search, navigate]);
 
   const handleAddToCart = () => {
     if (!product) return;
-    
     setIsAdding(true);
     
-    // Logika dodawania do koszyka
     const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
     const existingItem = currentCart.find(item => item.id === product.id);
     
@@ -103,14 +92,14 @@ export default function ProductDetails() {
       toast({
         description: <AddToCartToast product={product} />,
         duration: 3000,
-        className: "bg-white border-l-4 border-purple-500 p-0 overflow-hidden shadow-xl", 
+        className: "bg-white border-l-4 border-orange-500 p-0 overflow-hidden shadow-xl", 
       });
     }, 500);
   };
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center text-white">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-900">
         Ładowanie produktu...
       </div>
     );
@@ -121,23 +110,22 @@ export default function ProductDetails() {
   return (
     <div className="min-h-screen bg-gray-50 pt-8 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back Button */}
         <Button 
           variant="ghost" 
           onClick={() => navigate(-1)}
-          className="mb-6 hover:bg-gray-200"
+          className="mb-6 text-gray-600 hover:text-gray-900 hover:bg-gray-200"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Powrót
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Images Section */}
+          {/* Sekcja Zdjęć */}
           <div className="space-y-4">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="aspect-square bg-white rounded-2xl overflow-hidden border border-gray-200 relative"
+              className="aspect-square bg-white rounded-2xl overflow-hidden border border-gray-200 relative shadow-sm"
             >
               <img 
                 src={product.images ? product.images[activeImage] : product.image_url} 
@@ -158,7 +146,7 @@ export default function ProductDetails() {
                     key={idx}
                     onClick={() => setActiveImage(idx)}
                     className={`relative w-24 h-24 bg-white rounded-lg border-2 overflow-hidden flex-shrink-0 transition-all ${
-                      activeImage === idx ? "border-purple-600 ring-2 ring-purple-600/20" : "border-gray-200 hover:border-gray-300"
+                      activeImage === idx ? "border-orange-500 ring-2 ring-orange-500/20" : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-contain p-2" />
@@ -168,14 +156,14 @@ export default function ProductDetails() {
             )}
           </div>
 
-          {/* Product Info */}
+          {/* Info o produkcie */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
           >
             <div className="mb-2">
-              <span className="text-purple-600 font-medium text-sm tracking-wider uppercase">
+              <span className="text-orange-600 font-medium text-sm tracking-wider uppercase">
                 {product.category || "Moto 3D"}
               </span>
             </div>
@@ -212,9 +200,8 @@ export default function ProductDetails() {
               <p>{product.description}</p>
             </div>
 
-            {/* Specifications */}
             {product.specs && (
-              <div className="grid grid-cols-2 gap-4 mb-8 bg-white p-6 rounded-xl border border-gray-100">
+              <div className="grid grid-cols-2 gap-4 mb-8 bg-white p-6 rounded-xl border border-gray-200">
                 {Object.entries(product.specs).map(([key, value]) => (
                   <div key={key}>
                     <span className="block text-xs text-gray-400 uppercase font-bold">{key}</span>
@@ -224,12 +211,11 @@ export default function ProductDetails() {
               </div>
             )}
 
-            {/* Action Buttons */}
             <div className="flex gap-4 mt-auto">
               <Button 
                 size="lg" 
                 className={`flex-1 text-lg h-14 transition-all ${
-                  isAdding ? "bg-green-600" : "bg-black hover:bg-purple-600"
+                  isAdding ? "bg-green-600 hover:bg-green-700" : "bg-gray-900 hover:bg-orange-600"
                 }`}
                 onClick={handleAddToCart}
                 disabled={isAdding}
@@ -246,18 +232,17 @@ export default function ProductDetails() {
               </Button>
             </div>
 
-            {/* Trust Badges */}
             <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-gray-200">
               <div className="text-center">
-                <Truck className="w-6 h-6 mx-auto text-purple-600 mb-2" />
+                <Truck className="w-6 h-6 mx-auto text-orange-600 mb-2" />
                 <p className="text-xs font-bold text-gray-900">Wysyłka 48h</p>
               </div>
               <div className="text-center">
-                <ShieldCheck className="w-6 h-6 mx-auto text-purple-600 mb-2" />
+                <ShieldCheck className="w-6 h-6 mx-auto text-orange-600 mb-2" />
                 <p className="text-xs font-bold text-gray-900">Gwarancja jakości</p>
               </div>
               <div className="text-center">
-                <HelpCircle className="w-6 h-6 mx-auto text-purple-600 mb-2" />
+                <HelpCircle className="w-6 h-6 mx-auto text-orange-600 mb-2" />
                 <p className="text-xs font-bold text-gray-900">Wsparcie</p>
               </div>
             </div>
