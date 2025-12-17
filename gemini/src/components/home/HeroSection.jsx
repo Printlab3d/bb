@@ -23,7 +23,7 @@ export default function HeroSection() {
           </h1>
           
           <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-6 sm:mb-8 md:mb-10 elegant-text max-w-2xl mx-auto px-4">
-            Odkryj unikalne akcesoria motocyklowe i poczuj nowy wymiar stylu.
+            Odkryj najlepsze oświetlenie i akcesoria. Jakość, która robi różnicę.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
@@ -62,7 +62,7 @@ export default function HeroSection() {
             {[
               { label: "Darmowa Dostawa", value: "od 150 zł" },
               { label: "Wysyłka", value: "w 48h" },
-              { label: "Płatności", value: "Szybkie / BLIK" },
+              { label: "Płatności", value: "Przelewy24 / BLIK" },
               { label: "Homologacja", value: "Drogowa" }
             ].map((item, index) => (
               <div key={index} className="text-center bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 border border-orange-200 hover:border-orange-400 shadow-sm hover:shadow-lg hover:shadow-orange-200/50 transition-all duration-300 group">
