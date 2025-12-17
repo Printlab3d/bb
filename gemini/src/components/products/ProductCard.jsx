@@ -1,26 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react"; 
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "../ui/add-to-cart-toast";
+import { useLanguage } from "../../pages/Layout.jsx"; 
 
 export default function ProductCard({ product, onAddToCart, showHotBadge = false }) {
   const { toast } = useToast();
-  
+  const { t, language } = useLanguage();
+  const [translatedName, setTranslatedName] = useState(product.name);
+
+  useEffect(() => {
+    setTranslatedName(product.name);
+  }, [product.name, language]);
+
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
     onAddToCart(product);
-    
-    toast({
-      description: <AddToCartToast product={product} />,
-      duration: 5000,
-    });
   };
 
   return (
@@ -35,7 +36,7 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
             <div className="relative w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
               <img 
                 src={product.image_url} 
-                alt={product.name}
+                alt={translatedName}
                 className="w-full h-full object-contain p-4 sm:p-6 group-hover:scale-105 transition-transform duration-300"
               />
               
@@ -53,7 +54,7 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
 
               {product.stock <= 0 && (
                 <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center">
-                  <span className="text-white font-medium text-sm">Brak w magazynie</span>
+                  <span className="text-white font-medium text-sm">{t('product.outOfStock')}</span>
                 </div>
               )}
             </div>
@@ -62,7 +63,7 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
           <div className="p-4 sm:p-5 flex flex-col flex-grow bg-white">
             <Link to={`${createPageUrl("ProductDetails")}?id=${product.id}`}>
               <h3 className="text-sm sm:text-base font-medium text-gray-700 group-hover:text-orange-600 mb-3 elegant-text line-clamp-2 transition-colors duration-300 leading-snug">
-                {product.name}
+                {translatedName}
               </h3>
             </Link>
 
@@ -80,16 +81,7 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
                   className="w-full bg-white hover:bg-orange-600 text-gray-800 hover:text-white border-2 border-orange-500/30 hover:border-orange-600 font-medium text-[10px] xs:text-xs sm:text-sm py-2 sm:py-3 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-orange-500/30 px-2 sm:px-4"
                 >
                   <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 transition-colors duration-300 flex-shrink-0" />
-                  <span className="truncate leading-tight">Do koszyka</span>
-                </Button>
-              )}
-              
-              {product.stock === 0 && (
-                <Button
-                  disabled
-                  className="w-full bg-gray-100 text-gray-500 border border-gray-200 text-sm py-3"
-                >
-                  Niedostępny
+                  <span className="truncate leading-tight">{t('product.addToCart')}</span>
                 </Button>
               )}
             </div>
