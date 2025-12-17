@@ -4,37 +4,24 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 
+// USUNIĘTO: import { useLanguage } ... (to powodowało błąd)
+
 export default function HeroSection() {
   return (
     <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-black">
-      {/* Background Gradient */}
+      {/* Tło */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-black to-black z-0"></div>
       
-      {/* Animated Shapes */}
+      {/* Animowane kształty */}
       <div className="absolute inset-0 overflow-hidden z-0">
         <motion.div 
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3] 
-          }}
-          transition={{ 
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut" 
-          }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -top-20 -right-20 w-96 h-96 bg-purple-600/30 rounded-full blur-3xl"
         />
         <motion.div 
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.2, 0.4, 0.2] 
-          }}
-          transition={{ 
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1 
-          }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           className="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl"
         />
       </div>
