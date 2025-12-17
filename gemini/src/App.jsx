@@ -1,13 +1,12 @@
 import './App.css'
 import Pages from "@/pages/index.jsx"
-
-// USUNIĘTO import Toastera, bo jest już w Layout.jsx
+// UWAGA: Nie ma importu Toastera tutaj!
 
 function App() {
   return (
     <>
       <Pages />
-      {/* USUNIĘTO <Toaster /> - to likwiduje podwójne dymki */}
+      {/* UWAGA: Nie ma komponentu <Toaster /> tutaj! Jest on w Layout.jsx */}
     </>
   )
 }
