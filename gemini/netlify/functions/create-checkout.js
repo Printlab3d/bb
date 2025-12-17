@@ -40,10 +40,10 @@ export const handler = async (event) => {
         }
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
+            payment_method_types: ['card', 'blik', 'p24'],
             line_items: lineItems,
             mode: 'payment',
-            success_url: `${process.env.URL}/Success`,
+            success_url: `${process.env.URL}/Success`, // Upewnij się, że masz stronę Success lub zmień na /
             cancel_url: `${process.env.URL}/Cart`,
             customer_email: customerInfo.email,
             metadata: {
