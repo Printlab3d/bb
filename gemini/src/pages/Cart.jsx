@@ -82,8 +82,8 @@ export default function Cart() {
     setIsProcessing(true);
 
     try {
-      // Endpoint wywołujący Serverless Function Netlify
-      const response = await fetch('/.netlify/functions/create-checkout', {
+      // TU JEST ZMIANA - celujemy w nowy plik payment.js
+      const response = await fetch('/.netlify/functions/payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,15 +104,17 @@ export default function Cart() {
       });
 
       if (!response.ok) {
-        throw new Error('Nie udało się utworzyć sesji płatności');
+        // Spróbujmy odczytać błąd z serwera
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Błąd połączenia z serwerem płatności');
       }
 
       const { url } = await response.json();
-      window.location.href = url; // Przekierowanie do Stripe Checkout
+      window.location.href = url; 
 
     } catch (error) {
       console.error("Błąd podczas tworzenia płatności:", error);
-      alert("Wystąpił błąd podczas przechodzenia do płatności. Spróbuj ponownie.");
+      alert(`Wystąpił błąd: ${error.message}`);
       setIsProcessing(false);
     }
   };
@@ -316,7 +318,6 @@ export default function Cart() {
 
                       {/* Security Info */}
                       <div className="text-center space-y-2 pt-3 sm:pt-4 border-t border-gray-200">
-                        {/* ZMIENIONE Z PRZELEWY24 NA STRIPE */}
                         <p className="text-xs sm:text-sm text-gray-600 elegant-text flex items-center justify-center gap-2">
                           🔒 Bezpieczne płatności przez Stripe
                         </p>
@@ -462,11 +463,11 @@ export default function Cart() {
                             Powrót do koszyka
                           </Button>
                         </div>
-                      </div>
 
-                      <p className="text-xs text-gray-500 text-center">
-                        Klikając "Zapłać" zostaniesz przekierowany do bezpiecznej strony płatności Stripe
-                      </p>
+                        <p className="text-xs text-gray-500 text-center">
+                          Klikając "Zapłać" zostaniesz przekierowany do bezpiecznej strony płatności Stripe
+                        </p>
+                      </div>
                     </>
                   )}
                 </CardContent>
