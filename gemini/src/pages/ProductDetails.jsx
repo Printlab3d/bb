@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,28 +8,53 @@ import { createPageUrl } from "@/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "../components/ui/add-to-cart-toast";
 
+// BAZA PRODUKTÓW (zgodna z Home.jsx)
+const PRODUCTS = [
+  {
+    id: 1,
+    name: "Uchwyt na kask 'Skull'",
+    price: 89.00,
+    image_url: "/assets/skull-holder.jpg",
+    description: "Solidny uchwyt na kask. Idealny do garażu.",
+    stock: 10
+  },
+  {
+    id: 2,
+    name: "Brelok Personalizowany",
+    price: 29.00,
+    image_url: "/assets/keychain-custom.jpg",
+    description: "Personalizowany brelok z Twoim napisem.",
+    stock: 50
+  },
+  {
+    id: 3,
+    name: "Podstawka pod stopkę",
+    price: 45.00,
+    image_url: "/assets/stand-pad.jpg",
+    description: "Podstawka zapobiegająca zapadaniu się stopki.",
+    stock: 20
+  },
+  {
+    id: 4,
+    name: "Zestaw Startowy Moto",
+    price: 135.00,
+    image_url: "/assets/emblem.jpg",
+    description: "Kompletny zestaw akcesoriów na start.",
+    stock: 5
+  }
+];
+
 export default function ProductDetails() {
   const urlParams = new URLSearchParams(window.location.search);
-  const productId = urlParams.get('id');
+  const productId = parseInt(urlParams.get('id')); // Parsowanie na int
   const [selectedImage, setSelectedImage] = useState(0);
   const { toast } = useToast();
-  const [translatedName, setTranslatedName] = useState("");
-  const [translatedDesc, setTranslatedDesc] = useState("");
-
-  const { data: product, isLoading } = useQuery({
-    queryKey: ['product', productId],
-    queryFn: async () => {
-      const products = await base44.entities.Product.list();
-      return products.find(p => p.id === productId);
-    },
-  });
+  const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    if (product) {
-        setTranslatedName(product.name);
-        setTranslatedDesc(product.description || "");
-    }
-  }, [product]);
+    const found = PRODUCTS.find(p => p.id === productId);
+    setProduct(found);
+  }, [productId]);
 
   const addToCart = () => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -51,14 +74,6 @@ export default function ProductDetails() {
       duration: 5000,
     });
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
-      </div>
-    );
-  }
 
   if (!product) {
     return (
@@ -100,7 +115,7 @@ export default function ProductDetails() {
               <div className="relative w-full aspect-square bg-gradient-to-br from-gray-100 via-white to-gray-50 rounded-lg sm:rounded-xl overflow-hidden">
                 <img 
                   src={allImages[selectedImage]} 
-                  alt={translatedName}
+                  alt={product.name}
                   className="w-full h-full object-contain p-2 sm:p-4"
                 />
                 {product.featured && (
@@ -110,28 +125,6 @@ export default function ProductDetails() {
                 )}
               </div>
             </div>
-
-            {allImages.length > 1 && (
-              <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                {allImages.map((img, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`relative aspect-square bg-white rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImage === index 
-                        ? 'border-orange-500 shadow-md' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <img 
-                      src={img} 
-                      alt={`${translatedName} ${index + 1}`}
-                      className="w-full h-full object-contain p-1 sm:p-2"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
           </motion.div>
 
           <motion.div
@@ -141,7 +134,7 @@ export default function ProductDetails() {
           >
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light text-black mb-3 sm:mb-4 elegant-text leading-tight">
-                {translatedName}
+                {product.name}
               </h1>
               
               <div className="flex items-baseline gap-2 sm:gap-3 mb-4 sm:mb-6">
@@ -168,13 +161,13 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            {translatedDesc && (
+            {product.description && (
               <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200">
                 <h2 className="text-lg sm:text-xl font-medium text-black mb-3 sm:mb-4 elegant-text">
                   Opis
                 </h2>
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-line">
-                  {translatedDesc}
+                  {product.description}
                 </p>
               </div>
             )}
@@ -191,19 +184,6 @@ export default function ProductDetails() {
                   </p>
                 </div>
               </div>
-              {product.sku && !product.sku.startsWith('EAR-') && (
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-orange-900 mb-1 text-sm sm:text-base">
-                      Homologacja drogowa
-                    </p>
-                    <p className="text-xs sm:text-sm text-orange-700">
-                      Certyfikowane do użytku na drogach publicznych
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="sticky bottom-0 left-0 right-0 bg-gray-50 p-4 -mx-4 border-t border-gray-200 lg:static lg:bg-transparent lg:border-0 lg:p-0 lg:mx-0">
