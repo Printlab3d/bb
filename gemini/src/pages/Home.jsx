@@ -1,133 +1,148 @@
-import React, { useState, useEffect } from "react";
-import productsData from "@/data/products.json";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, TrendingUp } from "lucide-react"; 
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import HeroSection from "@/components/home/HeroSection";
+import ProductCard from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/button";
-import HeroSection from "../components/home/HeroSection";
-import ProductCard from "../components/products/ProductCard";
+import { ArrowRight, Star, ShieldCheck, Truck } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { AddToCartToast } from "../components/ui/add-to-cart-toast";
-import { useLanguage } from "./Layout.jsx"; // OSTATECZNA POPRAWKA IMPORTU
+import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
+// USUNIĘTO: import { useLanguage } from "./Layout.jsx";
+
+// Przykładowe dane bestsellerów (zastąp swoimi jeśli masz inne źródło)
+const bestsellers = [
+  {
+    id: 1,
+    name: "Uchwyt na kask 'Skull'",
+    price: 89.00,
+    old_price: 119.00,
+    image_url: "/assets/skull-holder.jpg",
+    category: "Akcesoria",
+    is_new: true
+  },
+  {
+    id: 2,
+    name: "Brelok Personalizowany",
+    price: 29.00,
+    image_url: "/assets/keychain-custom.jpg",
+    category: "Breloki",
+    is_new: false
+  },
+  {
+    id: 3,
+    name: "Podstawka pod stopkę",
+    price: 45.00,
+    image_url: "/assets/stand-pad.jpg",
+    category: "Garaż",
+    is_new: false
+  },
+  {
+    id: 4,
+    name: "Emblemat na bak",
+    price: 35.00,
+    image_url: "/assets/emblem.jpg",
+    category: "Ozdoby",
+    is_new: true
+  }
+];
 
 export default function Home() {
   const { toast } = useToast();
-  const { t } = useLanguage();
-  
-  const [allProducts, setAllProducts] = useState([]);
-  const isLoading = false;
 
-  useEffect(() => {
-    setAllProducts(productsData);
-  }, []);
-  
-  const products = allProducts
-    .filter(product => product.featured === true)
-    .sort((a, b) => {
-      if (a.name.includes('Zestaw')) return -1;
-      if (b.name.includes('Zestaw')) return 1;
-      return 0;
-    });
-
-  const addToCart = (product) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(item => item.id === product.id);
+  const handleAddToCart = (product) => {
+    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existingItem = currentCart.find(item => item.id === product.id);
     
+    let newCart;
     if (existingItem) {
-      existingItem.quantity += 1;
+      newCart = currentCart.map(item => 
+        item.id === product.id 
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
     } else {
-      cart.push({ ...product, quantity: 1 });
+      newCart = [...currentCart, { ...product, quantity: 1 }];
     }
     
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(newCart));
     window.dispatchEvent(new Event('cartUpdated'));
 
+    // Powiadomienie
     toast({
       description: <AddToCartToast product={product} />,
-      duration: 5000,
+      duration: 3000,
+      className: "bg-white border-l-4 border-purple-500 p-0 overflow-hidden shadow-xl", 
     });
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="bg-black min-h-screen">
+      {/* Hero Section */}
       <HeroSection />
-      
-      {!isLoading && products.length > 0 && (
-        <div className="bg-gradient-to-b from-orange-50 via-white to-orange-50 py-8 sm:py-12 md:py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-6 sm:mb-8 md:mb-16"
-            >
-              <div className="inline-flex items-center gap-2 bg-orange-100 border border-orange-300 hover:border-orange-500 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6 md:mb-8 transition-colors duration-300 group">
-                <TrendingUp className="w-3 sm:w-4 h-3 sm:h-4 text-orange-600 group-hover:text-orange-700 transition-colors duration-300" />
-                <span className="text-xs sm:text-sm font-medium text-orange-700 elegant-text transition-colors duration-300">{t('home.bestsellers')}</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-3 sm:mb-4 elegant-text px-4">
-                {t('home.bestLighting')}
-              </h2>
-              <p className="text-gray-700 text-sm sm:text-base md:text-lg elegant-text max-w-2xl mx-auto px-4">
-                {t('home.popularProducts')}
-              </p>
-            </motion.div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mb-8 md:mb-12">
-              {products.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <ProductCard 
-                    product={product} 
-                    onAddToCart={addToCart}
-                  />
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="text-center px-4">
-              <Link to={createPageUrl("Moto")} className="inline-block w-full sm:w-auto">
-                <Button 
-                  size="lg"
-                  className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white border-none font-semibold elegant-text px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base group hover:shadow-xl hover:shadow-orange-500/40 w-full sm:w-auto transition-all duration-300"
-                >
-                  {t('home.viewAll')}
-                  <ArrowRight className="ml-2 w-4 sm:w-5 h-4 sm:h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </div>
-            </div>
-            </div>
-            )}
-
-      <div className="bg-gradient-to-b from-white to-orange-50 py-8 sm:py-12 md:py-20 border-t border-orange-200">
+      {/* Features Banner */}
+      <div className="bg-white/5 border-y border-white/10 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {[
-              { icon: "🎯", title: t('home.highestQuality'), desc: t('home.premiumLED') },
-              { icon: "⚡", title: t('home.fastShipping'), desc: t('home.order48h') },
-              { icon: "🛡️", title: t('home.homologation'), desc: t('home.certified') }
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-orange-200 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-200/50 transition-all duration-300 group"
-                >
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-orange-50 group-hover:bg-orange-100 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4 text-2xl sm:text-3xl transition-colors duration-300 border border-orange-200">
-                  {item.icon}
-                </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-800 group-hover:text-orange-600 mb-2 elegant-text transition-colors duration-300">{item.title}</h3>
-                <p className="text-gray-600 text-xs sm:text-sm">{item.desc}</p>
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mb-2">
+                <Truck className="w-6 h-6" />
+              </div>
+              <h3 className="text-white font-medium">Szybka Wysyłka</h3>
+              <p className="text-sm text-gray-400">Wysyłamy w 24-48h</p>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mb-2">
+                <Star className="w-6 h-6" />
+              </div>
+              <h3 className="text-white font-medium">Wysoka Jakość</h3>
+              <p className="text-sm text-gray-400">Precyzyjny druk 3D</p>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mb-2">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-white font-medium">Gwarancja Satysfakcji</h3>
+              <p className="text-sm text-gray-400">30 dni na zwrot</p>
+            </div>
           </div>
+        </div>
+      </div>
+
+      {/* Bestsellers Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+            Bestsellery
+          </h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Najczęściej wybierane produkty przez naszych klientów
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {bestsellers.map((product) => (
+            <ProductCard 
+              key={product.id} 
+              product={product} 
+              onAddToCart={handleAddToCart}
+              showHotBadge={true}
+            />
+          ))}
+        </div>
+
+        <div className="mt-12 text-center">
+          <Link to="/Moto">
+            <Button size="lg" className="bg-white text-black hover:bg-gray-200 px-8 py-6 rounded-full text-lg font-medium">
+              Zobacz Wszystkie Produkty
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
