@@ -1,144 +1,131 @@
 import React from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import HeroSection from "@/components/home/HeroSection";
-import ProductCard from "@/components/products/ProductCard";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, ShieldCheck, Truck } from "lucide-react";
+import { ArrowRight, TrendingUp } from "lucide-react"; 
 import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { Button } from "@/components/ui/button";
+import HeroSection from "../components/home/HeroSection";
+import ProductCard from "../components/products/ProductCard";
 import { useToast } from "@/components/ui/use-toast";
-import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
-
-const bestsellers = [
-  {
-    id: 1,
-    name: "Uchwyt na kask 'Skull'",
-    price: 89.00,
-    old_price: 119.00,
-    image_url: "/assets/skull-holder.jpg",
-    category: "Akcesoria",
-    is_new: true
-  },
-  {
-    id: 2,
-    name: "Brelok Personalizowany",
-    price: 29.00,
-    image_url: "/assets/keychain-custom.jpg",
-    category: "Breloki",
-    is_new: false
-  },
-  {
-    id: 3,
-    name: "Podstawka pod stopkę",
-    price: 45.00,
-    image_url: "/assets/stand-pad.jpg",
-    category: "Garaż",
-    is_new: false
-  },
-  {
-    id: 4,
-    name: "Emblemat na bak",
-    price: 35.00,
-    image_url: "/assets/emblem.jpg",
-    category: "Ozdoby",
-    is_new: true
-  }
-];
+import { AddToCartToast } from "../components/ui/add-to-cart-toast";
 
 export default function Home() {
   const { toast } = useToast();
+  
+  const { data: allProducts, isLoading } = useQuery({
+    queryKey: ['all-products'],
+    queryFn: () => base44.entities.Product.list('-created_date'),
+    initialData: [],
+  });
 
-  const handleAddToCart = (product) => {
-    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = currentCart.find(item => item.id === product.id);
+  const products = allProducts
+    .filter(product => product.featured === true)
+    .sort((a, b) => {
+      if (a.name.includes('Zestaw')) return -1;
+      if (b.name.includes('Zestaw')) return 1;
+      return 0;
+    });
+
+  const addToCart = (product) => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existingItem = cart.find(item => item.id === product.id);
     
-    let newCart;
     if (existingItem) {
-      newCart = currentCart.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
+      existingItem.quantity += 1;
     } else {
-      newCart = [...currentCart, { ...product, quantity: 1 }];
+      cart.push({ ...product, quantity: 1 });
     }
     
-    localStorage.setItem('cart', JSON.stringify(newCart));
+    localStorage.setItem('cart', JSON.stringify(cart));
     window.dispatchEvent(new Event('cartUpdated'));
 
     toast({
       description: <AddToCartToast product={product} />,
-      duration: 3000,
-      className: "bg-white border-l-4 border-orange-500 p-0 overflow-hidden shadow-xl", 
+      duration: 5000,
     });
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="min-h-screen">
       <HeroSection />
+      
+      {!isLoading && products.length > 0 && (
+        <div className="bg-gradient-to-b from-orange-50 via-white to-orange-50 py-8 sm:py-12 md:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-6 sm:mb-8 md:mb-16"
+            >
+              <div className="inline-flex items-center gap-2 bg-orange-100 border border-orange-300 hover:border-orange-500 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6 md:mb-8 transition-colors duration-300 group">
+                <TrendingUp className="w-3 sm:w-4 h-3 sm:h-4 text-orange-600 group-hover:text-orange-700 transition-colors duration-300" />
+                <span className="text-xs sm:text-sm font-medium text-orange-700 elegant-text transition-colors duration-300">Bestsellery</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-3 sm:mb-4 elegant-text px-4">
+                Najlepsze Akcesoria
+              </h2>
+              <p className="text-gray-700 text-sm sm:text-base md:text-lg elegant-text max-w-2xl mx-auto px-4">
+                Najczęściej wybierane produkty przez naszych klientów
+              </p>
+            </motion.div>
 
-      {/* Sekcja Korzyści - Jasna */}
-      <div className="bg-white border-y border-gray-100 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center gap-2 p-4">
-              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-2">
-                <Truck className="w-6 h-6" />
-              </div>
-              <h3 className="text-gray-900 font-bold text-lg">Szybka Wysyłka</h3>
-              <p className="text-sm text-gray-500">Wysyłamy w 24-48h</p>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 mb-8 md:mb-12">
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <ProductCard 
+                    product={product} 
+                    onAddToCart={addToCart}
+                  />
+                </motion.div>
+              ))}
             </div>
-            <div className="flex flex-col items-center gap-2 p-4">
-              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-2">
-                <Star className="w-6 h-6" />
-              </div>
-              <h3 className="text-gray-900 font-bold text-lg">Wysoka Jakość</h3>
-              <p className="text-sm text-gray-500">Precyzyjny druk 3D</p>
-            </div>
-            <div className="flex flex-col items-center gap-2 p-4">
-              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-2">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-gray-900 font-bold text-lg">Gwarancja Satysfakcji</h3>
-              <p className="text-sm text-gray-500">30 dni na zwrot</p>
+
+            <div className="text-center px-4">
+              <Link to={createPageUrl("Moto")} className="inline-block w-full sm:w-auto">
+                <Button 
+                  size="lg"
+                  className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white border-none font-semibold elegant-text px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base group hover:shadow-xl hover:shadow-orange-500/40 w-full sm:w-auto transition-all duration-300"
+                >
+                  Zobacz Wszystkie
+                  <ArrowRight className="ml-2 w-4 sm:w-5 h-4 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Bestsellery */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
-            Bestsellery
-          </h2>
-          <p className="text-gray-500 max-w-2xl mx-auto">
-            Najczęściej wybierane produkty przez naszych klientów
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {bestsellers.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              product={product} 
-              onAddToCart={handleAddToCart}
-              showHotBadge={true}
-            />
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Link to="/Moto">
-            <Button size="lg" className="bg-gray-900 text-white hover:bg-orange-600 px-8 py-6 rounded-full text-lg font-medium transition-colors">
-              Zobacz Wszystkie Produkty
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
+      <div className="bg-gradient-to-b from-white to-orange-50 py-8 sm:py-12 md:py-20 border-t border-orange-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            {[
+              { icon: "🎯", title: "Najwyższa Jakość", desc: "Produkty klasy Premium" },
+              { icon: "⚡", title: "Szybka Wysyłka", desc: "Wysyłamy w 48h" },
+              { icon: "🛡️", title: "Gwarancja", desc: "Bezpieczne zakupy" }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="text-center bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-orange-200 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-200/50 transition-all duration-300 group"
+              >
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-orange-50 group-hover:bg-orange-100 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4 text-2xl sm:text-3xl transition-colors duration-300 border border-orange-200">
+                  {item.icon}
+                </div>
+                <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-800 group-hover:text-orange-600 mb-2 elegant-text transition-colors duration-300">{item.title}</h3>
+                <p className="text-gray-600 text-xs sm:text-sm">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
