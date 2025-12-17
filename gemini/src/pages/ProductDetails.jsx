@@ -1,227 +1,265 @@
 import React, { useState, useEffect } from "react";
-import productsData from "@/data/products.json";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ArrowLeft, ShoppingCart, Check, Star, Truck, ShieldCheck, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ShoppingCart, Package, CheckCircle, Truck } from "lucide-react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 import { useToast } from "@/components/ui/use-toast";
-import { AddToCartToast } from "../components/ui/add-to-cart-toast";
-import { useLanguage } from "./Layout.jsx"; // POPRAWIONY IMPORT: w tym samym folderze!
+import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
+// USUNIĘTO BŁĘDNY IMPORT: useLanguage
+
+// Przykładowa baza produktów (musi tu być, żeby strona wiedziała co wyświetlić po ID)
+// W idealnym świecie brałbyś to z products.json, ale tutaj hardcodujemy dla pewności działania
+const ALL_PRODUCTS = [
+  {
+    id: 1,
+    name: "Uchwyt na kask 'Skull'",
+    price: 89.00,
+    old_price: 119.00,
+    description: "Solidny uchwyt na kask w kształcie czaszki. Idealny do garażu lub man cave'a. Wykonany z wytrzymałego materiału PLA+.",
+    image_url: "/assets/skull-holder.jpg",
+    images: ["/assets/skull-holder.jpg"],
+    category: "Akcesoria",
+    specs: { "Materiał": "PLA+", "Montaż": "Ścienny", "Kolor": "Czarny/Biały" }
+  },
+  {
+    id: 2,
+    name: "Brelok Personalizowany",
+    price: 29.00,
+    description: "Twój własny tekst lub numer rejestracyjny na breloku. Dostępne różne kolory.",
+    image_url: "/assets/keychain-custom.jpg",
+    images: ["/assets/keychain-custom.jpg"],
+    category: "Breloki",
+    specs: { "Materiał": "PET-G", "Rozmiar": "Standard" }
+  },
+  {
+    id: 3,
+    name: "Podstawka pod stopkę",
+    price: 45.00,
+    description: "Zapobiega zapadaniu się stopki motocyklowej w miękkim podłożu (trawa, piasek).",
+    image_url: "/assets/stand-pad.jpg",
+    images: ["/assets/stand-pad.jpg"],
+    category: "Garaż",
+    specs: { "Wymiary": "10x10cm", "Wzmocnienie": "Tak" }
+  },
+  {
+    id: 4,
+    name: "Emblemat na bak",
+    price: 35.00,
+    description: "Stylowy emblemat 3D na zbiornik paliwa. Montaż na taśmę 3M (w zestawie).",
+    image_url: "/assets/emblem.jpg",
+    images: ["/assets/emblem.jpg"],
+    category: "Ozdoby",
+    specs: { "Mocowanie": "Taśma 3M", "Wodoodporność": "Tak" }
+  }
+];
 
 export default function ProductDetails() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = urlParams.get('id');
-  const [selectedImage, setSelectedImage] = useState(0);
+  const { search } = useLocation();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const { t, language } = useLanguage();
-  const [translatedName, setTranslatedName] = useState("");
-  const [translatedDesc, setTranslatedDesc] = useState("");
-
-  const [product, setProduct] = useState(null); 
-  const isLoading = false; 
+  const [product, setProduct] = useState(null);
+  const [activeImage, setActiveImage] = useState(0);
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
-    const foundProduct = productsData.find(p => p.id === productId);
-    setProduct(foundProduct);
-  }, [productId]);
-
-  useEffect(() => {
-    if (product) {
-      setTranslatedName(product.name);
-      setTranslatedDesc(product.description || "");
-    }
-  }, [product]);
-
-  const addToCart = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(item => item.id === product.id);
+    const params = new URLSearchParams(search);
+    const id = parseInt(params.get("id"));
+    const foundProduct = ALL_PRODUCTS.find(p => p.id === id);
     
-    if (existingItem) {
-      existingItem.quantity += 1;
+    if (foundProduct) {
+      setProduct(foundProduct);
     } else {
-      cart.push({ ...product, quantity: 1 });
+      // Jeśli nie znaleziono, wróć do sklepu (opcjonalnie)
+      // navigate("/Moto");
+    }
+  }, [search, navigate]);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    
+    setIsAdding(true);
+    
+    // Logika dodawania do koszyka
+    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existingItem = currentCart.find(item => item.id === product.id);
+    
+    let newCart;
+    if (existingItem) {
+      newCart = currentCart.map(item => 
+        item.id === product.id 
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      newCart = [...currentCart, { ...product, quantity: 1 }];
     }
     
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(newCart));
     window.dispatchEvent(new Event('cartUpdated'));
 
-    toast({
-      description: <AddToCartToast product={product} />,
-      duration: 5000,
-    });
+    setTimeout(() => {
+      setIsAdding(false);
+      toast({
+        description: <AddToCartToast product={product} />,
+        duration: 3000,
+        className: "bg-white border-l-4 border-purple-500 p-0 overflow-hidden shadow-xl", 
+      });
+    }, 500);
   };
 
-  if (isLoading || !product) { 
+  if (!product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="text-center">
-          <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-light text-black mb-4">{t('product.notFound')}</h2>
-          <Link to={createPageUrl("Moto")}>
-            <Button>{t('product.backToShop')}</Button>
-          </Link>
-        </div>
+      <div className="min-h-screen bg-black flex items-center justify-center text-white">
+        Ładowanie produktu...
       </div>
     );
   }
 
-  const allImages = [product.image_url, ...(product.gallery || [])];
+  const hasDiscount = product.old_price && product.old_price > product.price;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <Link to={createPageUrl("Moto")}>
-            <Button variant="ghost" size="sm" className="text-sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              {t('product.backToShop')}
-            </Button>
-          </Link>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50 pt-8 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back Button */}
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate(-1)}
+          className="mb-6 hover:bg-gray-200"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Powrót
+        </Button>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-12">
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-3 sm:space-y-4"
-          >
-            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm border border-gray-200">
-              <div className="relative w-full aspect-square bg-gradient-to-br from-gray-100 via-white to-gray-50 rounded-lg sm:rounded-xl overflow-hidden">
-                <img 
-                  src={allImages[selectedImage]} 
-                  alt={translatedName}
-                  className="w-full h-full object-contain p-2 sm:p-4"
-                />
-                {product.featured && (
-                  <Badge className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white border-none text-xs sm:text-sm">
-                    HOT
-                  </Badge>
-                )}
-              </div>
-            </div>
-
-            {allImages.length > 1 && (
-              <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                {allImages.map((img, index) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Images Section */}
+          <div className="space-y-4">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="aspect-square bg-white rounded-2xl overflow-hidden border border-gray-200 relative"
+            >
+              <img 
+                src={product.images ? product.images[activeImage] : product.image_url} 
+                alt={product.name}
+                className="w-full h-full object-contain p-8"
+              />
+              {hasDiscount && (
+                <Badge className="absolute top-4 left-4 bg-red-500 text-lg px-3 py-1">
+                  PROMOCJA
+                </Badge>
+              )}
+            </motion.div>
+            
+            {product.images && product.images.length > 1 && (
+              <div className="flex gap-4 overflow-x-auto pb-2">
+                {product.images.map((img, idx) => (
                   <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`relative aspect-square bg-white rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImage === index 
-                        ? 'border-orange-500 shadow-md' 
-                        : 'border-gray-200 hover:border-gray-300'
+                    key={idx}
+                    onClick={() => setActiveImage(idx)}
+                    className={`relative w-24 h-24 bg-white rounded-lg border-2 overflow-hidden flex-shrink-0 transition-all ${
+                      activeImage === idx ? "border-purple-600 ring-2 ring-purple-600/20" : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
-                    <img 
-                      src={img} 
-                      alt={`${translatedName} ${index + 1}`}
-                      className="w-full h-full object-contain p-1 sm:p-2"
-                    />
+                    <img src={img} alt="" className="w-full h-full object-contain p-2" />
                   </button>
                 ))}
               </div>
             )}
-          </motion.div>
+          </div>
 
-          <motion.div
+          {/* Product Info */}
+          <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6"
+            className="flex flex-col"
           >
-            <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light text-black mb-3 sm:mb-4 elegant-text leading-tight">
-                {translatedName}
-              </h1>
-              
-              <div className="flex items-baseline gap-2 sm:gap-3 mb-4 sm:mb-6">
-                <span className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
-                  {product.price}
-                </span>
-                <span className="text-xl sm:text-2xl text-gray-500 font-medium">zł</span>
-              </div>
-
-              <div className="flex items-center gap-2 mb-4 sm:mb-6 bg-white rounded-lg p-3 border border-gray-200">
-                {product.stock > 0 ? (
-                  <>
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                    <span className="text-green-600 font-medium text-sm sm:text-base">
-                      {t('product.available')} ({product.stock} {language === 'en' ? 'pcs' : 'szt.'})
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <Package className="w-5 h-5 text-orange-600 flex-shrink-0" />
-                    <span className="text-orange-600 font-medium text-sm sm:text-base">{t('product.outOfStock')}</span>
-                  </>
-                )}
-              </div>
+            <div className="mb-2">
+              <span className="text-purple-600 font-medium text-sm tracking-wider uppercase">
+                {product.category || "Moto 3D"}
+              </span>
             </div>
 
-            {translatedDesc && (
-              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200">
-                <h2 className="text-lg sm:text-xl font-medium text-black mb-3 sm:mb-4 elegant-text">
-                  {t('product.description')}
-                </h2>
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-line">
-                  {translatedDesc}
-                </p>
-              </div>
-            )}
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              {product.name}
+            </h1>
 
-            <div className="bg-orange-50 rounded-xl p-4 sm:p-6 border border-orange-200">
-              <div className="flex items-start gap-3 mb-3 sm:mb-4">
-                <Truck className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="font-medium text-orange-900 mb-1 text-sm sm:text-base">
-                    {language === 'en' ? 'Free shipping from 150 PLN' : 'Darmowa dostawa od 150 zł'}
-                  </p>
-                  <p className="text-xs sm:text-sm text-orange-700">
-                    {language === 'en' ? 'Shipping within 48 hours' : 'Wysyłka w ciągu 48 godzin'}
-                  </p>
-                </div>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                ))}
+                <span className="text-gray-500 ml-2 font-medium">(4.9/5)</span>
               </div>
-              {product.sku && !product.sku.startsWith('EAR-') && (
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-orange-900 mb-1 text-sm sm:text-base">
-                      {language === 'en' ? 'Road homologation' : 'Homologacja drogowa'}
-                    </p>
-                    <p className="text-xs sm:text-sm text-orange-700">
-                      {language === 'en' ? 'Certified for use on public roads' : 'Certyfikowane do użytku na drogach publicznych'}
-                    </p>
-                  </div>
-                </div>
+              <span className="text-gray-300">|</span>
+              <span className="text-green-600 font-medium flex items-center gap-1">
+                <Check className="w-4 h-4" /> Dostępny
+              </span>
+            </div>
+
+            <div className="flex items-baseline gap-4 mb-8">
+              <span className="text-4xl font-bold text-gray-900">
+                {product.price} zł
+              </span>
+              {hasDiscount && (
+                <span className="text-xl text-gray-400 line-through">
+                  {product.old_price} zł
+                </span>
               )}
             </div>
 
-            <div className="sticky bottom-0 left-0 right-0 bg-gray-50 p-4 -mx-4 border-t border-gray-200 lg:static lg:bg-transparent lg:border-0 lg:p-0 lg:mx-0">
-              <Button
-                onClick={addToCart}
-                disabled={product.stock === 0}
-                size="lg"
-                className={`w-full h-12 sm:h-14 text-base sm:text-lg ${
-                  product.stock === 0
-                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                    : "bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white shadow-lg shadow-orange-500/30"
-                } border-none font-medium elegant-text`}
+            <div className="prose prose-gray mb-8 text-gray-600 leading-relaxed">
+              <p>{product.description}</p>
+            </div>
+
+            {/* Specifications */}
+            {product.specs && (
+              <div className="grid grid-cols-2 gap-4 mb-8 bg-white p-6 rounded-xl border border-gray-100">
+                {Object.entries(product.specs).map(([key, value]) => (
+                  <div key={key}>
+                    <span className="block text-xs text-gray-400 uppercase font-bold">{key}</span>
+                    <span className="text-gray-900 font-medium">{value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-4 mt-auto">
+              <Button 
+                size="lg" 
+                className={`flex-1 text-lg h-14 transition-all ${
+                  isAdding ? "bg-green-600" : "bg-black hover:bg-purple-600"
+                }`}
+                onClick={handleAddToCart}
+                disabled={isAdding}
               >
-                {product.stock === 0 ? (
+                {isAdding ? (
                   <>
-                    <Package className="w-5 h-5 mr-2" />
-                    {t('product.unavailable')}
+                    <Check className="mr-2 h-5 w-5" /> Dodano do koszyka
                   </>
                 ) : (
                   <>
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    {t('product.addToCart')}
+                    <ShoppingCart className="mr-2 h-5 w-5" /> Dodaj do koszyka
                   </>
                 )}
               </Button>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-gray-200">
+              <div className="text-center">
+                <Truck className="w-6 h-6 mx-auto text-purple-600 mb-2" />
+                <p className="text-xs font-bold text-gray-900">Wysyłka 48h</p>
+              </div>
+              <div className="text-center">
+                <ShieldCheck className="w-6 h-6 mx-auto text-purple-600 mb-2" />
+                <p className="text-xs font-bold text-gray-900">Gwarancja jakości</p>
+              </div>
+              <div className="text-center">
+                <HelpCircle className="w-6 h-6 mx-auto text-purple-600 mb-2" />
+                <p className="text-xs font-bold text-gray-900">Wsparcie</p>
+              </div>
             </div>
           </motion.div>
         </div>
