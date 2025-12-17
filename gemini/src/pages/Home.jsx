@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import HeroSection from "@/components/home/HeroSection";
 import ProductCard from "@/components/products/ProductCard";
@@ -7,9 +7,7 @@ import { ArrowRight, Star, ShieldCheck, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
-// USUNIĘTO: import { useLanguage } from "./Layout.jsx";
 
-// Przykładowe dane bestsellerów (zastąp swoimi jeśli masz inne źródło)
 const bestsellers = [
   {
     id: 1,
@@ -67,49 +65,47 @@ export default function Home() {
     localStorage.setItem('cart', JSON.stringify(newCart));
     window.dispatchEvent(new Event('cartUpdated'));
 
-    // Powiadomienie
     toast({
       description: <AddToCartToast product={product} />,
       duration: 3000,
-      className: "bg-white border-l-4 border-purple-500 p-0 overflow-hidden shadow-xl", 
+      className: "bg-white border-l-4 border-orange-500 p-0 overflow-hidden shadow-xl", 
     });
   };
 
   return (
-    <div className="bg-black min-h-screen">
-      {/* Hero Section */}
+    <div className="bg-gray-50 min-h-screen">
       <HeroSection />
 
-      {/* Features Banner */}
-      <div className="bg-white/5 border-y border-white/10 py-8">
+      {/* Sekcja Korzyści - Jasna */}
+      <div className="bg-white border-y border-gray-100 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mb-2">
+            <div className="flex flex-col items-center gap-2 p-4">
+              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-2">
                 <Truck className="w-6 h-6" />
               </div>
-              <h3 className="text-white font-medium">Szybka Wysyłka</h3>
-              <p className="text-sm text-gray-400">Wysyłamy w 24-48h</p>
+              <h3 className="text-gray-900 font-bold text-lg">Szybka Wysyłka</h3>
+              <p className="text-sm text-gray-500">Wysyłamy w 24-48h</p>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mb-2">
+            <div className="flex flex-col items-center gap-2 p-4">
+              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-2">
                 <Star className="w-6 h-6" />
               </div>
-              <h3 className="text-white font-medium">Wysoka Jakość</h3>
-              <p className="text-sm text-gray-400">Precyzyjny druk 3D</p>
+              <h3 className="text-gray-900 font-bold text-lg">Wysoka Jakość</h3>
+              <p className="text-sm text-gray-500">Precyzyjny druk 3D</p>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mb-2">
+            <div className="flex flex-col items-center gap-2 p-4">
+              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mb-2">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-white font-medium">Gwarancja Satysfakcji</h3>
-              <p className="text-sm text-gray-400">30 dni na zwrot</p>
+              <h3 className="text-gray-900 font-bold text-lg">Gwarancja Satysfakcji</h3>
+              <p className="text-sm text-gray-500">30 dni na zwrot</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bestsellers Section */}
+      {/* Bestsellery */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -117,10 +113,10 @@ export default function Home() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
             Bestsellery
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-500 max-w-2xl mx-auto">
             Najczęściej wybierane produkty przez naszych klientów
           </p>
         </motion.div>
@@ -138,7 +134,7 @@ export default function Home() {
 
         <div className="mt-12 text-center">
           <Link to="/Moto">
-            <Button size="lg" className="bg-white text-black hover:bg-gray-200 px-8 py-6 rounded-full text-lg font-medium">
+            <Button size="lg" className="bg-gray-900 text-white hover:bg-orange-600 px-8 py-6 rounded-full text-lg font-medium transition-colors">
               Zobacz Wszystkie Produkty
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
