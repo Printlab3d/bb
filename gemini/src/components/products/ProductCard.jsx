@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,17 +7,10 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "../ui/add-to-cart-toast";
-import { base44 } from "@/api/base44Client";
 
 export default function ProductCard({ product, onAddToCart, showHotBadge = false }) {
   const { toast } = useToast();
-  const [translatedName, setTranslatedName] = useState(product.name);
-
-  // Uproszczone tłumaczenie: Jeśli język to angielski, próbujemy tłumaczyć, w przeciwnym razie zostawiamy nazwę
-  useEffect(() => {
-    setTranslatedName(product.name);
-  }, [product.name]);
-
+  
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -42,7 +35,7 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
             <div className="relative w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
               <img 
                 src={product.image_url} 
-                alt={translatedName}
+                alt={product.name}
                 className="w-full h-full object-contain p-4 sm:p-6 group-hover:scale-105 transition-transform duration-300"
               />
               
@@ -69,7 +62,7 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
           <div className="p-4 sm:p-5 flex flex-col flex-grow bg-white">
             <Link to={`${createPageUrl("ProductDetails")}?id=${product.id}`}>
               <h3 className="text-sm sm:text-base font-medium text-gray-700 group-hover:text-orange-600 mb-3 elegant-text line-clamp-2 transition-colors duration-300 leading-snug">
-                {translatedName}
+                {product.name}
               </h3>
             </Link>
 
