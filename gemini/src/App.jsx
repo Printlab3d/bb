@@ -1,12 +1,13 @@
 import './App.css'
 import Pages from "@/pages/index.jsx"
-// USUNIĘTO: import { Toaster } from "@/components/ui/toaster"
+
+// USUNIĘTO import Toastera, bo jest już w Layout.jsx
 
 function App() {
   return (
     <>
       <Pages />
-      {/* USUNIĘTO: <Toaster /> - już jest w Layout.jsx */}
+      {/* USUNIĘTO <Toaster /> - to likwiduje podwójne dymki */}
     </>
   )
 }
