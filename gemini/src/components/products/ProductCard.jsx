@@ -4,12 +4,10 @@ import { ShoppingCart, Heart, Eye, Check, Star, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { TooltipProvider } from "@/components/ui/tooltip"; // Uproszczony import
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "../ui/add-to-cart-toast";
-
-// USUNIĘTO: import useLanguage...
 
 export default function ProductCard({ product, onAddToCart, showHotBadge = false }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -26,7 +24,7 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
       toast({
         description: <AddToCartToast product={product} />,
         duration: 3000,
-        className: "bg-white border-l-4 border-purple-500 p-0 overflow-hidden shadow-xl", 
+        className: "bg-white border-l-4 border-orange-500 p-0 overflow-hidden shadow-xl", 
       });
     }, 600);
   };
@@ -46,23 +44,27 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
         className="h-full"
       >
         <Card 
-          className="group relative bg-white border-gray-100 overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
+          className="group relative bg-white border-gray-200 overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
+          {/* Badges */}
           <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
             {showHotBadge && (
-              <Badge className="bg-orange-500 text-white border-none shadow-sm flex items-center gap-1 px-2.5 py-1">
-                <Flame className="w-3.5 h-3.5 fill-current" /> HOT
+              <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none shadow-sm flex items-center gap-1 px-2.5 py-1">
+                <Flame className="w-3.5 h-3.5 fill-current" />
+                HOT
               </Badge>
             )}
             {hasDiscount && (
-              <Badge className="bg-red-500 text-white border-none shadow-sm font-bold">
+              <Badge className="bg-red-500 hover:bg-red-600 text-white border-none shadow-sm font-bold">
                 -{discountPercentage}%
               </Badge>
             )}
             {product.is_new && (
-              <Badge className="bg-purple-600 text-white border-none shadow-sm">NOWOŚĆ</Badge>
+              <Badge className="bg-blue-600 hover:bg-blue-700 text-white border-none shadow-sm">
+                NOWOŚĆ
+              </Badge>
             )}
           </div>
 
@@ -70,38 +72,66 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
             <motion.img 
               src={product.image_url} 
               alt={product.name}
-              className="absolute inset-0 w-full h-full object-contain p-6 transition-transform duration-700 ease-out"
-              animate={{ scale: isHovered ? 1.1 : 1 }}
+              className="absolute inset-0 w-full h-full object-contain p-6 transition-transform duration-500 ease-out"
+              animate={{ scale: isHovered ? 1.05 : 1 }}
             />
           </Link>
 
           <CardContent className="p-5 flex-grow flex flex-col relative z-10 bg-white">
-            <div className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wider">MOTO-3D</div>
-            <Link to={`/ProductDetails?id=${product.id}`} className="block group-hover:text-purple-600 transition-colors">
-              <h3 className="font-bold text-gray-900 leading-tight mb-2 line-clamp-2 min-h-[2.5rem] group-hover:text-purple-600 transition-colors">
+            <div className="text-xs text-orange-600 mb-2 font-medium uppercase tracking-wider">
+               MOTO-3D
+            </div>
+
+            <Link to={`/ProductDetails?id=${product.id}`} className="block group-hover:text-orange-600 transition-colors">
+              <h3 className="font-bold text-gray-900 leading-tight mb-2 line-clamp-2 min-h-[2.5rem] group-hover:text-orange-600 transition-colors">
                 {product.name}
               </h3>
             </Link>
+
             <div className="flex items-center gap-1 mb-3">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className={`w-3.5 h-3.5 ${i < 4 ? "text-yellow-400 fill-yellow-400" : "text-gray-200 fill-gray-200"}`} />
+                <Star 
+                  key={i} 
+                  className={`w-3.5 h-3.5 ${i < 4 ? "text-yellow-400 fill-yellow-400" : "text-gray-200 fill-gray-200"}`} 
+                />
               ))}
               <span className="text-xs text-gray-400 ml-1">(4.8)</span>
             </div>
+
             <div className="mt-auto flex items-baseline gap-2">
-              <span className="text-xl font-bold text-gray-900">{product.price} zł</span>
-              {hasDiscount && <span className="text-sm text-gray-400 line-through decoration-gray-300">{product.old_price} zł</span>}
+              <span className="text-xl font-bold text-gray-900">
+                {product.price} zł
+              </span>
+              {hasDiscount && (
+                <span className="text-sm text-gray-400 line-through decoration-gray-300">
+                  {product.old_price} zł
+                </span>
+              )}
             </div>
           </CardContent>
 
-          <CardFooter className="p-5 pt-0 bg-white border-t border-gray-50">
+          <CardFooter className="p-5 pt-0 bg-white border-t border-gray-100">
             <Button 
-              className={`w-full relative overflow-hidden transition-all duration-300 font-medium h-11 ${isAdding ? "bg-green-500" : "bg-black hover:bg-purple-600 text-white"}`}
+              className={`w-full relative overflow-hidden transition-all duration-300 font-medium h-11 ${
+                isAdding 
+                  ? "bg-green-500 hover:bg-green-600 text-white" 
+                  : "bg-gray-900 hover:bg-orange-600 text-white"
+              }`}
               onClick={handleAddToCart}
               disabled={isAdding}
             >
               <div className="flex items-center justify-center gap-2 relative z-10">
-                {isAdding ? <><Check className="w-4 h-4" /> Dodano!</> : <><ShoppingCart className="w-4 h-4" /> Do koszyka</>}
+                {isAdding ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Dodano!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-4 h-4" />
+                    Do koszyka
+                  </>
+                )}
               </div>
             </Button>
           </CardFooter>
