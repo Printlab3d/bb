@@ -1,112 +1,177 @@
-import React, { useState, useEffect } from "react";
-// USUŃ TEN IMPORT: import { base44 } from "@/api/base44Client"; 
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
+import { 
+  ShoppingCart, 
+  Heart, 
+  Eye, 
+  Check, 
+  Star,
+  Flame 
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Package } from "lucide-react"; 
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "../ui/add-to-cart-toast";
-import { useLanguage } from "../../pages/Layout.jsx"; // Ścieżka do Layoutu (Wstecz do pages)
+// USUNIĘTO: import { useLanguage } from "../../pages/Layout.jsx";
 
 export default function ProductCard({ product, onAddToCart, showHotBadge = false }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const { toast } = useToast();
-  const { t, language } = useLanguage();
-  const [translatedName, setTranslatedName] = useState(product.name);
-
-  // CAŁY BLOK TŁUMACZENIA LLM ZOSTAJE USUNIĘTY
-  useEffect(() => {
-    // Ponieważ Base44 LLM został usunięty, używamy nazwy polskiej (lub tej z JSON).
-    setTranslatedName(product.name);
-  }, [product.name, language]);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
-    e.stopPropagation();
+    setIsAdding(true);
     
-    onAddToCart(product);
-    
-    toast({
-      description: <AddToCartToast product={product} />,
-      duration: 5000,
-    });
+    // Symulacja opóźnienia dla lepszego efektu UX
+    setTimeout(() => {
+      onAddToCart(product);
+      setIsAdding(false);
+      
+      // Wyświetlenie powiadomienia
+      toast({
+        description: <AddToCartToast product={product} />,
+        duration: 3000,
+        className: "bg-white border-l-4 border-purple-500 p-0 overflow-hidden shadow-xl", 
+      });
+    }, 600);
   };
 
+  // Obliczanie ceny i rabatu
+  const hasDiscount = product.old_price && product.old_price > product.price;
+  const discountPercentage = hasDiscount 
+    ? Math.round(((product.old_price - product.price) / product.old_price) * 100) 
+    : 0;
+
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.3 }}
-      className="h-full"
-    >
-      <Card className={`bg-white border ${product.name.includes('Zestaw') ? 'border-4 border-gradient-to-r from-orange-500 to-yellow-500 shadow-xl shadow-orange-500/30' : 'border-gray-200'} hover:border-orange-500 transition-all duration-300 overflow-hidden h-full shadow-sm hover:shadow-orange-200/50 flex flex-col group`}>
-        <CardContent className="p-0 flex flex-col h-full">
-          <Link to={`${createPageUrl("ProductDetails")}?id=${product.id}`}>
-            <div className="relative w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
-              <img 
-                src={product.image_url} 
-                alt={translatedName}
-                className="w-full h-full object-contain p-4 sm:p-6 group-hover:scale-105 transition-transform duration-300"
-              />
-              
-              {product.name.includes('Zestaw') && (
-                <div className="absolute top-3 right-3 bg-gradient-to-r from-orange-600 to-yellow-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                  BUNDLE
-                </div>
-              )}
+    <TooltipProvider>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="h-full"
+      >
+        <Card 
+          className="group relative bg-white border-gray-100 overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Badges */}
+          <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
+            {showHotBadge && (
+              <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none shadow-sm flex items-center gap-1 px-2.5 py-1">
+                <Flame className="w-3.5 h-3.5 fill-current" />
+                HOT
+              </Badge>
+            )}
+            {hasDiscount && (
+              <Badge className="bg-red-500 hover:bg-red-600 text-white border-none shadow-sm font-bold">
+                -{discountPercentage}%
+              </Badge>
+            )}
+            {product.is_new && (
+              <Badge className="bg-purple-600 hover:bg-purple-700 text-white border-none shadow-sm">
+                NOWOŚĆ
+              </Badge>
+            )}
+          </div>
 
-              {product.featured && showHotBadge && !product.name.includes('Zestaw') && (
-                <div className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
-                  HOT
-                </div>
-              )}
+          {/* Wishlist Button */}
+          <button className="absolute top-3 right-3 z-20 p-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-400 hover:text-red-500 hover:bg-white transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 shadow-sm">
+            <Heart className="w-5 h-5" />
+          </button>
 
-              {product.stock <= 0 && (
-                <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center">
-                  <span className="text-white font-medium text-sm">{t('product.outOfStock')}</span>
-                </div>
-              )}
+          {/* Image Container */}
+          <Link to={`/ProductDetails?id=${product.id}`} className="relative block pt-[100%] overflow-hidden bg-gray-50 cursor-pointer">
+            <motion.img 
+              src={product.image_url} 
+              alt={product.name}
+              className="absolute inset-0 w-full h-full object-contain p-6 transition-transform duration-700 ease-out"
+              animate={{ scale: isHovered ? 1.1 : 1 }}
+            />
+            
+            {/* Quick View Overlay */}
+            <div className={`absolute inset-0 bg-black/5 flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="bg-white/90 text-black hover:bg-white shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 rounded-full px-6 font-medium"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Szczegóły
+              </Button>
             </div>
           </Link>
-          
-          <div className="p-4 sm:p-5 flex flex-col flex-grow bg-white">
-            <Link to={`${createPageUrl("ProductDetails")}?id=${product.id}`}>
-              <h3 className="text-sm sm:text-base font-medium text-gray-700 group-hover:text-orange-600 mb-3 elegant-text line-clamp-2 transition-colors duration-300 leading-snug">
-                {translatedName}
+
+          {/* Content */}
+          <CardContent className="p-5 flex-grow flex flex-col relative z-10 bg-white">
+            {/* Category (Optional) */}
+            <div className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wider">
+               MOTO-3D
+            </div>
+
+            <Link to={`/ProductDetails?id=${product.id}`} className="block group-hover:text-purple-600 transition-colors">
+              <h3 className="font-bold text-gray-900 leading-tight mb-2 line-clamp-2 min-h-[2.5rem] group-hover:text-purple-600 transition-colors">
+                {product.name}
               </h3>
             </Link>
 
-            <div className="mt-auto">
-              <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-2xl sm:text-3xl font-semibold text-gray-800 group-hover:text-orange-600 transition-colors duration-300">
-                  {product.price.toFixed(2)}
+            {/* Rating */}
+            <div className="flex items-center gap-1 mb-3">
+              {[...Array(5)].map((_, i) => (
+                <Star 
+                  key={i} 
+                  className={`w-3.5 h-3.5 ${i < 4 ? "text-yellow-400 fill-yellow-400" : "text-gray-200 fill-gray-200"}`} 
+                />
+              ))}
+              <span className="text-xs text-gray-400 ml-1">(4.8)</span>
+            </div>
+
+            {/* Price */}
+            <div className="mt-auto flex items-baseline gap-2">
+              <span className="text-xl font-bold text-gray-900">
+                {product.price} zł
+              </span>
+              {hasDiscount && (
+                <span className="text-sm text-gray-400 line-through decoration-gray-300">
+                  {product.old_price} zł
                 </span>
-                <span className="text-sm text-gray-500">PLN</span>
-              </div>
-              
-              {product.stock > 0 && (
-                <Button
-                  onClick={handleAddToCart}
-                  className="w-full bg-white hover:bg-orange-600 text-gray-800 hover:text-white border-2 border-orange-500/30 hover:border-orange-600 font-medium text-[10px] xs:text-xs sm:text-sm py-2 sm:py-3 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-orange-500/30 px-2 sm:px-4"
-                >
-                  <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 transition-colors duration-300 flex-shrink-0" />
-                  <span className="truncate leading-tight">{t('product.addToCart')}</span>
-                </Button>
-              )}
-              
-              {product.stock === 0 && (
-                <Button
-                  disabled
-                  className="w-full bg-gray-100 text-gray-500 border border-gray-200 text-sm py-3"
-                >
-                  {t('product.unavailable')}
-                </Button>
               )}
             </div>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+          </CardContent>
+
+          {/* Footer / Actions */}
+          <CardFooter className="p-5 pt-0 bg-white border-t border-gray-50">
+            <Button 
+              className={`w-full relative overflow-hidden transition-all duration-300 font-medium h-11 ${
+                isAdding 
+                  ? "bg-green-500 hover:bg-green-600 text-white" 
+                  : "bg-black hover:bg-purple-600 text-white"
+              }`}
+              onClick={handleAddToCart}
+              disabled={isAdding}
+            >
+              <div className="flex items-center justify-center gap-2 relative z-10">
+                {isAdding ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Dodano!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-4 h-4" />
+                    Do koszyka
+                  </>
+                )}
+              </div>
+            </Button>
+          </CardFooter>
+        </Card>
+      </motion.div>
+    </TooltipProvider>
   );
 }
