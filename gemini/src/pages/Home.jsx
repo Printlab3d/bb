@@ -12,9 +12,7 @@ import { AddToCartToast } from "../components/ui/add-to-cart-toast";
 
 export default function Home() {
   const { toast } = useToast();
-  
   const [allProducts, setAllProducts] = useState([]);
-  const isLoading = false;
 
   useEffect(() => {
     setAllProducts(productsData);
@@ -48,26 +46,26 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <HeroSection />
       
-      {!isLoading && products.length > 0 && (
-        <div className="bg-gradient-to-b from-orange-50 via-white to-orange-50 py-8 sm:py-12 md:py-24">
+      {products.length > 0 && (
+        <div className="bg-gradient-to-b from-orange-50 via-white to-white py-8 sm:py-12 md:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-6 sm:mb-8 md:mb-16"
             >
-              <div className="inline-flex items-center gap-2 bg-orange-100 border border-orange-300 hover:border-orange-500 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6 md:mb-8 transition-colors duration-300 group">
-                <TrendingUp className="w-3 sm:w-4 h-3 sm:h-4 text-orange-600 group-hover:text-orange-700 transition-colors duration-300" />
-                <span className="text-xs sm:text-sm font-medium text-orange-700 elegant-text transition-colors duration-300">Bestsellery</span>
+              <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-200 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6 md:mb-8">
+                <TrendingUp className="w-3 sm:w-4 h-3 sm:h-4 text-orange-600" />
+                <span className="text-xs sm:text-sm font-medium text-orange-700 elegant-text">Bestsellery</span>
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-3 sm:mb-4 elegant-text px-4">
                 Najlepsze oświetlenie i akcesoria
               </h2>
               <p className="text-gray-700 text-sm sm:text-base md:text-lg elegant-text max-w-2xl mx-auto px-4">
-                Sprawdź produkty, które najczęściej wybierają nasi klienci.
+                Odkryj produkty, które podbiły serca naszych klientów.
               </p>
             </motion.div>
 
@@ -91,7 +89,7 @@ export default function Home() {
               <Link to={createPageUrl("Moto")} className="inline-block w-full sm:w-auto">
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white border-none font-semibold elegant-text px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base group hover:shadow-xl hover:shadow-orange-500/40 w-full sm:w-auto transition-all duration-300"
+                  className="bg-orange-600 hover:bg-orange-700 text-white border-none font-semibold elegant-text px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base group transition-all duration-300 w-full sm:w-auto shadow-md"
                 >
                   Zobacz wszystko
                   <ArrowRight className="ml-2 w-4 sm:w-5 h-4 sm:h-5 group-hover:translate-x-1 transition-transform" />
@@ -101,33 +99,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      <div className="bg-gradient-to-b from-white to-orange-50 py-8 sm:py-12 md:py-20 border-t border-orange-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {[
-              { icon: "🎯", title: "Najwyższa jakość", desc: "Premium LED" },
-              { icon: "⚡", title: "Szybka wysyłka", desc: "Wysyłka w 48h" },
-              { icon: "🛡️", title: "Gwarancja", desc: "Produkty certyfikowane" }
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-orange-200 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-200/50 transition-all duration-300 group"
-                >
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-orange-50 group-hover:bg-orange-100 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4 text-2xl sm:text-3xl transition-colors duration-300 border border-orange-200">
-                  {item.icon}
-                </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-medium text-gray-800 group-hover:text-orange-600 mb-2 elegant-text transition-colors duration-300">{item.title}</h3>
-                <p className="text-gray-600 text-xs sm:text-sm">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
