@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import productsData from "@/data/products.json";
+// UPEWNIJ SIĘ ŻE ŚCIEŻKA DO DANYCH JEST POPRAWNA
+// Jeśli nie masz pliku products.json, użyj pustej tablicy lub danych statycznych jak w poprzednim przykładzie
+import productsData from "@/data/products.json"; 
 import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp } from "lucide-react"; 
 import { Link } from "react-router-dom";
@@ -15,7 +17,8 @@ export default function Home() {
   const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
-    setAllProducts(productsData);
+    // Zabezpieczenie na wypadek braku danych
+    setAllProducts(productsData || []);
   }, []);
   
   const products = allProducts
