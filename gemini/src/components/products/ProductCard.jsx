@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Package } from "lucide-react"; 
+import { ShoppingCart } from "lucide-react"; 
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { useToast } from "@/components/ui/use-toast";
-import { AddToCartToast } from "../ui/add-to-cart-toast";
+// USUNĄŁEM IMPORTY OD TOASTA, BO TU SĄ NIEPOTRZEBNE
+// import { useToast } from "@/components/ui/use-toast"; 
+// import { AddToCartToast } from "../ui/add-to-cart-toast";
+import { createPageUrl } from "@/utils"; // Zakładam, że utils masz tutaj, jeśli nie - popraw ścieżkę
 
 export default function ProductCard({ product, onAddToCart, showHotBadge = false }) {
-  const { toast } = useToast();
+  // USUNĄŁEM HOOK useToast() - nie potrzebujemy go tutaj
   const [translatedName, setTranslatedName] = useState(product.name);
 
   useEffect(() => {
@@ -21,12 +21,11 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
     e.preventDefault();
     e.stopPropagation();
     
+    // TYLKO WYWOŁUJEMY FUNKCJĘ RODZICA
+    // To rodzic (Home.jsx) zajmie się wyświetleniem powiadomienia
     onAddToCart(product);
     
-    toast({
-      description: <AddToCartToast product={product} />,
-      duration: 5000,
-    });
+    // USUNĄŁEM WYWOŁANIE toast() Z TEGO MIEJSCA
   };
 
   return (
@@ -37,6 +36,7 @@ export default function ProductCard({ product, onAddToCart, showHotBadge = false
     >
       <Card className={`bg-white border ${product.name.includes('Zestaw') ? 'border-4 border-gradient-to-r from-orange-500 to-yellow-500 shadow-xl shadow-orange-500/30' : 'border-gray-200'} hover:border-orange-500 transition-all duration-300 overflow-hidden h-full shadow-sm hover:shadow-orange-200/50 flex flex-col group`}>
         <CardContent className="p-0 flex flex-col h-full">
+          {/* Link do szczegółów */}
           <Link to={`${createPageUrl("ProductDetails")}?id=${product.id}`}>
             <div className="relative w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
               <img 
