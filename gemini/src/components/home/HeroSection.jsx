@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+// USUNIĘTO BŁĘDNY IMPORT
 
 export default function HeroSection() {
   return (
