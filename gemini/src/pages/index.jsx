@@ -1,10 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
-// KLUCZOWE: Importujemy Layout z tego samego folderu
+// WAŻNE: Importuje Layout z tego samego folderu (src/pages/Layout.jsx)
 import Layout from "./Layout.jsx"; 
 
-// Importy podstron
 import Home from "./Home";
 import Cart from "./Cart";
 import CustomKeychains from "./CustomKeychains";
@@ -18,7 +17,6 @@ import Success from "./Success";
 
 function PagesContent() {
     const location = useLocation();
-    // Proste pobieranie nazwy strony dla animacji w Layout
     const path = location.pathname.split('/').pop() || 'Home';
     
     return (
