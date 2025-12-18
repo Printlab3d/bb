@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Logo VR.png
-const LOGO_SRC = "/assets/VR.png"; 
+// --- TU JEST ZMIANA: WRACAMY DO vri.png ---
+const LOGO_SRC = "/assets/vri.png"; 
 
 export const useLanguage = () => ({ 
   t: (key) => key, 
@@ -65,26 +65,24 @@ export default function Layout({ children, currentPageName }) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Kontener paska nawigacji - Zwiększona wysokość do h-20 dla lepszego wyglądu dużych elementów */}
+          {/* WYSOKI NAGŁÓWEK (h-20) */}
           <div className="relative flex items-center justify-between h-20"> 
             
-            {/* 1. LOGO (LEWA STRONA) */}
+            {/* 1. LOGO LEWA STRONA (vri.png) */}
             <Link to="/Home" className="flex-shrink-0 flex items-center z-20">
               <img 
                 src={LOGO_SRC} 
-                alt="Logo VR" 
-                // Nieco większe logo
+                alt="Logo VibeRush" 
                 className="h-12 w-auto object-contain transition-transform hover:scale-105"
               />
             </Link>
 
-            {/* 2. MENU NA ŚRODKU (ABSOLUTE CENTER) - POWIĘKSZONE */}
+            {/* 2. MENU ŚRODEK (ABSOLUTE CENTER) - DUŻE NAPISY */}
             <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-10">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.path}
-                  // ZMIANA: text-lg (duża czcionka), font-medium
                   className={`text-lg font-medium transition-colors relative group py-2 ${
                     link.color === 'purple' 
                       ? "text-gray-800 hover:text-purple-600" 
@@ -99,10 +97,9 @@ export default function Layout({ children, currentPageName }) {
               ))}
             </div>
 
-            {/* 3. IKONY (PRAWA STRONA) - POWIĘKSZONY KOSZYK */}
+            {/* 3. KOSZYK PRAWA STRONA - DUŻY */}
             <div className="flex items-center gap-4 z-20">
               <Link to="/Cart" className="relative p-2 group rounded-full hover:bg-gray-50 transition-colors">
-                {/* ZMIANA: w-7 h-7 (większa ikona koszyka) */}
                 <ShoppingCart className="w-7 h-7 text-gray-700 group-hover:text-orange-600 transition-colors" />
                 
                 {cartCount > 0 && (
@@ -112,7 +109,7 @@ export default function Layout({ children, currentPageName }) {
                 )}
               </Link>
 
-              {/* MOBILE MENU TRIGGER */}
+              {/* MOBILE MENU */}
               <div className="md:hidden">
                 <Sheet>
                   <SheetTrigger asChild>
@@ -154,7 +151,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </nav>
 
-      <main className="flex-grow pt-28"> {/* Zwiększony padding-top bo nagłówek jest wyższy */}
+      <main className="flex-grow pt-28">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPageName}
