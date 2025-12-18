@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Eksportujemy useLanguage stąd, bo tego szuka ProductCard (@/layout)
+// Eksportujemy useLanguage, żeby inne pliki (np. ProductCard) nie wywalały błędu
 export const useLanguage = () => ({ 
   t: (key) => key, 
   language: 'pl' 
@@ -71,7 +71,7 @@ export default function Layout({ children, currentPageName }) {
               </span>
             </Link>
 
-            {/* MENU */}
+            {/* MENU DESKTOP */}
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link
@@ -91,7 +91,7 @@ export default function Layout({ children, currentPageName }) {
               ))}
             </div>
 
-            {/* PRAWA STRONA */}
+            {/* IKONY */}
             <div className="flex items-center gap-2 sm:gap-4">
               <Link to="/Cart" className="relative p-2 group rounded-full hover:bg-gray-50 transition-colors">
                 <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-orange-600 transition-colors" />
@@ -102,7 +102,7 @@ export default function Layout({ children, currentPageName }) {
                 )}
               </Link>
 
-              {/* MOBILE */}
+              {/* MENU MOBILE */}
               <div className="md:hidden">
                 <Sheet>
                   <SheetTrigger asChild>
@@ -157,6 +157,7 @@ export default function Layout({ children, currentPageName }) {
         </AnimatePresence>
       </main>
 
+      {/* STOPKA */}
       <footer className="bg-white border-t border-gray-200 pt-16 pb-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
