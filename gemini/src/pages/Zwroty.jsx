@@ -1,86 +1,59 @@
-
 import React from "react";
-import { motion } from "framer-motion";
-import { Package } from "lucide-react";
+import { Mail, Package, RefreshCw } from "lucide-react";
 
 export default function Zwroty() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <Package className="w-12 h-12 text-orange-600 mx-auto mb-4" />
-            <h1 className="text-4xl font-light text-black mb-2 elegant-text">
-              Zwroty i Reklamacje
-            </h1>
-            <p className="text-gray-600">Polityka zwrotów produktów</p>
-          </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <h1 className="text-3xl font-light mb-12 text-center uppercase tracking-widest">Zwroty i Reklamacje</h1>
+      
+      <div className="bg-orange-50 border-l-4 border-orange-500 p-6 mb-12 rounded-r-lg">
+        <h3 className="text-lg font-bold text-orange-900 mb-2">Zasady w skrócie:</h3>
+        <p className="text-orange-800">
+          Masz 14 dni na decyzję. Koszt przesyłki zwrotnej pokrywa Kupujący.
+          Nie przyjmujemy zwrotów produktów w pełni personalizowanych (np. z Twoim imieniem).
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="text-center p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+          <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 text-orange-600">
+            <Mail className="w-6 h-6" />
+          </div>
+          <h3 className="font-bold mb-2">1. Napisz do nas</h3>
+          <p className="text-sm text-gray-600">
+            {/* NOWY EMAIL */}
+            Wyślij wiadomość na <strong>contact@printlab3d.eu</strong> z informacją, że chcesz zwrócić produkt. Podaj numer zamówienia.
+          </p>
+        </div>
+
+        <div className="text-center p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+          <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 text-orange-600">
+            <Package className="w-6 h-6" />
+          </div>
+          <h3 className="font-bold mb-2">2. Otrzymaj adres</h3>
+          <p className="text-sm text-gray-600">
+            W odpowiedzi zwrotnej prześlemy Ci dokładny adres magazynu, na który należy nadać paczkę.
+          </p>
+        </div>
+
+        <div className="text-center p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+          <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 text-orange-600">
+            <RefreshCw className="w-6 h-6" />
+          </div>
+          <h3 className="font-bold mb-2">3. Wyślij i czekaj</h3>
+          <p className="text-sm text-gray-600">
+            Nadaj paczkę (na własny koszt). Zwrot środków otrzymasz w ciągu 14 dni od momentu, gdy paczka do nas dotrze.
+          </p>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 space-y-8"
-        >
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">Prawo odstąpienia od umowy</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Zgodnie z przepisami prawa, masz prawo odstąpić od umowy w terminie 14 dni bez podania jakiejkolwiek przyczyny.</p>
-              <p>Termin do odstąpienia od umowy wygasa po upływie 14 dni od dnia, w którym weszłaś/wszedłeś w posiadanie rzeczy.</p>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">Jak odstąpić od umowy?</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Aby skorzystać z prawa odstąpienia od umowy, musisz poinformować nas o swojej decyzji w drodze jednoznacznego oświadczenia.</p>
-              <p><strong>Możesz to zrobić poprzez:</strong></p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Wysłanie wiadomości e-mail na adres: kontakt@viberush.pl</li>
-                <li>Wysłanie listu na adres siedziby firmy</li>
-              </ul>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">Zwrot produktu</h2>
-            <div className="space-y-3 text-gray-700">
-              <p><strong>Warunki zwrotu:</strong></p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Produkt nie może nosić śladów używania</li>
-                <li>Produkt musi być kompletny (wraz z dokumentacją, opakowaniem, akcesoriami)</li>
-                <li>Produkt nie może być uszkodzony</li>
-              </ul>
-              <p className="mt-4 font-bold text-orange-600">WAŻNE: Koszty bezpośredniego zwrotu rzeczy ponosi Klient.</p>
-              <p className="mt-3">Zalecamy wysyłkę przesyłki poleconej lub kurierem z potwierdzeniem odbioru.</p>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">Zwrot pieniędzy</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Po otrzymaniu zwracanego produktu dokonamy jego weryfikacji. Jeśli produkt spełnia warunki zwrotu, zwrócimy Ci wszystkie otrzymane płatności.</p>
-              <p>Zwrot płatności nastąpi w terminie 14 dni od dnia otrzymania oświadczenia o odstąpieniu od umowy.</p>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">Reklamacje - Gwarancja</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Wszystkie nasze produkty objęte są 12-miesięczną gwarancją producenta.</p>
-              <p><strong>Zgłoszenie reklamacji:</strong></p>
-              <p>Reklamacje można zgłaszać na adres e-mail: kontakt@viberush.pl</p>
-              <p className="mt-3">Rozpatrzenie reklamacji następuje w ciągu 14 dni od daty jej zgłoszenia.</p>
-            </div>
-          </section>
-        </motion.div>
+      <div className="prose max-w-none text-gray-700 space-y-4">
+        <h3 className="text-xl font-bold text-gray-900">Ważne informacje</h3>
+        <ul className="list-disc pl-5">
+          <li>Zwracany produkt nie może nosić śladów użytkowania i musi być kompletny.</li>
+          <li>Prosimy o bezpieczne zapakowanie towaru – elementy z druku 3D muszą być zabezpieczone przed zgnieceniem w transporcie.</li>
+          <li><strong>Produkty personalizowane</strong> (np. breloki z indywidualnym napisem) nie podlegają zwrotom, chyba że posiadają wadę fabryczną.</li>
+        </ul>
       </div>
     </div>
   );
