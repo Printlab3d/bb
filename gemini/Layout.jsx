@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, ShoppingCart, Instagram, Facebook } from "lucide-react";
+import { Menu, ShoppingCart, Instagram, Facebook } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Logika tlumaczen - zostawiamy, aby Twoje t('...') w innych plikach nie sypaly bledami
 const t = (key) => {
   const translations = {
     'nav.home': 'Strona Główna',
@@ -41,74 +40,66 @@ export default function Layout({ children, currentPageName }) {
     };
   }, []);
 
+  // Konfiguracja kolorów hover zgodnie z Twoim poleceniem
   const navLinks = [
-    { name: "Strona Główna", path: "/Home", hoverColor: "hover:text-orange-600", activeBar: "bg-orange-600" },
-    { name: "Moto", path: "/Moto", hoverColor: "hover:text-orange-600", activeBar: "bg-orange-600" },
-    { name: "Breloki 3D", path: "/CustomKeychains", hoverColor: "hover:text-purple-600", activeBar: "bg-purple-600" },
-    { name: "Okazje", path: "/Okazje", hoverColor: "hover:text-orange-600", activeBar: "bg-orange-600" },
+    { name: "Strona Główna", path: "/Home", hoverClass: "hover:text-orange-600", barClass: "bg-orange-600" },
+    { name: "Moto", path: "/Moto", hoverClass: "hover:text-orange-600", barClass: "bg-orange-600" },
+    { name: "Breloki 3D", path: "/CustomKeychains", hoverClass: "hover:text-purple-600", barClass: "bg-purple-600" },
+    { name: "Okazje", path: "/Okazje", hoverClass: "hover:text-orange-600", barClass: "bg-orange-600" },
   ];
 
   return (
     <div className="min-h-screen bg-white text-gray-900 selection:bg-orange-100">
-      {/* Navbar */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
-          isScrolled
-            ? "bg-white/80 backdrop-blur-md border-gray-200 py-4"
-            : "bg-white border-transparent py-6"
+          isScrolled ? "bg-white/80 backdrop-blur-md border-gray-200 py-4" : "bg-white border-transparent py-6"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* Logo ViberRush */}
-            <Link to="/Home" className="group relative z-50 flex items-center gap-1">
-              <span className="text-2xl font-light elegant-text tracking-widest text-gray-900">
-                Vibe<span className="text-orange-600 font-medium group-hover:text-orange-500 transition-colors">Rush</span>
-              </span>
+            {/* LOGO ZMIENIONE NA VIBERUSH */}
+            <Link to="/Home" className="text-2xl font-light elegant-text tracking-widest group">
+              Vibe<span className="text-orange-600 font-medium group-hover:text-orange-500 transition-colors">Rush</span>
             </Link>
 
-            {/* Desktop Menu */}
+            {/* HEADER MENU Z POPRAWNYMI KOLORAMI */}
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`text-sm font-medium text-gray-600 transition-colors relative group py-2 ${link.hoverColor}`}
+                  className={`text-sm font-medium text-gray-600 transition-colors relative group py-2 ${link.hoverClass}`}
                 >
                   {link.name}
-                  <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${link.activeBar}`}></span>
+                  <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${link.barClass}`}></span>
                 </Link>
               ))}
             </div>
 
-            {/* Right Actions */}
             <div className="flex items-center gap-4">
-              <Link to="/Cart" className="relative group">
-                <div className="p-2 rounded-full hover:bg-gray-100 transition-colors">
-                  <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-orange-600 transition-colors" />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-orange-600 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white shadow-sm">
-                      {cartCount}
-                    </span>
-                  )}
-                </div>
+              <Link to="/Cart" className="relative group p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-orange-600 transition-colors" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-orange-600 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white shadow-sm">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
 
-              {/* Mobile Menu */}
               <div className="md:hidden">
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-gray-600 hover:bg-gray-100">
+                    <Button variant="ghost" size="icon" className="text-gray-600">
                       <Menu className="w-6 h-6" />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="right" className="bg-white border-l border-gray-200 w-[300px] sm:w-[400px]">
+                  <SheetContent side="right" className="bg-white border-l border-gray-200 w-[300px]">
                     <div className="flex flex-col gap-8 mt-12">
                       {navLinks.map((link) => (
                         <Link
                           key={link.name}
                           to={link.path}
-                          className={`text-xl font-light text-gray-600 transition-all duration-300 border-l-2 border-transparent pl-4 ${link.hoverColor} hover:border-current`}
+                          className={`text-xl font-light text-gray-600 transition-all duration-300 border-l-2 border-transparent pl-4 ${link.hoverClass} hover:border-current`}
                         >
                           {link.name}
                         </Link>
@@ -122,7 +113,6 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="pt-20 min-h-screen">
         <AnimatePresence mode="wait">
           <motion.div
@@ -137,7 +127,6 @@ export default function Layout({ children, currentPageName }) {
         </AnimatePresence>
       </main>
 
-      {/* Full Footer */}
       <footer className="border-t border-gray-200 bg-white pt-16 pb-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
