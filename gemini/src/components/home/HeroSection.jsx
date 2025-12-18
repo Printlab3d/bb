@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -19,7 +19,7 @@ export default function HeroSection() {
           className="text-center max-w-4xl mx-auto"
         >
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light text-gray-900 mb-4 sm:mb-6 elegant-text px-4">
-            Vibe<span className="bg-gradient-to-r from-orange-600 via-orange-500 to-orange-600 bg-clip-text text-transparent">Rush</span>
+            Vibe<span className="bg-gradient-to-r from-orange-600 via-orange-500 to-orange-600 bg-clip-text text-transparent font-medium">Rush</span>
           </h1>
           
           <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-6 sm:mb-8 md:mb-10 elegant-text max-w-2xl mx-auto px-4">
@@ -30,7 +30,7 @@ export default function HeroSection() {
             <Link to={createPageUrl("Moto")} className="w-full sm:w-auto">
               <Button 
                 size="lg"
-                className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white border-none font-semibold elegant-text px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base group w-full transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/40"
+                className="bg-orange-600 hover:bg-orange-700 text-white border-none font-semibold elegant-text px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base group w-full transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/40"
               >
                 Kup Teraz
                 <ArrowRight className="ml-2 w-4 sm:w-5 h-4 sm:h-5 group-hover:translate-x-1 transition-transform" />
@@ -62,7 +62,7 @@ export default function HeroSection() {
             {[
               { label: "Darmowa dostawa", value: "od 150 zł" },
               { label: "Wysyłka", value: "w 48h" },
-              { label: "Płatności", value: "Szybkie" },
+              { label: "Najwyższa jakość", value: "Druk 3D" },
               { label: "Homologacja", value: "Drogowa" }
             ].map((item, index) => (
               <div key={index} className="text-center bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 border border-orange-200 hover:border-orange-400 shadow-sm hover:shadow-lg hover:shadow-orange-200/50 transition-all duration-300 group">
