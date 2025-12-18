@@ -1,131 +1,78 @@
-
 import React from "react";
-import { motion } from "framer-motion";
-import { Shield } from "lucide-react";
 
-export default function PolitykaPrywatnosci() {
+export default function Regulamin() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <Shield className="w-12 h-12 text-orange-600 mx-auto mb-4" />
-            <h1 className="text-4xl font-light text-black mb-2 elegant-text">
-              Polityka Prywatności
-            </h1>
-            <p className="text-gray-600">Dbamy o Twoją prywatność</p>
-          </motion.div>
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <h1 className="text-3xl font-light mb-8 text-center uppercase tracking-widest">Regulamin Sklepu</h1>
+      
+      <div className="prose max-w-none text-gray-700 space-y-6">
+        <h2 className="text-xl font-bold text-gray-900">I. Postanowienia ogólne</h2>
+        <p>
+          1. Sklep internetowy VibeRush, dostępny pod adresem internetowym viberush.pl, prowadzony jest przez firmę: 
+          <strong> Global Effect Rafał Nowakowski</strong> z siedzibą w: <strong>70-354 Szczecin, ul. Ściegiennego 26/17</strong>, 
+          NIP: <strong>6711079312</strong>, REGON: <strong>320689867</strong>.
+        </p>
+        <p>
+          2. Kontakt ze Sprzedawcą możliwy jest pod adresem e-mail: <strong>contact@printlab3d.eu</strong>.
+        </p>
+
+        <h2 className="text-xl font-bold text-gray-900">II. Produkty i Płatności</h2>
+        <p>
+          1. Ceny produktów w Sklepie są cenami brutto i wyrażone są w złotych polskich.
+        </p>
+        <p>
+          2. Sprzedawca realizuje zamówienia na akcesoria motocyklowe oraz produkty wykonywane w technologii druku 3D.
+        </p>
+        <p>
+          3. Płatności obsługiwane są przez bezpiecznych operatorów (Stripe/Przelewy24/BLIK) lub kartą płatniczą.
+        </p>
+
+        <h2 className="text-xl font-bold text-gray-900">III. Dostawa</h2>
+        <p>
+          1. Towar wysyłany jest na terenie Polski w terminie od 1 do 5 dni roboczych od zaksięgowania wpłaty.
+        </p>
+
+        <h2 className="text-xl font-bold text-gray-900">IV. Zwroty (Prawo odstąpienia od umowy)</h2>
+        <p>
+          1. Konsument ma prawo odstąpić od umowy w terminie 14 dni od otrzymania towaru.
+        </p>
+        <p>
+          2. <strong>Procedura zwrotu:</strong> Aby dokonać zwrotu, Konsument musi najpierw poinformować o tym Sprzedawcę drogą mailową na adres: <strong>contact@printlab3d.eu</strong>.
+        </p>
+        <p>
+          3. W odpowiedzi na zgłoszenie, Sprzedawca przekaże Konsumentowi dokładny adres zwrotny.
+        </p>
+        <p>
+          4. Bezpośredni koszt zwrotu towaru ponosi Konsument.
+        </p>
+        <p>
+          5. <strong>Wyjątki:</strong> Prawo do zwrotu nie przysługuje w przypadku produktów personalizowanych (np. breloki z własnym napisem).
+        </p>
+
+        <h2 className="text-xl font-bold text-gray-900">V. Reklamacje</h2>
+        <p>
+          1. Reklamacje należy zgłaszać na adres: contact@printlab3d.eu.
+        </p>
+        <p>
+          2. Specyfika druku 3D (widoczne warstwy) nie stanowi wady produktu podlegającej reklamacji.
+        </p>
+
+        {/* --- NOWA SEKCJA O OCHRONIE PRAWNEJ --- */}
+        <div className="bg-gray-50 border-l-4 border-gray-800 p-4 my-8">
+            <h2 className="text-xl font-bold text-gray-900 mt-0">VI. Prawa Autorskie i Własność Intelektualna</h2>
+            <p>
+              1. Wszystkie produkty dostępne w sklepie, w szczególności autorskie projekty wykonane w technologii druku 3D, a także nazwa sklepu, logotypy, zdjęcia oraz opisy, stanowią własność intelektualną firmy <strong>Global Effect Rafał Nowakowski</strong> i podlegają ochronie prawnej.
+            </p>
+            <p>
+              2. <strong>Zakaz Kopiowania:</strong> Zabrania się kopiowania, skanowania, inżynierii wstecznej oraz powielania produktów (zarówno fizycznie jak i cyfrowo) bez wyraźnej, pisemnej zgody Sprzedawcy.
+            </p>
+            <p>
+              3. <strong>Zakaz Dalszej Odprzedaży:</strong> Nabycie produktu nie uprawnia Kupującego do prowadzenia jego dalszej odsprzedaży w celach zarobkowych (dystrybucji komercyjnej) bez podpisania umowy partnerskiej ze Sprzedawcą. Naruszenie tego zakazu może skutkować odpowiedzialnością prawną.
+            </p>
+            <p>
+              4. Wszelkie znaki towarowe (w tym logo VibeRush / VR) użyte na stronie są zastrzeżone.
+            </p>
         </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 space-y-8"
-        >
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">1. Administrator danych</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Administratorem Twoich danych osobowych jest [NAZWA FIRMY], z siedzibą w [ADRES], NIP: [NIP], REGON: [REGON].</p>
-              <p>Kontakt: [EMAIL], [TELEFON]</p>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">2. Cele i podstawy przetwarzania</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Twoje dane osobowe przetwarzamy w następujących celach:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Realizacji zamówień złożonych w sklepie (podstawa: wykonanie umowy)</li>
-                <li>Kontaktu z Klientem, w tym obsługi reklamacji (podstawa: wykonanie umowy, prawnie uzasadniony interes)</li>
-                <li>Prowadzenia marketingu produktów i usług (podstawa: zgoda lub prawnie uzasadniony interes)</li>
-                <li>Wystawiania faktur (podstawa: obowiązek prawny)</li>
-                <li>Obrony przed roszczeniami (podstawa: prawnie uzasadniony interes)</li>
-              </ul>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">3. Rodzaje przetwarzanych danych</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Przetwarzamy następujące kategorie danych osobowych:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Dane identyfikacyjne: imię, nazwisko</li>
-                <li>Dane kontaktowe: adres e-mail, numer telefonu</li>
-                <li>Dane adresowe: adres dostawy, adres do faktury</li>
-                <li>Dane o zamówieniach: historia zakupów, preferencje</li>
-              </ul>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">4. Odbiorcy danych</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Twoje dane osobowe mogą być przekazywane:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Firmom kurierskim - w celu realizacji dostawy</li>
-                <li>Operatorom płatności (Przelewy24) - w celu realizacji płatności</li>
-                <li>Dostawcom systemów IT - w celu utrzymania infrastruktury technicznej</li>
-                <li>Organom państwowym - gdy wymaga tego prawo</li>
-              </ul>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">5. Okres przechowywania danych</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Dane osobowe przechowujemy przez okres:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Realizacji zamówienia i dochodzenia roszczeń z nim związanych</li>
-                <li>Wymagany przepisami prawa (np. przepisy podatkowe - 5 lat)</li>
-                <li>Do momentu wycofania zgody (w przypadku przetwarzania na podstawie zgody)</li>
-              </ul>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">6. Twoje prawa</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Masz prawo do:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Dostępu do swoich danych osobowych</li>
-                <li>Sprostowania (poprawiania) danych</li>
-                <li>Usunięcia danych</li>
-                <li>Ograniczenia przetwarzania danych</li>
-                <li>Przenoszenia danych</li>
-                <li>Wniesienia sprzeciwu wobec przetwarzania</li>
-                <li>Wycofania zgody w dowolnym momencie</li>
-                <li>Wniesienia skargi do organu nadzorczego (UODO)</li>
-              </ul>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">7. Pliki cookies</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Strona wykorzystuje pliki cookies w celu:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Zapamiętania sesji użytkownika i zawartości koszyka</li>
-                <li>Analizy ruchu na stronie</li>
-                <li>Dostosowania treści do preferencji użytkownika</li>
-              </ul>
-              <p className="mt-3">Możesz zarządzać cookies w ustawieniach swojej przeglądarki.</p>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-medium text-black mb-4 elegant-text">8. Bezpieczeństwo</h2>
-            <div className="space-y-3 text-gray-700">
-              <p>Stosujemy odpowiednie środki techniczne i organizacyjne zapewniające ochronę przetwarzanych danych osobowych, w tym szyfrowanie połączenia SSL oraz bezpieczne przechowywanie danych.</p>
-            </div>
-          </section>
-        </motion.div>
       </div>
     </div>
   );
