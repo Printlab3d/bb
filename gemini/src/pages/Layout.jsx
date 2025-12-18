@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
 
-// --- ZMIANA LOGO TUTAJ ---
-// Upewnij się, że plik vri.png jest w folderze public/assets
-const LOGO_SRC = "/assets/vri.png"; 
+// Logo VR.png
+const LOGO_SRC = "/assets/VR.png"; 
 
 export const useLanguage = () => ({ 
   t: (key) => key, 
@@ -65,24 +64,28 @@ export default function Layout({ children, currentPageName }) {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14"> 
+          
+          {/* Kontener paska nawigacji - Zwiększona wysokość do h-20 dla lepszego wyglądu dużych elementów */}
+          <div className="relative flex items-center justify-between h-20"> 
             
-            {/* --- LOGO Z BOKU (LEWA STRONA) --- */}
-            <Link to="/Home" className="flex-shrink-0 flex items-center">
+            {/* 1. LOGO (LEWA STRONA) */}
+            <Link to="/Home" className="flex-shrink-0 flex items-center z-20">
               <img 
                 src={LOGO_SRC} 
-                alt="Logo" 
-                className="h-10 w-auto object-contain transition-transform hover:scale-105"
+                alt="Logo VR" 
+                // Nieco większe logo
+                className="h-12 w-auto object-contain transition-transform hover:scale-105"
               />
             </Link>
 
-            {/* MENU ŚRODEK/PRAWO */}
-            <div className="hidden md:flex items-center gap-8 ml-auto mr-8">
+            {/* 2. MENU NA ŚRODKU (ABSOLUTE CENTER) - POWIĘKSZONE */}
+            <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-10">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`text-sm font-medium transition-colors relative group py-2 ${
+                  // ZMIANA: text-lg (duża czcionka), font-medium
+                  className={`text-lg font-medium transition-colors relative group py-2 ${
                     link.color === 'purple' 
                       ? "text-gray-800 hover:text-purple-600" 
                       : "text-gray-600 hover:text-orange-600"
@@ -96,30 +99,32 @@ export default function Layout({ children, currentPageName }) {
               ))}
             </div>
 
-            {/* IKONY PRAWA STRONA */}
-            <div className="flex items-center gap-2 sm:gap-4">
+            {/* 3. IKONY (PRAWA STRONA) - POWIĘKSZONY KOSZYK */}
+            <div className="flex items-center gap-4 z-20">
               <Link to="/Cart" className="relative p-2 group rounded-full hover:bg-gray-50 transition-colors">
-                <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-orange-600 transition-colors" />
+                {/* ZMIANA: w-7 h-7 (większa ikona koszyka) */}
+                <ShoppingCart className="w-7 h-7 text-gray-700 group-hover:text-orange-600 transition-colors" />
+                
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-orange-600 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white shadow-sm animate-in zoom-in">
+                  <span className="absolute top-0 right-0 w-5 h-5 bg-orange-600 text-white text-xs font-bold flex items-center justify-center rounded-full border-2 border-white shadow-sm animate-in zoom-in">
                     {cartCount}
                   </span>
                 )}
               </Link>
 
-              {/* MOBILE MENU */}
+              {/* MOBILE MENU TRIGGER */}
               <div className="md:hidden">
                 <Sheet>
                   <SheetTrigger asChild>
                     <Button variant="ghost" size="icon" className="hover:bg-gray-50">
-                      <Menu className="w-6 h-6 text-gray-600" />
+                      <Menu className="w-7 h-7 text-gray-700" />
                     </Button>
                   </SheetTrigger>
                   <SheetContent side="right" className="w-[300px] border-l-orange-500/20 p-0 bg-white">
                      <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                        <img src={LOGO_SRC} alt="Logo" className="h-8 w-auto object-contain" />
+                        <img src={LOGO_SRC} alt="Logo" className="h-10 w-auto object-contain" />
                         <SheetClose asChild>
-                          <Button variant="ghost" size="icon"><X className="w-5 h-5"/></Button>
+                          <Button variant="ghost" size="icon"><X className="w-6 h-6"/></Button>
                         </SheetClose>
                      </div>
                     
@@ -129,7 +134,7 @@ export default function Layout({ children, currentPageName }) {
                           <SheetClose asChild key={link.name}>
                             <Link
                               to={link.path}
-                              className={`text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+                              className={`text-xl font-medium py-4 px-4 rounded-lg transition-colors ${
                                 link.color === 'purple' 
                                   ? "text-purple-900 hover:bg-purple-50" 
                                   : "text-gray-800 hover:bg-orange-50"
@@ -149,7 +154,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </nav>
 
-      <main className="flex-grow pt-24">
+      <main className="flex-grow pt-28"> {/* Zwiększony padding-top bo nagłówek jest wyższy */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPageName}
@@ -167,7 +172,7 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div className="space-y-4">
-              <img src={LOGO_SRC} alt="Logo" className="h-8 w-auto object-contain mb-4" />
+              <img src={LOGO_SRC} alt="Logo" className="h-10 w-auto object-contain mb-4" />
               <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
                 Twoje źródło unikalnych akcesoriów.
               </p>
@@ -176,7 +181,7 @@ export default function Layout({ children, currentPageName }) {
                 <Facebook className="w-5 h-5 text-gray-400 hover:text-blue-600 cursor-pointer" />
               </div>
             </div>
-            {/* Reszta stopki uproszczona dla czytelności kodu, ale zachowuje strukturę */}
+            
             <div>
               <h4 className="font-bold mb-4">Sklep</h4>
               <Link to="/Moto" className="block text-gray-500 hover:text-orange-600 mb-2">Moto</Link>
@@ -193,8 +198,6 @@ export default function Layout({ children, currentPageName }) {
           </div>
         </div>
       </footer>
-      
-      {/* UWAGA: TUTAJ NIE MA TOASTERA! ZOSTAŁ USUNIĘTY! */}
     </div>
   );
 }
