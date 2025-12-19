@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from "react";
-// WAŻNA ZMIANA: Importujemy products z pliku .js (nie json)
+// POPRAWKA: Importujemy dane z pliku .js, ale nazywamy je productsData, żeby Twój kod działał
 import { products as productsData } from "@/data/products"; 
 import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp } from "lucide-react"; 
 import { Link } from "react-router-dom";
+// Jeśli masz plik utils, to zostaw, jeśli błąd - zmień na zwykły string w linku
+import { createPageUrl } from "@/utils"; 
 import { Button } from "@/components/ui/button";
-import ProductCard from "@/components/products/ProductCard";
+// PRZYWRÓCONO TWÓJ KOMPONENT HERO:
+import HeroSection from "../components/home/HeroSection";
+import ProductCard from "../components/products/ProductCard";
 import { useToast } from "@/components/ui/use-toast";
-import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
+import { AddToCartToast } from "../components/ui/add-to-cart-toast";
 
 export default function Home() {
   const { toast } = useToast();
   const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
+    // Pobieramy dane z poprawionego importu
     setAllProducts(productsData || []);
   }, []);
   
@@ -46,25 +51,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* HERO SECTION (Wklejony bezpośrednio, żeby uniknąć błędu importu) */}
-      <section className="relative bg-orange-50 text-gray-900 py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/assets/hero-pattern.png')] opacity-5"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-gray-900">
-            VIBERUSH
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mb-10">
-            Unikalne akcesoria motocyklowe i druk 3D. Wyróżnij się na drodze.
-          </p>
-          <div className="flex gap-4">
-            <Link to="/Moto">
-              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-orange-500/30 transition-all">
-                Zobacz Ofertę
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Tu jest Twój oryginalny wygląd nagłówka */}
+      <HeroSection />
       
       {products.length > 0 && (
         <div className="bg-gradient-to-b from-orange-50 via-white to-white py-8 sm:py-12 md:py-24">
