@@ -41,7 +41,6 @@ export default function Layout({ children, currentPageName }) {
     };
   }, []);
 
-  // Scroll do góry przy zmianie strony
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
@@ -56,11 +55,11 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-orange-100 selection:text-orange-900 flex flex-col overflow-x-hidden">
       
-      {/* HEADER */}
+      {/* HEADER - NAPRAWIONY (CZYSTY BIAŁY) */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-200 ${
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 border-b ${
           isScrolled 
-            ? "bg-white border-b border-gray-100 py-2 shadow-sm" // TUTAJ ZMIANA: Czysty biały, brak przezroczystości
+            ? "bg-white border-gray-200 py-2 shadow-sm" // USUNIĘTO "backdrop-blur" i "/95"
             : "bg-white border-transparent py-4"
         }`}
       >
@@ -77,7 +76,7 @@ export default function Layout({ children, currentPageName }) {
               />
             </Link>
 
-            {/* MENU DESKTOP (ŚRODEK) */}
+            {/* MENU DESKTOP */}
             <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-10">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path || (link.path === '/Home' && location.pathname === '/');
@@ -167,7 +166,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </nav>
 
-      {/* Główna treść */}
+      {/* TREŚĆ */}
       <main className="flex-grow pt-28">
         <AnimatePresence mode="wait">
           <motion.div
@@ -194,31 +193,11 @@ export default function Layout({ children, currentPageName }) {
               </p>
               
               <div className="flex gap-4 pt-2">
-                {/* Instagram */}
-                <a 
-                  href="https://www.instagram.com/skrab.exc/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-gradient-to-tr hover:from-orange-500 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-sm"
-                >
+                <a href="https://www.instagram.com/skrab.exc/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-gradient-to-tr hover:from-orange-500 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-sm">
                   <Instagram className="w-5 h-5" />
                 </a>
-
-                {/* TikTok */}
-                <a 
-                  href="https://www.tiktok.com/@skrab.exc?is_from_webapp=1&sender_device=pc" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-black hover:text-white transition-all duration-300 shadow-sm"
-                >
-                   <svg 
-                      viewBox="0 0 24 24" 
-                      fill="currentColor" 
-                      className="w-5 h-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/>
-                   </svg>
+                <a href="https://www.tiktok.com/@skrab.exc?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-black hover:text-white transition-all duration-300 shadow-sm">
+                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg>
                 </a>
               </div>
             </div>
@@ -235,19 +214,14 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <h4 className="font-bold mb-4">Kontakt</h4>
               <p className="text-gray-500 text-sm mb-2">Masz pytania?</p>
-              <a href="mailto:contact@printlab3d.eu" className="text-orange-600 font-medium hover:underline">
-                contact@printlab3d.eu
-              </a>
+              <a href="mailto:contact@printlab3d.eu" className="text-orange-600 font-medium hover:underline">contact@printlab3d.eu</a>
             </div>
           </div>
           
-          {/* Copyright */}
           <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
             <div className="flex flex-col gap-1 text-center md:text-left">
               <p>&copy; 2025 VibeRush (Global Effect). Wszelkie prawa zastrzeżone.</p>
-              <p className="text-[10px] text-gray-300">
-                Kopiowanie projektów 3D, zdjęć oraz logo zabronione. Wzory chronione prawem autorskim.
-              </p>
+              <p className="text-[10px] text-gray-300">Kopiowanie projektów 3D, zdjęć oraz logo zabronione. Wzory chronione prawem autorskim.</p>
             </div>
             <div className="flex gap-6">
               <span className="hover:text-gray-600 cursor-pointer">Bezpieczne płatności</span>
