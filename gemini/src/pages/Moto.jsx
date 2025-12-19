@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
-// --- POPRAWKA TUTAJ: Importujemy z .js, a nie .json ---
-import { products } from "@/data/products";
+import { products } from "@/data/products"; // Poprawny import z pliku .js
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Search, Package, Bike } from "lucide-react";
-import ProductCard from "../components/products/ProductCard";
+import ProductCard from "@/components/products/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { AddToCartToast } from "../components/ui/add-to-cart-toast";
-// Upewnij się, że ścieżka do Layout jest dobra (zależy gdzie masz ten plik)
-// Jeśli Layout jest w src/Layout.jsx, to import: import { useLanguage } from "../Layout";
-import { useLanguage } from "../Layout"; 
+import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
 
 export default function Moto() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,12 +15,15 @@ export default function Moto() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // --- POPRAWKA TUTAJ: Używamy zaimportowanej stałej 'products' ---
+    // Używamy zaimportowanej stałej products
     setAllProducts(products);
   }, []);
 
-  // Filtruj tylko produkty z kategorii "moto"
-  const motoProducts = allProducts.filter(product => product.category === 'moto');
+  // Filtruj tylko produkty z kategorii "moto" lub "accessories" (jeśli zatyczki są w accessories)
+  // Możesz dostosować ten warunek
+  const motoProducts = allProducts.filter(product => 
+      product.category === 'moto' || product.category === 'accessories'
+  );
 
   const filteredProducts = motoProducts.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
