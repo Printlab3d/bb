@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import productsData from "@/data/products.json";
+// --- POPRAWKA TUTAJ: Importujemy z .js, a nie .json ---
+import { products } from "@/data/products";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Search, Package, Bike } from "lucide-react";
@@ -7,7 +8,9 @@ import ProductCard from "../components/products/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "../components/ui/add-to-cart-toast";
-import { useLanguage } from "./Layout.jsx"; // POPRAWIONY IMPORT: w tym samym folderze!
+// Upewnij się, że ścieżka do Layout jest dobra (zależy gdzie masz ten plik)
+// Jeśli Layout jest w src/Layout.jsx, to import: import { useLanguage } from "../Layout";
+import { useLanguage } from "../Layout"; 
 
 export default function Moto() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,7 +19,8 @@ export default function Moto() {
   const { toast } = useToast();
 
   useEffect(() => {
-    setAllProducts(productsData);
+    // --- POPRAWKA TUTAJ: Używamy zaimportowanej stałej 'products' ---
+    setAllProducts(products);
   }, []);
 
   // Filtruj tylko produkty z kategorii "moto"
