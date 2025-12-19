@@ -34,7 +34,6 @@ export default function CustomKeychains() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
-            // ZMIANA DŁUGIEGO LINKU NA LOKALNY ZASÓB
             src="/assets/keychains-bg.jpg"
             alt="Breloki 3D"
             className="w-full h-full object-cover"
