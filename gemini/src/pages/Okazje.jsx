@@ -1,21 +1,17 @@
 import React from "react";
-// POPRAWIONY IMPORT DANYCH (z pliku .js, a nie .json)
-import { products as productsData } from "@/data/products";
+import { products } from "@/data/products"; // Poprawny import z pliku .js
 import { motion, AnimatePresence } from "framer-motion";
 import { Tag, Zap } from "lucide-react";
 import ProductCard from "@/components/products/ProductCard";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
-// Zakładam, że Layout jest w folderze wyżej (src/Layout.jsx) - jeśli jest inaczej, popraw ścieżkę
-import { useLanguage } from "../Layout"; 
 
 export default function Okazje() {
   const { toast } = useToast();
   const isLoading = false;
   
-  // Zgodnie z Twoją prośbą: "na razie żadnego produktu do okazji nie pakuj".
-  // Ustawiam pustą tablicę, żeby wyświetlił się Twój ekran "Brak okazji w tym momencie".
-  const products = []; 
+  // Zostawiamy puste zgodnie z życzeniem, żeby wyświetlił się ekran "Brak okazji"
+  const promoProducts = []; 
 
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -70,7 +66,7 @@ export default function Okazje() {
           <div className="flex justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
           </div>
-        ) : products.length === 0 ? (
+        ) : promoProducts.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -92,7 +88,7 @@ export default function Okazje() {
               <div>
                 <p className="text-white font-medium text-xl elegant-text flex items-center gap-2">
                   <Zap className="w-5 h-5 text-purple-500" />
-                  {products.length} {products.length === 1 ? 'Produkt' : 'Produktów'} w promocji
+                  {promoProducts.length} {promoProducts.length === 1 ? 'Produkt' : 'Produktów'} w promocji
                 </p>
                 <p className="text-gray-500 text-sm elegant-text">Oferta ograniczona czasowo</p>
               </div>
@@ -106,7 +102,7 @@ export default function Okazje() {
                 exit={{ opacity: 0 }}
                 className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6"
               >
-                {products.map((product, index) => (
+                {promoProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
                     initial={{ opacity: 0, y: 20 }}
