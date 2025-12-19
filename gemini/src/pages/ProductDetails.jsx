@@ -1,216 +1,212 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useLocation, Link } from "react-router-dom";
+import { ShoppingCart, ArrowLeft, Check, ShieldAlert, Truck, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ShoppingCart, Package, CheckCircle, Truck } from "lucide-react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import { products } from "@/data/products"; // Upewnij się, że masz ten plik z produktami!
 import { useToast } from "@/components/ui/use-toast";
-import { AddToCartToast } from "../components/ui/add-to-cart-toast";
-
-// BAZA PRODUKTÓW (zgodna z Home.jsx)
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Uchwyt na kask 'Skull'",
-    price: 89.00,
-    image_url: "/assets/skull-holder.jpg",
-    description: "Solidny uchwyt na kask. Idealny do garażu.",
-    stock: 10
-  },
-  {
-    id: 2,
-    name: "Brelok Personalizowany",
-    price: 29.00,
-    image_url: "/assets/keychain-custom.jpg",
-    description: "Personalizowany brelok z Twoim napisem.",
-    stock: 50
-  },
-  {
-    id: 3,
-    name: "Podstawka pod stopkę",
-    price: 45.00,
-    image_url: "/assets/stand-pad.jpg",
-    description: "Podstawka zapobiegająca zapadaniu się stopki.",
-    stock: 20
-  },
-  {
-    id: 4,
-    name: "Zestaw Startowy Moto",
-    price: 135.00,
-    image_url: "/assets/emblem.jpg",
-    description: "Kompletny zestaw akcesoriów na start.",
-    stock: 5
-  }
-];
 
 export default function ProductDetails() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = parseInt(urlParams.get('id')); // Parsowanie na int
-  const [selectedImage, setSelectedImage] = useState(0);
   const { toast } = useToast();
-  const [product, setProduct] = useState(null);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const productId = parseInt(searchParams.get('id'));
+  
+  // Znajdź produkt w bazie
+  const product = products.find(p => p.id === productId);
+  
+  // Stan dla wybranego zdjęcia (galeria)
+  const [selectedImage, setSelectedImage] = useState(0);
 
+  // Scroll na górę po załadowaniu lub zmianie produktu
   useEffect(() => {
-    const found = PRODUCTS.find(p => p.id === productId);
-    setProduct(found);
-  }, [productId]);
+    window.scrollTo(0, 0);
+    if (product) {
+      setSelectedImage(0);
+    }
+  }, [productId, product]);
 
+  // Funkcja dodawania do koszyka (musi być tutaj, bo to oddzielna podstrona)
   const addToCart = () => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(item => item.id === product.id);
-    
+    const existingItem = cart.find((item) => item.id === product.id);
+
+    let newCart;
     if (existingItem) {
-      existingItem.quantity += 1;
+      newCart = cart.map((item) =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
     } else {
-      cart.push({ ...product, quantity: 1 });
+      newCart = [...cart, { ...product, quantity: 1 }];
     }
+
+    localStorage.setItem('cart', JSON.stringify(newCart));
     
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('cartUpdated'));
+    // Wysyłamy sygnał do Layoutu, żeby zaktualizował licznik w nagłówku
+    window.dispatchEvent(new Event("cartUpdated"));
 
     toast({
-      description: <AddToCartToast product={product} />,
-      duration: 5000,
+      title: "Dodano do koszyka",
+      description: `${product.name} znajduje się w Twoim koszyku.`,
+      duration: 3000,
     });
   };
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="text-center">
-          <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-light text-black mb-4">Produkt nie znaleziony</h2>
-          <Link to={createPageUrl("Moto")}>
-            <Button>Wróć do sklepu</Button>
-          </Link>
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
+        <h2 className="text-2xl font-bold">Nie znaleziono produktu</h2>
+        <Link to="/Home">
+            <Button variant="outline">Wróć do sklepu</Button>
+        </Link>
       </div>
     );
   }
 
-  const allImages = [product.image_url, ...(product.gallery || [])];
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <Link to={createPageUrl("Moto")}>
-            <Button variant="ghost" size="sm" className="text-sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Wróć do sklepu
-            </Button>
-          </Link>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-in fade-in duration-500">
+      {/* Przycisk powrotu */}
+      <Link to="/Home" className="inline-flex items-center text-gray-500 hover:text-orange-600 mb-8 transition-colors">
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Wróć do przeglądania
+      </Link>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-12">
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-3 sm:space-y-4"
-          >
-            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm border border-gray-200">
-              <div className="relative w-full aspect-square bg-gradient-to-br from-gray-100 via-white to-gray-50 rounded-lg sm:rounded-xl overflow-hidden">
-                <img 
-                  src={allImages[selectedImage]} 
-                  alt={product.name}
-                  className="w-full h-full object-contain p-2 sm:p-4"
-                />
-                {product.featured && (
-                  <Badge className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white border-none text-xs sm:text-sm">
-                    HOT
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6"
-          >
-            <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light text-black mb-3 sm:mb-4 elegant-text leading-tight">
-                {product.name}
-              </h1>
-              
-              <div className="flex items-baseline gap-2 sm:gap-3 mb-4 sm:mb-6">
-                <span className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
-                  {product.price}
-                </span>
-                <span className="text-xl sm:text-2xl text-gray-500 font-medium">zł</span>
-              </div>
-
-              <div className="flex items-center gap-2 mb-4 sm:mb-6 bg-white rounded-lg p-3 border border-gray-200">
-                {product.stock > 0 ? (
-                  <>
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                    <span className="text-green-600 font-medium text-sm sm:text-base">
-                      Dostępny ({product.stock} szt.)
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <Package className="w-5 h-5 text-orange-600 flex-shrink-0" />
-                    <span className="text-orange-600 font-medium text-sm sm:text-base">Brak w magazynie</span>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {product.description && (
-              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200">
-                <h2 className="text-lg sm:text-xl font-medium text-black mb-3 sm:mb-4 elegant-text">
-                  Opis
-                </h2>
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-line">
-                  {product.description}
-                </p>
-              </div>
-            )}
-
-            <div className="bg-orange-50 rounded-xl p-4 sm:p-6 border border-orange-200">
-              <div className="flex items-start gap-3 mb-3 sm:mb-4">
-                <Truck className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="font-medium text-orange-900 mb-1 text-sm sm:text-base">
-                    Darmowa dostawa od 150 zł
-                  </p>
-                  <p className="text-xs sm:text-sm text-orange-700">
-                    Wysyłka w ciągu 48 godzin
-                  </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+        
+        {/* LEWA KOLUMNA - ZDJĘCIA */}
+        <div className="space-y-4">
+          {/* Główne zdjęcie */}
+          <div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 relative group">
+             {/* Jeśli są warianty (kolory), dodajemy etykietę */}
+             {product.color && (
+                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold shadow-sm z-10">
+                    Kolor: {product.color}
                 </div>
-              </div>
-            </div>
+             )}
+            <img 
+              src={product.images[selectedImage] || product.images[0]} 
+              alt={product.name}
+              className="w-full h-full object-contain p-8 transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
 
-            <div className="sticky bottom-0 left-0 right-0 bg-gray-50 p-4 -mx-4 border-t border-gray-200 lg:static lg:bg-transparent lg:border-0 lg:p-0 lg:mx-0">
-              <Button
-                onClick={addToCart}
-                disabled={product.stock === 0}
-                size="lg"
-                className={`w-full h-12 sm:h-14 text-base sm:text-lg ${
-                  product.stock === 0
-                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                    : "bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white shadow-lg shadow-orange-500/30"
-                } border-none font-medium elegant-text`}
-              >
-                {product.stock === 0 ? (
-                  <>
-                    <Package className="w-5 h-5 mr-2" />
-                    Niedostępny
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Do koszyka
-                  </>
-                )}
-              </Button>
+          {/* Miniaturki (jeśli jest więcej niż 1 zdjęcie) */}
+          {product.images.length > 1 && (
+            <div className="flex gap-4 overflow-x-auto pb-2">
+              {product.images.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(index)}
+                  className={`w-20 h-20 flex-shrink-0 rounded-lg border-2 overflow-hidden bg-gray-50 transition-all ${
+                    selectedImage === index ? "border-orange-500 ring-2 ring-orange-200" : "border-gray-200 hover:border-orange-300"
+                  }`}
+                >
+                  <img src={img} alt={`Widok ${index}`} className="w-full h-full object-contain p-2" />
+                </button>
+              ))}
             </div>
-          </motion.div>
+          )}
+        </div>
+
+        {/* PRAWA KOLUMNA - INFO */}
+        <div>
+          <div className="mb-2">
+            <span className="text-sm font-medium text-orange-600 bg-orange-50 px-3 py-1 rounded-full uppercase tracking-wider">
+              {product.category === 'moto' ? 'Moto' : product.category === 'accessories' ? 'Akcesoria' : 'Gadżety'}
+            </span>
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
+          
+          <div className="flex items-baseline gap-4 mb-6">
+            <span className="text-4xl font-bold text-gray-900">{product.price.toFixed(2)} zł</span>
+            {product.oldPrice && (
+                <span className="text-xl text-gray-400 line-through">{product.oldPrice.toFixed(2)} zł</span>
+            )}
+          </div>
+
+          <div className="prose text-gray-600 mb-8 leading-relaxed">
+            {product.description}
+          </div>
+
+          {/* --- TU JEST ZMIANA: OBSŁUGA WARIANTÓW (KOLORY) --- */}
+          {product.variants && (
+            <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                <h3 className="text-sm font-medium text-gray-900 mb-3">Wybierz kolor:</h3>
+                <div className="flex flex-wrap gap-3">
+                {product.variants.map((variant) => (
+                    <Link 
+                    key={variant.id} 
+                    to={`/ProductDetails?id=${variant.id}`} 
+                    className={`w-10 h-10 rounded-full border-2 transition-all shadow-sm flex items-center justify-center relative ${
+                        product.id === variant.id 
+                        ? "border-orange-600 ring-2 ring-orange-200 scale-110" 
+                        : "border-gray-300 hover:scale-110 hover:border-orange-400"
+                    }`}
+                    style={{ backgroundColor: variant.hex }}
+                    title={variant.color}
+                    >
+                        {/* Ptaszek dla aktywnego koloru */}
+                        {product.id === variant.id && (
+                             <Check className={`w-5 h-5 ${variant.color === 'Biały' || variant.color === 'Srebrny' ? 'text-black' : 'text-white'}`} />
+                        )}
+                    </Link>
+                ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-3">Wybrany wariant: <span className="font-bold text-gray-900">{product.color}</span></p>
+            </div>
+          )}
+
+          {/* Lista cech */}
+          {product.features && (
+            <div className="mb-8">
+                <h3 className="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wide">Cechy produktu:</h3>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {product.features.map((feature, i) => (
+                        <li key={i} className="flex items-center text-sm text-gray-600">
+                            <Check className="w-4 h-4 text-orange-500 mr-2 flex-shrink-0" />
+                            {feature}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+          )}
+
+          {/* Przycisk akcji */}
+          <div className="flex gap-4 mb-8">
+            <Button 
+                onClick={addToCart}
+                className="flex-1 bg-gray-900 hover:bg-orange-600 text-white h-14 text-lg transition-all shadow-lg hover:shadow-orange-500/30"
+            >
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Dodaj do koszyka
+            </Button>
+          </div>
+
+          {/* Informacje dodatkowe */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 border-t border-gray-100">
+             <div className="flex items-start gap-3">
+                <Truck className="w-5 h-5 text-orange-600 mt-0.5" />
+                <div>
+                    <h4 className="font-bold text-sm">Szybka wysyłka</h4>
+                    <p className="text-xs text-gray-500">Wysyłamy w 24-48h</p>
+                </div>
+             </div>
+             <div className="flex items-start gap-3">
+                <ShieldAlert className="w-5 h-5 text-orange-600 mt-0.5" />
+                <div>
+                    <h4 className="font-bold text-sm">Gwarancja jakości</h4>
+                    <p className="text-xs text-gray-500">Sprawdzony druk 3D / LED</p>
+                </div>
+             </div>
+          </div>
+          
+          {/* Ostrzeżenie dla druku 3D (jeśli dotyczy) */}
+          {product.category === 'keychains' || product.name.includes('3D') ? (
+               <div className="mt-6 p-3 bg-blue-50 text-blue-800 text-xs rounded-lg border border-blue-100">
+                  <p><strong>Info:</strong> Produkty z druku 3D mogą posiadać widoczne warstwy charakterystyczne dla technologii FDM. Nie wpływa to na ich wytrzymałość.</p>
+               </div>
+          ) : null}
+
         </div>
       </div>
     </div>
