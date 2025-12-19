@@ -58,9 +58,9 @@ export default function Layout({ children, currentPageName }) {
       
       {/* HEADER */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 border-b ${
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-200 ${
           isScrolled 
-            ? "bg-white/95 backdrop-blur-md border-gray-200 py-2 shadow-sm" 
+            ? "bg-white border-b border-gray-100 py-2 shadow-sm" // TUTAJ ZMIANA: Czysty biały, brak przezroczystości
             : "bg-white border-transparent py-4"
         }`}
       >
@@ -80,7 +80,6 @@ export default function Layout({ children, currentPageName }) {
             {/* MENU DESKTOP (ŚRODEK) */}
             <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-10">
               {navLinks.map((link) => {
-                // Sprawdzamy czy link jest aktywny
                 const isActive = location.pathname === link.path || (link.path === '/Home' && location.pathname === '/');
                 
                 return (
@@ -94,7 +93,6 @@ export default function Layout({ children, currentPageName }) {
                     }`}
                   >
                     {link.name}
-                    {/* Linia podświetlająca */}
                     <span className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
                        isActive ? "w-full" : "w-0 group-hover:w-full"
                     } ${link.color === 'purple' ? "bg-purple-600" : "bg-orange-600"}`}></span>
@@ -133,7 +131,6 @@ export default function Layout({ children, currentPageName }) {
                     <div className="flex flex-col h-full p-6">
                       <div className="flex flex-col gap-3">
                         {navLinks.map((link) => {
-                          // LOGIKA PODŚWIETLANIA MOBILNEGO
                           const isActive = location.pathname === link.path || (link.path === '/Home' && location.pathname === '/');
                           
                           let activeClasses = "";
@@ -244,7 +241,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
           
-          {/* Copyright z informacją o Global Effect i prawach autorskich */}
+          {/* Copyright */}
           <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
             <div className="flex flex-col gap-1 text-center md:text-left">
               <p>&copy; 2025 VibeRush (Global Effect). Wszelkie prawa zastrzeżone.</p>
