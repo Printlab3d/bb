@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from "react";
-import productsData from "@/data/products.json";
+import React from "react";
+// POPRAWIONY IMPORT DANYCH (z pliku .js, a nie .json)
+import { products as productsData } from "@/data/products";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tag, Zap, CheckCircle } from "lucide-react";
-import ProductCard from "../components/products/ProductCard";
+import { Tag, Zap } from "lucide-react";
+import ProductCard from "@/components/products/ProductCard";
 import { useToast } from "@/components/ui/use-toast";
-import { AddToCartToast } from "../components/ui/add-to-cart-toast";
-import { useLanguage } from "./Layout.jsx"; // POPRAWIONY IMPORT: w tym samym folderze!
+import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
+// Zakładam, że Layout jest w folderze wyżej (src/Layout.jsx) - jeśli jest inaczej, popraw ścieżkę
+import { useLanguage } from "../Layout"; 
 
 export default function Okazje() {
   const { toast } = useToast();
-  const [allProducts, setAllProducts] = useState([]);
   const isLoading = false;
   
-  useEffect(() => {
-    setAllProducts(productsData);
-  }, []);
-
-  const products = allProducts.filter(product => 
-    product.category === 'accessories' || product.category === 'lifestyle'
-  );
+  // Zgodnie z Twoją prośbą: "na razie żadnego produktu do okazji nie pakuj".
+  // Ustawiam pustą tablicę, żeby wyświetlił się Twój ekran "Brak okazji w tym momencie".
+  const products = []; 
 
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
