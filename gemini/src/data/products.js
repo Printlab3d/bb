@@ -6,7 +6,7 @@ export const products = [
     category: "moto",
     price: 89.00,
     oldPrice: 119.00,
-    // WSZYSTKO MAŁYMI LITERAMI:
+    // MAŁE LITERY:
     image: "/assets/kierunkowskaz1.jpg",
     images: ["/assets/kierunkowskaz1.jpg", "/assets/kierunkowskaz2.jpg"],
     description: "Nowoczesne kierunkowskazy LED z efektem dynamicznym (pływającym).",
