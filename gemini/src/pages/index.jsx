@@ -1,47 +1,43 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "@/Layout";
 
-// WAŻNE: Importuje Layout z tego samego folderu (src/pages/Layout.jsx)
-import Layout from "./Layout.jsx"; 
-
+// Importy Twoich podstron
 import Home from "./Home";
-import Cart from "./Cart";
-import CustomKeychains from "./CustomKeychains";
-import Moto from "./Moto";
-import Okazje from "./Okazje";
-import Regulamin from "./Regulamin";
-import PolitykaPrywatnosci from "./PolitykaPrywatnosci";
-import Zwroty from "./Zwroty";
-import ProductDetails from "./ProductDetails";
-import Success from "./Success";
+import Moto from "./Moto"; // Zakładam, że masz te pliki
+import Keychains from "./CustomKeychains"; // Jeśli tak się nazywa plik breloków
+import Okazje from "./Okazje"; // Jeśli masz okazje
+import Cart from "./Cart"; // Koszyk
 
-function PagesContent() {
-    const location = useLocation();
-    const path = location.pathname.split('/').pop() || 'Home';
-    
-    return (
-        <Layout currentPageName={path}>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/Home" element={<Home />} />
-                <Route path="/Cart" element={<Cart />} />
-                <Route path="/CustomKeychains" element={<CustomKeychains />} />
-                <Route path="/Moto" element={<Moto />} />
-                <Route path="/Okazje" element={<Okazje />} />
-                <Route path="/Regulamin" element={<Regulamin />} />
-                <Route path="/PolitykaPrywatnosci" element={<PolitykaPrywatnosci />} />
-                <Route path="/Zwroty" element={<Zwroty />} />
-                <Route path="/ProductDetails" element={<ProductDetails />} />
-                <Route path="/Success" element={<Success />} />
-            </Routes>
-        </Layout>
-    );
-}
+// WAŻNE: Tu importujemy ten nowy plik ze szczegółami produktu
+import ProductDetails from "./ProductDetails"; 
 
-export default function Pages() {
-    return (
-        <Router>
-            <PagesContent />
-        </Router>
-    );
-}
+const Pages = () => {
+  return (
+    <Router>
+      {/* Layout otacza wszystko, żeby nagłówek był zawsze widoczny */}
+      <Layout>
+        <Routes>
+          {/* Strona główna */}
+          <Route path="/" element={<Home />} />
+          <Route path="/Home" element={<Home />} />
+          
+          {/* Kategorie */}
+          <Route path="/Moto" element={<Moto />} />
+          <Route path="/CustomKeychains" element={<Keychains />} />
+          <Route path="/Okazje" element={<Okazje />} />
+          
+          {/* Koszyk */}
+          <Route path="/Cart" element={<Cart />} />
+
+          {/* --- TU JEST NAPRAWA --- */}
+          {/* Ta linijka mówi: jak w adresie jest /product/COŚ, wyświetl ProductDetails */}
+          <Route path="/product/:id" element={<ProductDetails />} />
+          
+        </Routes>
+      </Layout>
+    </Router>
+  );
+};
+
+export default Pages;
