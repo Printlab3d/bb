@@ -1,15 +1,15 @@
 export const products = [
-  // --- KATEGORIA: MOTO (Oświetlenie i Mocowania) ---
+  // --- KATEGORIA: MOTO ---
   {
     id: 1,
     name: "Kierunkowskazy LED Dynamiczne (Pływające)",
     category: "moto",
     price: 89.00,
     oldPrice: 119.00,
-    // ZMIANA NA .jpg
-    image: "/assets/kierunkowskaz1.jpg",
-    images: ["/assets/kierunkowskaz1.jpg", "/assets/kierunkowskaz2.jpg"],
-    description: "Nowoczesne kierunkowskazy LED z efektem dynamicznym (pływającym). Zwiększają widoczność motocykla i nadają mu agresywny, nowoczesny wygląd. Idealnie komponują się z naszymi mocowaniami tablicy rejestracyjnej.",
+    // TU BYŁ BŁĄD: Musi być duże K na początku, bo tak masz w folderze
+    image: "/assets/Kierunkowskaz1.jpg",
+    images: ["/assets/Kierunkowskaz1.jpg", "/assets/kierunkowskaz2.jpg"],
+    description: "Nowoczesne kierunkowskazy LED z efektem dynamicznym (pływającym).",
     features: [
       "Technologia LED - wysoka jasność",
       "Efekt pływającego światła (Audi style)",
@@ -27,7 +27,7 @@ export const products = [
     price: 69.00,
     image: "/assets/swiatloplaskie1.jpg",
     images: ["/assets/swiatloplaskie1.jpg", "/assets/swiatloplaskie2.jpg"],
-    description: "Minimalistyczna, płaska lampa tylna LED z funkcją światła pozycyjnego i STOP. Posiada przyciemniany klosz (smoke), który idealnie pasuje do customowych projektów ogonów motocyklowych.",
+    description: "Minimalistyczna, płaska lampa tylna LED z funkcją światła pozycyjnego i STOP.",
     features: [
       "Ultra-płaski profil",
       "Klosz typu SMOKE (przyciemniany)",
@@ -44,11 +44,11 @@ export const products = [
     price: 149.00,
     image: "/assets/mocowanie1.jpg",
     images: ["/assets/mocowanie1.jpg", "/assets/mocowanie2.jpg", "/assets/mocowanie3.jpg"],
-    description: "Wytrzymały uchwyt tablicy rejestracyjnej zaprojektowany i wykonany w technologii druku 3D z materiału odpornego na UV i drgania (PETG/ASA). Zaprojektowany tak, aby pasował do większości motocykli (Fender Eliminator).",
+    description: "Wytrzymały uchwyt tablicy rejestracyjnej drukowany w 3D (PETG/ASA).",
     features: [
-      "Materiał klasy przemysłowej (odporny na słońce i benzynę)",
+      "Materiał klasy przemysłowej",
       "Regulowany kąt nachylenia",
-      "Gotowe otwory pod nasze kierunkowskazy LED",
+      "Gotowe otwory pod kierunkowskazy",
       "Miejsce na podświetlenie tablicy",
       "Lekka i sztywna konstrukcja"
     ],
@@ -61,7 +61,7 @@ export const products = [
     price: 39.00,
     image: "/assets/swiatlouniwersalne1.jpg",
     images: ["/assets/swiatlouniwersalne1.jpg", "/assets/swiatlouniwersalne2.jpg"],
-    description: "Mała, ale potężna lampka LED o wszechstronnym zastosowaniu. Idealna jako podświetlenie tablicy rejestracyjnej w naszym mocowaniu lub jako dyskretne oświetlenie dodatkowe.",
+    description: "Mała, ale potężna lampka LED o wszechstronnym zastosowaniu.",
     features: [
       "Kompaktowe wymiary",
       "Barwa światła: Zimna biała",
@@ -71,7 +71,7 @@ export const products = [
     stock: 50,
   },
 
-  // --- KATEGORIA: BRELOKI / GADŻETY (Klucz) ---
+  // --- KATEGORIA: BRELOKI ---
   {
     id: 5,
     name: "Brelok 3D / Osłona Kluczyka - Custom Design",
@@ -79,10 +79,10 @@ export const products = [
     price: 49.00,
     image: "/assets/klucz1.jpg",
     images: ["/assets/klucz1.jpg", "/assets/klucz2.jpg", "/assets/klucz3.jpg"],
-    description: "Unikalna nakładka na kluczyk lub brelok wykonany w technologii druku 3D. Personalizowany design, który wyróżni Twoje klucze. Kompatybilny z naszym systemem mocowań.",
+    description: "Unikalna nakładka na kluczyk lub brelok wykonany w technologii druku 3D.",
     features: [
       "Wytrzymały materiał",
-      "Unikalny wzór (dostępne różne kolory na zamówienie)",
+      "Unikalny wzór",
       "Lekki i poręczny",
       "Oczko na kółko do kluczy w zestawie"
     ],
@@ -90,7 +90,7 @@ export const products = [
     featured: true,
   },
 
-  // --- KATEGORIA: ZATYCZKI (Warianty Kolorystyczne) ---
+  // --- KATEGORIA: ZATYCZKI ---
   {
     id: 101,
     name: "Zatyczki Motocyklowe VibeRush - Czarne (Black)",
@@ -98,8 +98,8 @@ export const products = [
     price: 59.00,
     image: "/assets/sczarne.jpg",
     images: ["/assets/sczarne.jpg", "/assets/srozmiary.jpg"],
-    description: "Profesjonalne zatyczki do uszu redukujące szum wiatru, ale pozwalające słyszeć silnik i komunikaty drogowe. Niezbędne w długich trasach. Wersja w klasycznej czerni.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów w pudełku", "Aluminiowe etui w zestawie"],
+    description: "Profesjonalne zatyczki do uszu. Wersja w klasycznej czerni.",
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
     color: "Czarny",
   },
@@ -110,8 +110,8 @@ export const products = [
     price: 59.00,
     image: "/assets/szlote.jpg",
     images: ["/assets/szlote.jpg", "/assets/srozmiary.jpg"],
-    description: "Profesjonalne zatyczki do uszu redukujące szum wiatru. Wersja w eleganckim kolorze złotym.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów w pudełku", "Aluminiowe etui w zestawie"],
+    description: "Profesjonalne zatyczki do uszu. Wersja złota.",
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
     color: "Złoty",
   },
@@ -122,8 +122,8 @@ export const products = [
     price: 59.00,
     image: "/assets/sfioletowe.jpg",
     images: ["/assets/sfioletowe.jpg", "/assets/srozmiary.jpg"],
-    description: "Profesjonalne zatyczki do uszu redukujące szum wiatru. Wersja w unikalnym fiolecie.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów w pudełku", "Aluminiowe etui w zestawie"],
+    description: "Profesjonalne zatyczki do uszu. Wersja fioletowa.",
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
     color: "Fioletowy",
   },
@@ -132,10 +132,11 @@ export const products = [
     name: "Zatyczki Motocyklowe VibeRush - Srebrne (Silver)",
     category: "accessories",
     price: 59.00,
+    // UWAGA: w spisie plików widziałem 'srebrne.jpg', zakładam że jest z małej.
     image: "/assets/srebrne.jpg",
     images: ["/assets/srebrne.jpg", "/assets/srozmiary.jpg"],
-    description: "Profesjonalne zatyczki do uszu redukujące szum wiatru. Wersja w kolorze srebrnym.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów w pudełku", "Aluminiowe etui w zestawie"],
+    description: "Profesjonalne zatyczki do uszu. Wersja srebrna.",
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
     color: "Srebrny",
   },
@@ -146,8 +147,8 @@ export const products = [
     price: 59.00,
     image: "/assets/srozowe.jpg",
     images: ["/assets/srozowe.jpg", "/assets/srozmiary.jpg"],
-    description: "Profesjonalne zatyczki do uszu redukujące szum wiatru. Wersja dla miłośniczek jednośladów w kolorze różowym.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów w pudełku", "Aluminiowe etui w zestawie"],
+    description: "Profesjonalne zatyczki do uszu. Wersja różowa.",
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
     color: "Różowy",
   },
