@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Trash2, ArrowRight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-// Importujemy świeżą bazę produktów, żeby naprawić zdjęcia
 import { products } from "@/data/products";
 
 export default function Cart() {
@@ -20,7 +19,6 @@ export default function Cart() {
   const updateCart = (newCart) => {
     setCart(newCart);
     localStorage.setItem('cart', JSON.stringify(newCart));
-    // Wysyłamy zdarzenie, żeby licznik w nagłówku się odświeżył
     window.dispatchEvent(new Event('cartUpdated'));
   };
 
@@ -39,6 +37,24 @@ export default function Cart() {
       return item;
     });
     updateCart(newCart);
+  };
+
+  // --- NAPRAWA: FUNKCJA PRZEKIEROWANIA ---
+  const handleCheckout = () => {
+    // WAŻNE: Wklej tutaj swój link w cudzysłowie!
+    const paymentLink = "TU_WKLEJ_SWOJ_LINK_DO_PLATNOSCI"; 
+
+    if (paymentLink === "TU_WKLEJ_SWOJ_LINK_DO_PLATNOSCI") {
+       // Zabezpieczenie: jeśli zapomnisz wkleić linku, wyświetli komunikat
+       toast({
+         variant: "destructive",
+         title: "Błąd konfiguracji",
+         description: "Brak linku do płatności w kodzie strony.",
+       });
+    } else {
+       // Przekierowanie
+       window.location.href = paymentLink;
+    }
   };
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -68,15 +84,11 @@ export default function Cart() {
         {/* LISTA PRODUKTÓW */}
         <div className="lg:col-span-2 space-y-6">
           {cart.map((item) => {
-            // FIX ZDJĘĆ: Szukamy produktu w świeżej bazie danych po ID
-            // Dzięki temu mamy pewność, że zdjęcie jest aktualne (np. migacz1.jpg), a nie stare z cache
             const liveProduct = products.find(p => p.id === item.id);
-            // Bierzemy zdjęcie z liveProduct (jeśli istnieje), w przeciwnym razie ze starego itemu
             const imageSrc = liveProduct ? liveProduct.image : (item.image || (item.images && item.images[0]));
 
             return (
               <div key={item.id} className="flex gap-4 p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                {/* ZDJĘCIE */}
                 <div className="w-24 h-24 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
                   {imageSrc ? (
                     <img src={imageSrc} alt={item.name} className="w-full h-full object-contain" />
@@ -85,7 +97,6 @@ export default function Cart() {
                   )}
                 </div>
 
-                {/* INFO */}
                 <div className="flex-grow flex flex-col justify-between">
                   <div className="flex justify-between items-start">
                     <Link to={`/product/${item.id}`} className="font-bold text-gray-900 hover:text-orange-600 line-clamp-2">
@@ -131,7 +142,12 @@ export default function Cart() {
               <span className="text-lg font-bold text-gray-900">Do zapłaty</span>
               <span className="text-2xl font-bold text-orange-600">{total.toFixed(2)} zł</span>
             </div>
-            <Button className="w-full bg-gray-900 hover:bg-orange-600 text-white h-12 text-lg shadow-lg">
+            
+            {/* PRZYCISK Z AKCJĄ ONCLICK */}
+            <Button 
+              onClick={handleCheckout}
+              className="w-full bg-gray-900 hover:bg-orange-600 text-white h-12 text-lg shadow-lg"
+            >
               Przejdź do płatności <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </div>
