@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Logo vri.png
-const LOGO_SRC = "/assets/vri.png"; 
+// TU BYŁ BŁĄD: Plik na dysku to vri.PNG (duże litery rozszerzenia)
+const LOGO_SRC = "/assets/vri.PNG"; 
 
 export const useLanguage = () => ({ 
   t: (key) => key, 
@@ -55,16 +55,15 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-orange-100 selection:text-orange-900 flex flex-col overflow-x-hidden">
       
-      {/* HEADER - NAPRAWIONY (CZYSTY BIAŁY) */}
+      {/* HEADER */}
       <nav
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 border-b ${
           isScrolled 
-            ? "bg-white border-gray-200 py-2 shadow-sm" // USUNIĘTO "backdrop-blur" i "/95"
+            ? "bg-white border-gray-200 py-2 shadow-sm"
             : "bg-white border-transparent py-4"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           <div className="relative flex items-center justify-between h-20"> 
             
             {/* LOGO */}
@@ -80,7 +79,6 @@ export default function Layout({ children, currentPageName }) {
             <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-10">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path || (link.path === '/Home' && location.pathname === '/');
-                
                 return (
                   <Link
                     key={link.name}
@@ -166,7 +164,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </nav>
 
-      {/* TREŚĆ */}
+      {/* Główna treść */}
       <main className="flex-grow pt-28">
         <AnimatePresence mode="wait">
           <motion.div
