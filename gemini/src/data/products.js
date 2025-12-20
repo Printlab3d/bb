@@ -6,9 +6,9 @@ export const products = [
     category: "moto",
     price: 89.00,
     oldPrice: 119.00,
-    // MAŁE LITERY:
-    image: "/assets/kierunkowskaz1.jpg",
-    images: ["/assets/kierunkowskaz1.jpg", "/assets/kierunkowskaz2.jpg"],
+    // ZMIANA: W folderze masz migacz1.jpg
+    image: "/assets/migacz1.jpg",
+    images: ["/assets/migacz1.jpg", "/assets/migacz2.jpg"],
     description: "Nowoczesne kierunkowskazy LED z efektem dynamicznym (pływającym).",
     features: [
       "Technologia LED - wysoka jasność",
@@ -25,8 +25,9 @@ export const products = [
     name: "Lampa LED STOP Płaska (Przyciemniana)",
     category: "moto",
     price: 69.00,
-    image: "/assets/swiatloplaskie1.jpg",
-    images: ["/assets/swiatloplaskie1.jpg", "/assets/swiatloplaskie2.jpg"],
+    // ZMIANA: W folderze masz plaskie1.jpg
+    image: "/assets/plaskie1.jpg",
+    images: ["/assets/plaskie1.jpg", "/assets/plaskie2.jpg"],
     description: "Minimalistyczna, płaska lampa tylna LED z funkcją światła pozycyjnego i STOP.",
     features: [
       "Ultra-płaski profil",
@@ -42,6 +43,7 @@ export const products = [
     name: "Uniwersalne Mocowanie Tablicy Rejestracyjnej 3D",
     category: "moto",
     price: 149.00,
+    // TO BYŁO DOBRZE: mocowanie1.jpg
     image: "/assets/mocowanie1.jpg",
     images: ["/assets/mocowanie1.jpg", "/assets/mocowanie2.jpg", "/assets/mocowanie3.jpg"],
     description: "Wytrzymały uchwyt tablicy rejestracyjnej drukowany w 3D (PETG/ASA).",
@@ -59,8 +61,9 @@ export const products = [
     name: "Lampka Uniwersalna LED (Oświetlenie Tablicy)",
     category: "moto",
     price: 39.00,
-    image: "/assets/swiatlouniwersalne1.jpg",
-    images: ["/assets/swiatlouniwersalne1.jpg", "/assets/swiatlouniwersalne2.jpg"],
+    // ZMIANA: W folderze masz stop1.jpg (chyba to ta lampka)
+    image: "/assets/stop1.jpg",
+    images: ["/assets/stop1.jpg", "/assets/stop2.jpg"],
     description: "Mała, ale potężna lampka LED o wszechstronnym zastosowaniu.",
     features: [
       "Kompaktowe wymiary",
@@ -77,6 +80,7 @@ export const products = [
     name: "Brelok 3D / Osłona Kluczyka - Custom Design",
     category: "keychains",
     price: 49.00,
+    // TO BYŁO DOBRZE: klucz1.jpg
     image: "/assets/klucz1.jpg",
     images: ["/assets/klucz1.jpg", "/assets/klucz2.jpg", "/assets/klucz3.jpg"],
     description: "Unikalna nakładka na kluczyk lub brelok wykonany w technologii druku 3D.",
@@ -96,6 +100,7 @@ export const products = [
     name: "Zatyczki Motocyklowe VibeRush - Czarne (Black)",
     category: "accessories",
     price: 59.00,
+    // TO BYŁO DOBRZE: sczarne.jpg
     image: "/assets/sczarne.jpg",
     images: ["/assets/sczarne.jpg", "/assets/srozmiary.jpg"],
     description: "Profesjonalne zatyczki do uszu. Wersja w klasycznej czerni.",
