@@ -6,6 +6,13 @@ export function AddToCartToast({ product }) {
     window.location.href = `/Cart`;
   };
 
+  // --- NAPRAWA ZDJĘCIA ---
+  // Twoja baza danych używa pola 'image', a nie 'image_url'.
+  // Ta logika sprawdza czy jest 'image', a jak nie to bierze pierwsze z 'images'.
+  const imageSrc = product.image 
+    ? product.image 
+    : (product.images && product.images.length > 0 ? product.images[0] : null);
+
   return (
     <div className="bg-white rounded-3xl shadow-2xl p-4 min-w-[280px] max-w-[400px]">
       <div className="flex items-center gap-3 mb-3">
@@ -18,17 +25,25 @@ export function AddToCartToast({ product }) {
       </div>
       
       <div className="flex items-center gap-3 bg-gray-50 rounded-2xl p-3 mb-3">
-        <img 
-          src={product.image_url} 
-          alt={product.name}
-          className="w-16 h-16 object-contain rounded-xl bg-white flex-shrink-0"
-        />
+        {/* Tu używamy naszej nowej zmiennej imageSrc */}
+        {imageSrc ? (
+          <img 
+            src={imageSrc} 
+            alt={product.name}
+            className="w-16 h-16 object-contain rounded-xl bg-white flex-shrink-0"
+          />
+        ) : (
+          <div className="w-16 h-16 flex items-center justify-center bg-gray-200 rounded-xl text-xs text-gray-500">
+            Brak
+          </div>
+        )}
+        
         <div className="flex-1 min-w-0">
           <p className="font-medium text-sm text-gray-900 mb-1 line-clamp-2">
             {product.name}
           </p>
           <p className="text-base text-orange-600 font-bold">
-            {product.price} zł
+            {product.price.toFixed(2)} zł
           </p>
         </div>
       </div>
