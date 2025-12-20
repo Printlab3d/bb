@@ -1,13 +1,17 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "@/Layout";
+
+// --- TU BYŁ BŁĄD ---
+// Zmieniamy "@/Layout" na "../Layout.jsx"
+// Dzięki temu Netlify dokładnie wie, gdzie szukać pliku
+import Layout from "../Layout.jsx"; 
 
 // Importy Twoich podstron
 import Home from "./Home";
-import Moto from "./Moto"; // Zakładam, że masz te pliki
-import Keychains from "./CustomKeychains"; // Jeśli tak się nazywa plik breloków
-import Okazje from "./Okazje"; // Jeśli masz okazje
-import Cart from "./Cart"; // Koszyk
+import Moto from "./Moto"; 
+import Keychains from "./CustomKeychains"; 
+import Okazje from "./Okazje"; 
+import Cart from "./Cart"; 
 
 // WAŻNE: Tu importujemy ten nowy plik ze szczegółami produktu
 import ProductDetails from "./ProductDetails"; 
@@ -30,8 +34,7 @@ const Pages = () => {
           {/* Koszyk */}
           <Route path="/Cart" element={<Cart />} />
 
-          {/* --- TU JEST NAPRAWA --- */}
-          {/* Ta linijka mówi: jak w adresie jest /product/COŚ, wyświetl ProductDetails */}
+          {/* Strona produktu */}
           <Route path="/product/:id" element={<ProductDetails />} />
           
         </Routes>
