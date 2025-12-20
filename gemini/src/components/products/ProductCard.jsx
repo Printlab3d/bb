@@ -1,107 +1,101 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react"; 
+import React from "react";
 import { Link } from "react-router-dom";
-// USUNĄŁEM IMPORTY OD TOASTA, BO TU SĄ NIEPOTRZEBNE
-// import { useToast } from "@/components/ui/use-toast"; 
-// import { AddToCartToast } from "../ui/add-to-cart-toast";
-import { createPageUrl } from "@/utils"; // Zakładam, że utils masz tutaj, jeśli nie - popraw ścieżkę
+import { ShoppingCart, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function ProductCard({ product, onAddToCart, showHotBadge = false }) {
-  // USUNĄŁEM HOOK useToast() - nie potrzebujemy go tutaj
-  const [translatedName, setTranslatedName] = useState(product.name);
-
-  useEffect(() => {
-    setTranslatedName(product.name);
-  }, [product.name]);
-
-  const handleAddToCart = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // TYLKO WYWOŁUJEMY FUNKCJĘ RODZICA
-    // To rodzic (Home.jsx) zajmie się wyświetleniem powiadomienia
-    onAddToCart(product);
-    
-    // USUNĄŁEM WYWOŁANIE toast() Z TEGO MIEJSCA
-  };
+  // LOGIKA WYBORU ZDJĘCIA:
+  // 1. Sprawdź czy jest pole 'image' (pojedyncze)
+  // 2. Jeśli nie, weź pierwsze z tablicy 'images'
+  // 3. Jeśli nic nie ma, wstaw pusty ciąg (nie wywali błędu, pokaże placeholder)
+  const imageSrc = product.image 
+    ? product.image 
+    : (product.images && product.images.length > 0 ? product.images[0] : "");
 
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.3 }}
-      className="h-full"
-    >
-      <Card className={`bg-white border ${product.name.includes('Zestaw') ? 'border-4 border-gradient-to-r from-orange-500 to-yellow-500 shadow-xl shadow-orange-500/30' : 'border-gray-200'} hover:border-orange-500 transition-all duration-300 overflow-hidden h-full shadow-sm hover:shadow-orange-200/50 flex flex-col group`}>
-        <CardContent className="p-0 flex flex-col h-full">
-          {/* Link do szczegółów */}
-          <Link to={`${createPageUrl("ProductDetails")}?id=${product.id}`}>
-            <div className="relative w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
-              <img 
-                src={product.image_url} 
-                alt={translatedName}
-                className="w-full h-full object-contain p-4 sm:p-6 group-hover:scale-105 transition-transform duration-300"
-              />
-              
-              {product.name.includes('Zestaw') && (
-                <div className="absolute top-3 right-3 bg-gradient-to-r from-orange-600 to-yellow-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                  BUNDLE
-                </div>
-              )}
+    <div className="group relative bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+      
+      {/* LINK DO STRONY PRODUKTU */}
+      <Link to={`/product/${product.id}`} className="block relative aspect-square overflow-hidden bg-gray-50">
+        
+        {/* ODZNAKI (HOT / WYPRZEDAŻ) */}
+        <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
+          {showHotBadge && product.featured && (
+            <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none shadow-sm px-3 py-1">
+              HOT
+            </Badge>
+          )}
+          {product.oldPrice && (
+            <Badge className="bg-red-500 hover:bg-red-600 text-white border-none shadow-sm px-3 py-1">
+              SALE
+            </Badge>
+          )}
+        </div>
 
-              {product.featured && showHotBadge && !product.name.includes('Zestaw') && (
-                <div className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
-                  HOT
-                </div>
-              )}
-
-              {product.stock <= 0 && (
-                <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center">
-                  <span className="text-white font-medium text-sm">Brak w magazynie</span>
-                </div>
-              )}
-            </div>
-          </Link>
-          
-          <div className="p-4 sm:p-5 flex flex-col flex-grow bg-white">
-            <Link to={`${createPageUrl("ProductDetails")}?id=${product.id}`}>
-              <h3 className="text-sm sm:text-base font-medium text-gray-700 group-hover:text-orange-600 mb-3 elegant-text line-clamp-2 transition-colors duration-300 leading-snug">
-                {translatedName}
-              </h3>
-            </Link>
-
-            <div className="mt-auto">
-              <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-2xl sm:text-3xl font-semibold text-gray-800 group-hover:text-orange-600 transition-colors duration-300">
-                  {product.price.toFixed(2)}
-                </span>
-                <span className="text-sm text-gray-500">PLN</span>
-              </div>
-              
-              {product.stock > 0 && (
-                <Button
-                  onClick={handleAddToCart}
-                  className="w-full bg-white hover:bg-orange-600 text-gray-800 hover:text-white border-2 border-orange-500/30 hover:border-orange-600 font-medium text-[10px] xs:text-xs sm:text-sm py-2 sm:py-3 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-orange-500/30 px-2 sm:px-4"
-                >
-                  <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 transition-colors duration-300 flex-shrink-0" />
-                  <span className="truncate leading-tight">Dodaj do koszyka</span>
-                </Button>
-              )}
-              
-              {product.stock === 0 && (
-                <Button
-                  disabled
-                  className="w-full bg-gray-100 text-gray-500 border border-gray-200 text-sm py-3"
-                >
-                  Niedostępny
-                </Button>
-              )}
-            </div>
+        {/* ZDJĘCIE PRODUKTU */}
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={product.name}
+            className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
+            // Zabezpieczenie: gdyby zdjęcie nie działało, ukrywa ikonkę błędu
+            onError={(e) => {
+              e.target.style.display = 'none'; 
+              e.target.parentNode.classList.add('bg-gray-200'); // Dodaje szare tło zamiast zdjęcia
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
+            Brak zdjęcia
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+        )}
+
+        {/* NAKŁADKA Z PRZYCISKIEM SZYBKIEGO PODGLĄDU */}
+        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <Button variant="secondary" size="sm" className="bg-white/90 hover:bg-white text-gray-900 shadow-md translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                <Eye className="w-4 h-4 mr-2" /> Szczegóły
+            </Button>
+        </div>
+      </Link>
+
+      {/* TREŚĆ KARTY */}
+      <div className="p-5 flex flex-col flex-grow">
+        <div className="mb-2">
+            <span className="text-xs font-semibold text-orange-600 uppercase tracking-wider">
+                {product.category === 'moto' ? 'Moto' : product.category === 'keychains' ? 'Breloki' : 'Akcesoria'}
+            </span>
+        </div>
+        
+        <Link to={`/product/${product.id}`} className="block group-hover:text-orange-600 transition-colors">
+          <h3 className="font-bold text-gray-900 line-clamp-2 mb-2 h-12" title={product.name}>
+            {product.name}
+          </h3>
+        </Link>
+
+        {/* CENA */}
+        <div className="mt-auto pt-4 flex items-center justify-between border-t border-gray-50">
+          <div className="flex flex-col">
+            {product.oldPrice && (
+              <span className="text-xs text-gray-400 line-through">
+                {product.oldPrice.toFixed(2)} PLN
+              </span>
+            )}
+            <span className="text-lg font-bold text-gray-900">
+              {product.price.toFixed(2)} <span className="text-xs font-normal text-gray-500">PLN</span>
+            </span>
+          </div>
+
+          <Button 
+            size="icon" 
+            className="rounded-full bg-gray-900 hover:bg-orange-600 text-white shadow-none hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-300"
+            onClick={() => onAddToCart(product)}
+            title="Dodaj do koszyka"
+          >
+            <ShoppingCart className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
