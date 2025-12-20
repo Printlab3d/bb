@@ -1,69 +1,61 @@
-import Stripe from 'stripe';
+// Plik: netlify/functions/create-payment.js
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-export const handler = async (event) => {
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+exports.handler = async (event) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers, body: 'Method Not Allowed' };
+  }
+
+  try {
+    const { cart } = JSON.parse(event.body);
+
+    // Bierzemy URL strony z ustawień Netlify lub domyślnie localhost
+    const site_url = process.env.URL || 'http://localhost:5173';
+
+    const line_items = cart.map((item) => {
+      // Budujemy pełną ścieżkę do zdjęcia, żeby wyświetliło się w Stripe
+      const imageUrl = item.image 
+        ? `${site_url}${item.image}` 
+        : (item.images && item.images[0] ? `${site_url}${item.images[0]}` : '');
+
+      return {
+        price_data: {
+          currency: 'pln',
+          product_data: {
+            name: item.name,
+            images: imageUrl ? [imageUrl] : [],
+          },
+          unit_amount: Math.round(item.price * 100),
+        },
+        quantity: item.quantity,
+      };
+    });
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card', 'blik', 'p24'],
+      line_items,
+      mode: 'payment',
+      success_url: `${site_url}/Home`, // Po sukcesie wraca na główną
+      cancel_url: `${site_url}/Cart`,  // Po anulowaniu wraca do koszyka
+    });
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ url: session.url }),
     };
-
-    if (event.httpMethod === 'OPTIONS') {
-        return { statusCode: 200, headers, body: '' };
-    }
-
-    try {
-        const { items, customerInfo, shipping } = JSON.parse(event.body);
-
-        const lineItems = items.map(item => ({
-            price_data: {
-                currency: 'pln',
-                product_data: {
-                    name: item.name,
-                    images: item.image_url ? [`${process.env.URL}${item.image_url}`] : [],
-                },
-                unit_amount: Math.round(item.price * 100),
-            },
-            quantity: item.quantity,
-        }));
-
-        if (shipping > 0) {
-            lineItems.push({
-                price_data: {
-                    currency: 'pln',
-                    product_data: { name: 'Dostawa' },
-                    unit_amount: Math.round(shipping * 100),
-                },
-                quantity: 1,
-            });
-        }
-
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card', 'blik', 'p24'],
-            line_items: lineItems,
-            mode: 'payment',
-            success_url: `${process.env.URL}/Success`,
-            cancel_url: `${process.env.URL}/Cart`,
-            customer_email: customerInfo.email,
-            metadata: {
-                customer_name: customerInfo.name,
-                delivery_address: customerInfo.address,
-                delivery_city: customerInfo.city,
-            },
-        });
-
-        return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify({ url: session.url }),
-        };
-
-    } catch (error) {
-        return {
-            statusCode: 500,
-            headers,
-            body: JSON.stringify({ error: error.message }),
-        };
-    }
+  } catch (error) {
+    console.error("Stripe Error:", error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: error.message }),
+    };
+  }
 };
