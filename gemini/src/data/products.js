@@ -6,9 +6,9 @@ export const products = [
     category: "moto",
     price: 89.00,
     oldPrice: 119.00,
-    // TU BYŁ BŁĄD: Musi być duże K na początku, bo tak masz w folderze
-    image: "/assets/Kierunkowskaz1.jpg",
-    images: ["/assets/Kierunkowskaz1.jpg", "/assets/kierunkowskaz2.jpg"],
+    // WSZYSTKO MAŁYMI LITERAMI:
+    image: "/assets/kierunkowskaz1.jpg",
+    images: ["/assets/kierunkowskaz1.jpg", "/assets/kierunkowskaz2.jpg"],
     description: "Nowoczesne kierunkowskazy LED z efektem dynamicznym (pływającym).",
     features: [
       "Technologia LED - wysoka jasność",
@@ -132,7 +132,6 @@ export const products = [
     name: "Zatyczki Motocyklowe VibeRush - Srebrne (Silver)",
     category: "accessories",
     price: 59.00,
-    // UWAGA: w spisie plików widziałem 'srebrne.jpg', zakładam że jest z małej.
     image: "/assets/srebrne.jpg",
     images: ["/assets/srebrne.jpg", "/assets/srozmiary.jpg"],
     description: "Profesjonalne zatyczki do uszu. Wersja srebrna.",
