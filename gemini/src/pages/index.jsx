@@ -1,25 +1,21 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// --- TU BYŁ BŁĄD ---
-// Zmieniamy "@/Layout" na "../Layout.jsx"
-// Dzięki temu Netlify dokładnie wie, gdzie szukać pliku
-import Layout from "../Layout.jsx"; 
+// NAPRAWA: Zmieniamy "../Layout.jsx" na "./Layout.jsx"
+// (kropka oznacza "ten sam folder", bo plik jest obok)
+import Layout from "./Layout.jsx"; 
 
-// Importy Twoich podstron
+// Importy podstron (są w tym samym folderze, więc ./ jest ok)
 import Home from "./Home";
 import Moto from "./Moto"; 
 import Keychains from "./CustomKeychains"; 
 import Okazje from "./Okazje"; 
 import Cart from "./Cart"; 
-
-// WAŻNE: Tu importujemy ten nowy plik ze szczegółami produktu
 import ProductDetails from "./ProductDetails"; 
 
 const Pages = () => {
   return (
     <Router>
-      {/* Layout otacza wszystko, żeby nagłówek był zawsze widoczny */}
       <Layout>
         <Routes>
           {/* Strona główna */}
