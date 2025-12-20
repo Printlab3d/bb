@@ -1,480 +1,141 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ShoppingCart, Trash2, Plus, Minus, CreditCard, Package, ArrowLeft, TruckIcon, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import { Trash2, ArrowRight, ShoppingBag } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+// Importujemy świeżą bazę produktów, żeby naprawić zdjęcia
+import { products } from "@/data/products";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
-  
-  const [formData, setFormData] = useState({
-    customer_name: "",
-    customer_email: "",
-    customer_phone: "",
-    delivery_address: "",
-    delivery_city: "",
-    delivery_postal: "",
-    notes: ""
-  });
+  const { toast } = useToast();
 
+  // Ładowanie koszyka
   useEffect(() => {
-    const loadCart = () => {
-      const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
-      setCart(savedCart);
-    };
-    
-    loadCart();
-    window.addEventListener('cartUpdated', loadCart);
-    return () => window.removeEventListener('cartUpdated', loadCart);
+    const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    setCart(savedCart);
   }, []);
 
-  const updateQuantity = (productId, delta) => {
-    const updatedCart = cart.map(item => {
+  // Aktualizacja LocalStorage po zmianach
+  const updateCart = (newCart) => {
+    setCart(newCart);
+    localStorage.setItem('cart', JSON.stringify(newCart));
+    // Wysyłamy zdarzenie, żeby licznik w nagłówku się odświeżył
+    window.dispatchEvent(new Event('cartUpdated'));
+  };
+
+  const removeFromCart = (productId) => {
+    const newCart = cart.filter(item => item.id !== productId);
+    updateCart(newCart);
+    toast({ description: "Produkt usunięty z koszyka" });
+  };
+
+  const updateQuantity = (productId, change) => {
+    const newCart = cart.map(item => {
       if (item.id === productId) {
-        const newQuantity = Math.max(1, Math.min(item.stock, item.quantity + delta));
+        const newQuantity = Math.max(1, item.quantity + change);
         return { ...item, quantity: newQuantity };
       }
       return item;
     });
-    setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event('cartUpdated'));
+    updateCart(newCart);
   };
 
-  const removeItem = (productId) => {
-    const updatedCart = cart.filter(item => item.id !== productId);
-    setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event('cartUpdated'));
-  };
+  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const freeShippingThreshold = 150;
-  const shippingCost = subtotal >= freeShippingThreshold ? 0 : 15;
-  const total = subtotal + shippingCost;
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleCheckout = async () => {
-    if (!showCheckoutForm) {
-      setShowCheckoutForm(true);
-      return;
-    }
-
-    if (!formData.customer_name || !formData.customer_email || !formData.customer_phone || 
-        !formData.delivery_address || !formData.delivery_city || !formData.delivery_postal) {
-      alert("Wypełnij wszystkie wymagane pola!");
-      return;
-    }
-
-    setIsProcessing(true);
-
-    try {
-      // TU JEST ZMIANA - celujemy w nowy plik payment.js
-      const response = await fetch('/.netlify/functions/payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items: cart,
-          customerInfo: {
-            name: formData.customer_name,
-            email: formData.customer_email,
-            phone: formData.customer_phone,
-            address: formData.delivery_address,
-            city: formData.delivery_city,
-            postal: formData.delivery_postal,
-            notes: formData.notes,
-          },
-          shipping: shippingCost,
-        }),
-      });
-
-      if (!response.ok) {
-        // Spróbujmy odczytać błąd z serwera
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error || 'Błąd połączenia z serwerem płatności');
-      }
-
-      const { url } = await response.json();
-      window.location.href = url; 
-
-    } catch (error) {
-      console.error("Błąd podczas tworzenia płatności:", error);
-      alert(`Wystąpił błąd: ${error.message}`);
-      setIsProcessing(false);
-    }
-  };
+  if (cart.length === 0) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+        <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mb-6 text-orange-600">
+          <ShoppingBag className="w-10 h-10" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Twój koszyk jest pusty</h2>
+        <p className="text-gray-500 mb-8">Wygląda na to, że nie dodałeś jeszcze żadnych produktów.</p>
+        <Link to="/Moto">
+          <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white">
+            Wróć do sklepu
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <ShoppingCart className="w-10 h-10 sm:w-12 sm:h-12 text-red-600 mx-auto mb-3 sm:mb-4" />
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-black mb-2 elegant-text">
-              Koszyk
-            </h1>
-            <p className="text-sm sm:text-base text-gray-600 elegant-text">
-              {cart.length === 0 ? "Twój koszyk jest pusty" : `${cart.length} ${cart.length === 1 ? 'produkt' : 'produktów'} w koszyku`}
-            </p>
-          </motion.div>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Twój Koszyk</h1>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {cart.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-12 sm:py-20"
-          >
-            <Package className="w-16 h-16 sm:w-24 sm:h-24 text-gray-400 mx-auto mb-4 sm:mb-6" />
-            <h2 className="text-xl sm:text-2xl font-light text-black mb-3 sm:mb-4 elegant-text">
-              Twój koszyk jest pusty
-            </h2>
-            <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 elegant-text">
-              Dodaj produkty do koszyka, aby kontynuować zakupy
-            </p>
-            <Link to={createPageUrl("Moto")}>
-              <Button className="bg-black hover:bg-red-600 text-white border-none font-medium elegant-text transition-colors duration-300">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Powrót do sklepu
-              </Button>
-            </Link>
-          </motion.div>
-        ) : (
-          <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-3 sm:space-y-4">
-              {cart.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="bg-white border border-gray-200 hover:border-gray-300 transition-colors">
-                    <CardContent className="p-3 sm:p-4 lg:p-6">
-                      <div className="flex gap-3 sm:gap-4 lg:gap-6">
-                        {/* Product Image */}
-                        <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
-                          <img 
-                            src={item.image_url} 
-                            alt={item.name}
-                            className="w-full h-full object-contain p-1 sm:p-2"
-                          />
-                        </div>
-                        
-                        {/* Product Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex justify-between gap-2 mb-2">
-                            <h3 className="text-sm sm:text-base lg:text-xl font-medium text-black elegant-text line-clamp-2">
-                              {item.name}
-                            </h3>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeItem(item.id)}
-                              className="text-gray-400 hover:text-red-600 hover:bg-red-50 flex-shrink-0 h-8 w-8"
-                            >
-                              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                            </Button>
-                          </div>
-                          
-                          {item.description && (
-                            <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 line-clamp-2">
-                              {item.description.substring(0, 100)}
-                            </p>
-                          )}
-                          
-                          <div className="flex items-center justify-between flex-wrap gap-3">
-                            {/* Quantity Controls */}
-                            <div className="flex items-center gap-2 sm:gap-3">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => updateQuantity(item.id, -1)}
-                                className="h-7 w-7 sm:h-8 sm:w-8 border-gray-300 hover:border-red-600 hover:bg-red-50 hover:text-red-600"
-                              >
-                                <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
-                              </Button>
-                              <span className="text-black font-medium w-6 sm:w-8 text-center text-sm sm:text-base">
-                                {item.quantity}
-                              </span>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => updateQuantity(item.id, 1)}
-                                className="h-7 w-7 sm:h-8 sm:w-8 border-gray-300 hover:border-red-600 hover:bg-red-50 hover:text-red-600"
-                                disabled={item.quantity >= item.stock}
-                              >
-                                <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-                              </Button>
-                            </div>
-                            
-                            {/* Price */}
-                            <div className="text-right">
-                              <p className="text-lg sm:text-xl lg:text-2xl font-light text-black">
-                                {(item.price * item.quantity).toFixed(2)} <span className="text-sm sm:text-base text-gray-500">zł</span>
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {item.price} zł / szt.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* LISTA PRODUKTÓW */}
+        <div className="lg:col-span-2 space-y-6">
+          {cart.map((item) => {
+            // FIX ZDJĘĆ: Szukamy produktu w świeżej bazie danych po ID
+            // Dzięki temu mamy pewność, że zdjęcie jest aktualne (np. migacz1.jpg), a nie stare z cache
+            const liveProduct = products.find(p => p.id === item.id);
+            // Bierzemy zdjęcie z liveProduct (jeśli istnieje), w przeciwnym razie ze starego itemu
+            const imageSrc = liveProduct ? liveProduct.image : (item.image || (item.images && item.images[0]));
 
-            {/* Summary Sidebar */}
-            <div className="lg:col-span-1">
-              <Card className="bg-white border border-gray-200 sticky top-4">
-                <CardHeader className="border-b border-gray-200 p-4 sm:p-6">
-                  <CardTitle className="text-base sm:text-lg text-black font-medium elegant-text">
-                    {showCheckoutForm ? "Dane do wysyłki" : "Podsumowanie"}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-                  {!showCheckoutForm ? (
-                    <>
-                      {/* Free Shipping Progress */}
-                      {remainingForFreeShipping > 0 && (
-                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 sm:p-4">
-                          <div className="flex items-start gap-2 sm:gap-3">
-                            <TruckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600 flex-shrink-0 mt-0.5" />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs sm:text-sm font-medium text-orange-900 mb-1">
-                                Dodaj jeszcze {remainingForFreeShipping.toFixed(2)} zł
-                              </p>
-                              <p className="text-xs text-orange-700">
-                                aby otrzymać darmową dostawę
-                              </p>
-                            </div>
-                          </div>
-                          <div className="mt-2 sm:mt-3 bg-orange-200 rounded-full h-2 overflow-hidden">
-                            <div 
-                              className="bg-orange-600 h-full transition-all duration-500"
-                              style={{ width: `${Math.min((subtotal / freeShippingThreshold) * 100, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Price Breakdown */}
-                      <div className="space-y-2 sm:space-y-3">
-                        <div className="flex justify-between text-sm sm:text-base text-gray-600">
-                          <span className="elegant-text">Produkty ({cart.length})</span>
-                          <span>{subtotal.toFixed(2)} zł</span>
-                        </div>
-                        <div className="flex justify-between text-sm sm:text-base text-gray-600">
-                          <span className="elegant-text">Dostawa</span>
-                          {shippingCost === 0 ? (
-                            <span className="text-green-600 font-medium">Darmowa</span>
-                          ) : (
-                            <span>{shippingCost.toFixed(2)} zł</span>
-                          )}
-                        </div>
-                        <div className="border-t border-gray-200 pt-2 sm:pt-3">
-                          <div className="flex justify-between text-xl sm:text-2xl font-light text-black">
-                            <span className="elegant-text">Razem</span>
-                            <span>{total.toFixed(2)} <span className="text-sm sm:text-base text-gray-500">zł</span></span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Checkout Button */}
-                      <Button 
-                        onClick={handleCheckout}
-                        disabled={isProcessing}
-                        className="w-full h-11 sm:h-12 bg-black hover:bg-orange-600 text-white border-none font-medium elegant-text text-sm sm:text-base transition-colors duration-300"
-                      >
-                        <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                        Przejdź do płatności
-                      </Button>
-
-                      {/* Security Info */}
-                      <div className="text-center space-y-2 pt-3 sm:pt-4 border-t border-gray-200">
-                        <p className="text-xs sm:text-sm text-gray-600 elegant-text flex items-center justify-center gap-2">
-                          🔒 Bezpieczne płatności przez Stripe
-                        </p>
-                        <p className="text-xs sm:text-sm text-gray-600 elegant-text">
-                          📦 Wysyłka w ciągu 48h
-                        </p>
-                      </div>
-                    </>
+            return (
+              <div key={item.id} className="flex gap-4 p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                {/* ZDJĘCIE */}
+                <div className="w-24 h-24 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
+                  {imageSrc ? (
+                    <img src={imageSrc} alt={item.name} className="w-full h-full object-contain" />
                   ) : (
-                    <>
-                      {/* Checkout Form */}
-                      <div className="space-y-3 sm:space-y-4">
-                        <div>
-                          <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 block">
-                            Imię i nazwisko *
-                          </label>
-                          <Input
-                            name="customer_name"
-                            value={formData.customer_name}
-                            onChange={handleInputChange}
-                            placeholder="Jan Kowalski"
-                            required
-                            className="h-10 sm:h-11 text-sm sm:text-base"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 block">
-                            Email *
-                          </label>
-                          <Input
-                            name="customer_email"
-                            type="email"
-                            value={formData.customer_email}
-                            onChange={handleInputChange}
-                            placeholder="jan@example.com"
-                            required
-                            className="h-10 sm:h-11 text-sm sm:text-base"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 block">
-                            Telefon *
-                          </label>
-                          <Input
-                            name="customer_phone"
-                            type="tel"
-                            value={formData.customer_phone}
-                            onChange={handleInputChange}
-                            placeholder="+48 123 456 789"
-                            required
-                            className="h-10 sm:h-11 text-sm sm:text-base"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 block">
-                            Adres dostawy *
-                          </label>
-                          <Input
-                            name="delivery_address"
-                            value={formData.delivery_address}
-                            onChange={handleInputChange}
-                            placeholder="ul. Przykładowa 123/45"
-                            required
-                            className="h-10 sm:h-11 text-sm sm:text-base"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                          <div>
-                            <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 block">
-                              Kod pocztowy *
-                            </label>
-                            <Input
-                              name="delivery_postal"
-                              value={formData.delivery_postal}
-                              onChange={handleInputChange}
-                              placeholder="00-000"
-                              required
-                              className="h-10 sm:h-11 text-sm sm:text-base"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 block">
-                              Miasto *
-                            </label>
-                            <Input
-                              name="delivery_city"
-                              value={formData.delivery_city}
-                              onChange={handleInputChange}
-                              placeholder="Warszawa"
-                              required
-                              className="h-10 sm:h-11 text-sm sm:text-base"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 block">
-                            Uwagi do zamówienia (opcjonalnie)
-                          </label>
-                          <Textarea
-                            name="notes"
-                            value={formData.notes}
-                            onChange={handleInputChange}
-                            placeholder="Dodatkowe informacje..."
-                            rows={3}
-                            className="text-sm sm:text-base"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Submit Form */}
-                      <div className="border-t border-gray-200 pt-3 sm:pt-4">
-                        <div className="flex justify-between text-lg sm:text-xl font-medium text-black mb-3 sm:mb-4">
-                          <span>Do zapłaty:</span>
-                          <span>{total.toFixed(2)} zł</span>
-                        </div>
-
-                        <div className="space-y-2 sm:space-y-3">
-                          <Button 
-                            onClick={handleCheckout}
-                            disabled={isProcessing}
-                            className="w-full h-11 sm:h-12 bg-black hover:bg-orange-600 text-white border-none font-medium elegant-text text-sm sm:text-base transition-colors duration-300"
-                          >
-                            {isProcessing ? (
-                              "Przekierowanie do płatności..."
-                            ) : (
-                              <>
-                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                                Zapłać kartą / BLIK
-                              </>
-                            )}
-                          </Button>
-
-                          <Button 
-                            onClick={() => setShowCheckoutForm(false)}
-                            variant="outline"
-                            className="w-full h-10 sm:h-11 text-sm sm:text-base"
-                          >
-                            Powrót do koszyka
-                          </Button>
-                        </div>
-
-                        <p className="text-xs text-gray-500 text-center">
-                          Klikając "Zapłać" zostaniesz przekierowany do bezpiecznej strony płatności Stripe
-                        </p>
-                      </div>
-                    </>
+                    <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">Brak foto</div>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+
+                {/* INFO */}
+                <div className="flex-grow flex flex-col justify-between">
+                  <div className="flex justify-between items-start">
+                    <Link to={`/product/${item.id}`} className="font-bold text-gray-900 hover:text-orange-600 line-clamp-2">
+                      {item.name}
+                    </Link>
+                    <button onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-red-500 transition-colors p-1">
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                  
+                  <div className="flex justify-between items-end mt-2">
+                    <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1">
+                      <button onClick={() => updateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-md transition-colors font-bold text-gray-600">-</button>
+                      <span className="text-sm font-semibold w-4 text-center">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-md transition-colors font-bold text-gray-600">+</button>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-lg text-gray-900">{(item.price * item.quantity).toFixed(2)} zł</p>
+                      {item.quantity > 1 && <p className="text-xs text-gray-500">{item.price.toFixed(2)} zł / szt.</p>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* PODSUMOWANIE */}
+        <div className="lg:col-span-1">
+          <div className="bg-gray-50 p-6 rounded-2xl sticky top-24">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Podsumowanie</h3>
+            <div className="space-y-3 text-sm text-gray-600 mb-6 border-b border-gray-200 pb-6">
+              <div className="flex justify-between">
+                <span>Wartość produktów</span>
+                <span>{total.toFixed(2)} zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Dostawa</span>
+                <span className="text-green-600 font-medium">Darmowa</span>
+              </div>
             </div>
+            <div className="flex justify-between items-center mb-8">
+              <span className="text-lg font-bold text-gray-900">Do zapłaty</span>
+              <span className="text-2xl font-bold text-orange-600">{total.toFixed(2)} zł</span>
+            </div>
+            <Button className="w-full bg-gray-900 hover:bg-orange-600 text-white h-12 text-lg shadow-lg">
+              Przejdź do płatności <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
