@@ -6,9 +6,9 @@ export const products = [
     category: "moto",
     price: 89.00,
     oldPrice: 119.00,
-    // ZMIANA: W folderze masz migacz1.jpg
-    image: "/assets/migacz1.jpg",
-    images: ["/assets/migacz1.jpg", "/assets/migacz2.jpg"],
+    // ZMIANA NA PNG
+    image: "/assets/migacz1.png",
+    images: ["/assets/migacz1.png", "/assets/migacz2.png"],
     description: "Nowoczesne kierunkowskazy LED z efektem dynamicznym (pływającym).",
     features: [
       "Technologia LED - wysoka jasność",
@@ -25,9 +25,9 @@ export const products = [
     name: "Lampa LED STOP Płaska (Przyciemniana)",
     category: "moto",
     price: 69.00,
-    // ZMIANA: W folderze masz plaskie1.jpg
-    image: "/assets/plaskie1.jpg",
-    images: ["/assets/plaskie1.jpg", "/assets/plaskie2.jpg"],
+    // ZMIANA NA PNG
+    image: "/assets/plaskie1.png",
+    images: ["/assets/plaskie1.png", "/assets/plaskie2.png"],
     description: "Minimalistyczna, płaska lampa tylna LED z funkcją światła pozycyjnego i STOP.",
     features: [
       "Ultra-płaski profil",
@@ -43,7 +43,7 @@ export const products = [
     name: "Uniwersalne Mocowanie Tablicy Rejestracyjnej 3D",
     category: "moto",
     price: 149.00,
-    // TO BYŁO DOBRZE: mocowanie1.jpg
+    // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/mocowanie1.jpg",
     images: ["/assets/mocowanie1.jpg", "/assets/mocowanie2.jpg", "/assets/mocowanie3.jpg"],
     description: "Wytrzymały uchwyt tablicy rejestracyjnej drukowany w 3D (PETG/ASA).",
@@ -61,9 +61,9 @@ export const products = [
     name: "Lampka Uniwersalna LED (Oświetlenie Tablicy)",
     category: "moto",
     price: 39.00,
-    // ZMIANA: W folderze masz stop1.jpg (chyba to ta lampka)
-    image: "/assets/stop1.jpg",
-    images: ["/assets/stop1.jpg", "/assets/stop2.jpg"],
+    // ZMIANA NA PNG
+    image: "/assets/stop1.png",
+    images: ["/assets/stop1.png", "/assets/stop2.png"],
     description: "Mała, ale potężna lampka LED o wszechstronnym zastosowaniu.",
     features: [
       "Kompaktowe wymiary",
@@ -80,7 +80,7 @@ export const products = [
     name: "Brelok 3D / Osłona Kluczyka - Custom Design",
     category: "keychains",
     price: 49.00,
-    // TO BYŁO DOBRZE: klucz1.jpg
+    // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/klucz1.jpg",
     images: ["/assets/klucz1.jpg", "/assets/klucz2.jpg", "/assets/klucz3.jpg"],
     description: "Unikalna nakładka na kluczyk lub brelok wykonany w technologii druku 3D.",
@@ -94,15 +94,15 @@ export const products = [
     featured: true,
   },
 
-  // --- KATEGORIA: ZATYCZKI ---
+  // --- KATEGORIA: ZATYCZKI (WSZYSTKIE NA PNG) ---
   {
     id: 101,
     name: "Zatyczki Motocyklowe VibeRush - Czarne (Black)",
     category: "accessories",
     price: 59.00,
-    // TO BYŁO DOBRZE: sczarne.jpg
-    image: "/assets/sczarne.jpg",
-    images: ["/assets/sczarne.jpg", "/assets/srozmiary.jpg"],
+    // ZMIANA NA PNG
+    image: "/assets/sczarne.png",
+    images: ["/assets/sczarne.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja w klasycznej czerni.",
     features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
@@ -113,8 +113,9 @@ export const products = [
     name: "Zatyczki Motocyklowe VibeRush - Złote (Gold)",
     category: "accessories",
     price: 59.00,
-    image: "/assets/szlote.jpg",
-    images: ["/assets/szlote.jpg", "/assets/srozmiary.jpg"],
+    // ZMIANA NA PNG
+    image: "/assets/szlote.png",
+    images: ["/assets/szlote.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja złota.",
     features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
@@ -125,8 +126,9 @@ export const products = [
     name: "Zatyczki Motocyklowe VibeRush - Fioletowe (Purple)",
     category: "accessories",
     price: 59.00,
-    image: "/assets/sfioletowe.jpg",
-    images: ["/assets/sfioletowe.jpg", "/assets/srozmiary.jpg"],
+    // ZMIANA NA PNG
+    image: "/assets/sfioletowe.png",
+    images: ["/assets/sfioletowe.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja fioletowa.",
     features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
@@ -137,8 +139,9 @@ export const products = [
     name: "Zatyczki Motocyklowe VibeRush - Srebrne (Silver)",
     category: "accessories",
     price: 59.00,
-    image: "/assets/srebrne.jpg",
-    images: ["/assets/srebrne.jpg", "/assets/srozmiary.jpg"],
+    // ZMIANA NA PNG
+    image: "/assets/srebrne.png",
+    images: ["/assets/srebrne.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja srebrna.",
     features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
@@ -149,8 +152,9 @@ export const products = [
     name: "Zatyczki Motocyklowe VibeRush - Różowe (Pink)",
     category: "accessories",
     price: 59.00,
-    image: "/assets/srozowe.jpg",
-    images: ["/assets/srozowe.jpg", "/assets/srozmiary.jpg"],
+    // ZMIANA NA PNG
+    image: "/assets/srozowe.png",
+    images: ["/assets/srozowe.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja różowa.",
     features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
     stock: 100,
