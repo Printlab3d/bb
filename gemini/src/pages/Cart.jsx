@@ -38,14 +38,13 @@ export default function Cart() {
     updateCart(newCart);
   };
 
-  // --- TO JEST TA FUNKCJA, KTÓRA DZIAŁAŁA WCZEŚNIEJ ---
-  // Łączy się z Twoim backendem na Netlify
+  // --- NAPRAWA: POPRAWNY ADRES URL DO PLIKU PAYMENTS ---
   const handleCheckout = async () => {
     setIsLoading(true);
     
     try {
-      // Próba połączenia z funkcją Netlify
-      const response = await fetch('/.netlify/functions/create-payment', {
+      // ZMIANA: Teraz łączymy się z "payments", bo tak nazwałeś plik
+      const response = await fetch('/.netlify/functions/payments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +59,6 @@ export default function Cart() {
       const data = await response.json();
 
       if (data.url) {
-        // Sukces - przekierowanie do Stripe
         window.location.href = data.url;
       } else {
         throw new Error("Brak URL płatności");
@@ -71,7 +69,7 @@ export default function Cart() {
       toast({
         variant: "destructive",
         title: "Błąd połączenia",
-        description: "Upewnij się, że plik create-payment.js istnieje w folderze netlify/functions i biblioteka 'stripe' jest zainstalowana.",
+        description: "Sprawdź czy plik 'payments.js' jest w folderze netlify/functions.",
       });
       setIsLoading(false);
     }
@@ -102,7 +100,6 @@ export default function Cart() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-6">
           {cart.map((item) => {
-            // FIX ZDJĘĆ: Pobieranie aktualnego zdjęcia z bazy
             const liveProduct = products.find(p => p.id === item.id);
             const imageSrc = liveProduct ? liveProduct.image : (item.image || (item.images && item.images[0]));
 
