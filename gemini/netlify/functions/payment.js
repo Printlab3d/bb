@@ -1,5 +1,3 @@
-// Plik: netlify/functions/create-payment.js
-
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
@@ -14,12 +12,11 @@ exports.handler = async (event) => {
 
   try {
     const { cart } = JSON.parse(event.body);
-
-    // Bierzemy URL strony z ustawień Netlify lub domyślnie localhost
+    // URL twojej strony (pobierany z Netlify lub localhost)
     const site_url = process.env.URL || 'http://localhost:5173';
 
     const line_items = cart.map((item) => {
-      // Budujemy pełną ścieżkę do zdjęcia, żeby wyświetliło się w Stripe
+      // Budowanie pełnego linku do zdjęcia
       const imageUrl = item.image 
         ? `${site_url}${item.image}` 
         : (item.images && item.images[0] ? `${site_url}${item.images[0]}` : '');
@@ -41,8 +38,8 @@ exports.handler = async (event) => {
       payment_method_types: ['card', 'blik', 'p24'],
       line_items,
       mode: 'payment',
-      success_url: `${site_url}/Home`, // Po sukcesie wraca na główną
-      cancel_url: `${site_url}/Cart`,  // Po anulowaniu wraca do koszyka
+      success_url: `${site_url}/Home`,
+      cancel_url: `${site_url}/Cart`,
     });
 
     return {
@@ -51,7 +48,6 @@ exports.handler = async (event) => {
       body: JSON.stringify({ url: session.url }),
     };
   } catch (error) {
-    console.error("Stripe Error:", error);
     return {
       statusCode: 500,
       headers,
