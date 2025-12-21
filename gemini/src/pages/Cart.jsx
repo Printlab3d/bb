@@ -7,7 +7,7 @@ import { products } from "@/data/products";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Blokada przycisku podczas ładowania
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -38,31 +38,41 @@ export default function Cart() {
     updateCart(newCart);
   };
 
-  // --- FUNKCJA PŁATNOŚCI ŁĄCZĄCA SIĘ Z NETLIFY ---
+  // --- TO JEST TA FUNKCJA, KTÓRA DZIAŁAŁA WCZEŚNIEJ ---
+  // Łączy się z Twoim backendem na Netlify
   const handleCheckout = async () => {
     setIsLoading(true);
-    toast({ title: "Przetwarzanie...", description: "Łączenie z bramką płatności." });
-
+    
     try {
-      // Wywołujemy funkcję backendową z Kroku 1
+      // Próba połączenia z funkcją Netlify
       const response = await fetch('/.netlify/functions/create-payment', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ cart }),
       });
+
+      if (!response.ok) {
+        throw new Error(`Błąd serwera: ${response.status}`);
+      }
 
       const data = await response.json();
 
       if (data.url) {
-        window.location.href = data.url; // Przekierowanie do Stripe
+        // Sukces - przekierowanie do Stripe
+        window.location.href = data.url;
       } else {
-        console.error("Błąd zwrotny:", data);
-        toast({ variant: "destructive", title: "Błąd", description: "Nie udało się utworzyć płatności." });
-        setIsLoading(false);
+        throw new Error("Brak URL płatności");
       }
+      
     } catch (error) {
-      console.error("Błąd połączenia:", error);
-      toast({ variant: "destructive", title: "Błąd", description: "Problem z połączeniem z serwerem." });
+      console.error("Checkout Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Błąd połączenia",
+        description: "Upewnij się, że plik create-payment.js istnieje w folderze netlify/functions i biblioteka 'stripe' jest zainstalowana.",
+      });
       setIsLoading(false);
     }
   };
@@ -77,7 +87,9 @@ export default function Cart() {
         </div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Twój koszyk jest pusty</h2>
         <Link to="/Moto">
-          <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white">Wróć do sklepu</Button>
+          <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white">
+            Wróć do sklepu
+          </Button>
         </Link>
       </div>
     );
@@ -90,7 +102,7 @@ export default function Cart() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-6">
           {cart.map((item) => {
-            // FIX ZDJĘĆ - to co naprawialiśmy wcześniej
+            // FIX ZDJĘĆ: Pobieranie aktualnego zdjęcia z bazy
             const liveProduct = products.find(p => p.id === item.id);
             const imageSrc = liveProduct ? liveProduct.image : (item.image || (item.images && item.images[0]));
 
@@ -103,6 +115,7 @@ export default function Cart() {
                     <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">Brak foto</div>
                   )}
                 </div>
+
                 <div className="flex-grow flex flex-col justify-between">
                   <div className="flex justify-between items-start">
                     <Link to={`/product/${item.id}`} className="font-bold text-gray-900 hover:text-orange-600 line-clamp-2">
@@ -112,11 +125,12 @@ export default function Cart() {
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
+                  
                   <div className="flex justify-between items-end mt-2">
                     <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1">
-                      <button onClick={() => updateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center font-bold text-gray-600">-</button>
+                      <button onClick={() => updateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-md transition-colors font-bold text-gray-600">-</button>
                       <span className="text-sm font-semibold w-4 text-center">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center font-bold text-gray-600">+</button>
+                      <button onClick={() => updateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-md transition-colors font-bold text-gray-600">+</button>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-lg text-gray-900">{(item.price * item.quantity).toFixed(2)} zł</p>
@@ -132,21 +146,26 @@ export default function Cart() {
           <div className="bg-gray-50 p-6 rounded-2xl sticky top-24">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Podsumowanie</h3>
             <div className="space-y-3 text-sm text-gray-600 mb-6 border-b border-gray-200 pb-6">
-              <div className="flex justify-between"><span>Wartość</span><span>{total.toFixed(2)} zł</span></div>
-              <div className="flex justify-between"><span>Dostawa</span><span className="text-green-600 font-medium">Darmowa</span></div>
+              <div className="flex justify-between">
+                <span>Wartość produktów</span>
+                <span>{total.toFixed(2)} zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Dostawa</span>
+                <span className="text-green-600 font-medium">Darmowa</span>
+              </div>
             </div>
             <div className="flex justify-between items-center mb-8">
               <span className="text-lg font-bold text-gray-900">Do zapłaty</span>
               <span className="text-2xl font-bold text-orange-600">{total.toFixed(2)} zł</span>
             </div>
             
-            {/* PRZYCISK PŁATNOŚCI */}
             <Button 
               onClick={handleCheckout}
               disabled={isLoading}
-              className="w-full bg-gray-900 hover:bg-orange-600 text-white h-12 text-lg shadow-lg disabled:opacity-50"
+              className="w-full bg-gray-900 hover:bg-orange-600 text-white h-12 text-lg shadow-lg"
             >
-              {isLoading ? "Ładowanie..." : (
+              {isLoading ? "Przetwarzanie..." : (
                 <>Przejdź do płatności <ArrowRight className="ml-2 w-5 h-5" /></>
               )}
             </Button>
