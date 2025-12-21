@@ -38,13 +38,13 @@ export default function Cart() {
     updateCart(newCart);
   };
 
-  // --- NAPRAWA: POPRAWNY ADRES URL DO PLIKU PAYMENTS ---
+  // --- POPRAWKA ADRESU ---
   const handleCheckout = async () => {
     setIsLoading(true);
     
     try {
-      // ZMIANA: Teraz łączymy się z "payments", bo tak nazwałeś plik
-      const response = await fetch('/.netlify/functions/payments', {
+      // ZMIANA: Usunąłem "s" z końca. Teraz łączy się z plikiem payment.js
+      const response = await fetch('/.netlify/functions/payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export default function Cart() {
       toast({
         variant: "destructive",
         title: "Błąd połączenia",
-        description: "Sprawdź czy plik 'payments.js' jest w folderze netlify/functions.",
+        description: "Nie znaleziono pliku payment.js w folderze funkcji.",
       });
       setIsLoading(false);
     }
