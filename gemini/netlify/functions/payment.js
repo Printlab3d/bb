@@ -12,11 +12,9 @@ exports.handler = async (event) => {
 
   try {
     const { cart } = JSON.parse(event.body);
-    // URL twojej strony (pobierany z Netlify lub localhost)
     const site_url = process.env.URL || 'http://localhost:5173';
 
     const line_items = cart.map((item) => {
-      // Budowanie pełnego linku do zdjęcia
       const imageUrl = item.image 
         ? `${site_url}${item.image}` 
         : (item.images && item.images[0] ? `${site_url}${item.images[0]}` : '');
