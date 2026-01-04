@@ -99,6 +99,24 @@ export const products = [
     ],
     stock: 30,
   },
+    {
+    id: 6,
+    name: "Zestaw Homologacyjny do motocykla",
+    category: "moto",
+    price: 290.00,
+    oldPrice: 388.00,
+    // WYJĄTEK: ZOSTAJE JPG
+    image: "/assets/mocowanie1.jpg",
+    images: ["/assets/mocowanie1.jpg", "/assets/mocowanie2.jpg", "/assets/mocowanie3.jpg"],
+    description: "Zestaw promocyjny, który posiada:",
+    features: [
+      "4 przyciemniane minimalistyczne kierunkowskazy ",
+      "Kompletne mocowanie tablicy z uchwytem",
+      "Uniwersalne światło stopu",
+    ],
+    stock: 10,
+    featured: true,
+  },
 
   // --- KATEGORIA: ZATYCZKI (WSZYSTKIE NA PNG) ---
   {
