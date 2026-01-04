@@ -1,20 +1,20 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// ZMIANA TUTAJ: Używamy @/Layout zamiast ../Layout
-// @ wskazuje bezpośrednio na folder src, więc na 100% znajdzie plik.
-import Layout from "@/Layout"; 
+// --- TU BYŁ BŁĄD ---
+// Netlify wymaga dopisku .jsx, inaczej nie widzi pliku.
+import Layout from "@/Layout.jsx"; 
 
-// Importy stron z tego samego folderu (pages)
+// Importy stron
 import Home from "./Home";
 import Moto from "./Moto";
 import CustomKeychains from "./CustomKeychains";
 import Okazje from "./Okazje";
 import ProductDetails from "./ProductDetails"; 
 import Cart from "./Cart";
-// import Checkout from "./Checkout"; // Jeśli używasz, odkomentuj
+// import Checkout from "./Checkout"; 
 
-// --- NOWE STRONY (Regulaminy) ---
+// Stopka
 import Regulamin from "./Regulamin";
 import Zwroty from "./Zwroty";
 import PolitykaPrywatnosci from "./PolitykaPrywatnosci";
@@ -34,7 +34,6 @@ const Pages = () => {
         
         {/* <Route path="/Checkout" element={<Layout currentPageName="Zamowienie"><Checkout /></Layout>} /> */}
 
-        {/* --- STOPKA --- */}
         <Route path="/Regulamin" element={<Layout currentPageName="Regulamin"><Regulamin /></Layout>} />
         <Route path="/Zwroty" element={<Layout currentPageName="Zwroty"><Zwroty /></Layout>} />
         <Route path="/PolitykaPrywatnosci" element={<Layout currentPageName="Polityka"><PolitykaPrywatnosci /></Layout>} />
