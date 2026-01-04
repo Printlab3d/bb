@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// --- TU BYŁ BŁĄD ---
-// Netlify wymaga dopisku .jsx, inaczej nie widzi pliku.
-import Layout from "@/Layout.jsx"; 
+// ZMIANA: Usuwamy .jsx i używamy @ (kieruje do folderu src)
+// Vite sam dopasuje czy to Layout.jsx czy layout.jsx
+import Layout from "@/Layout"; 
 
 // Importy stron
 import Home from "./Home";
