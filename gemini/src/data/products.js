@@ -2,17 +2,17 @@ export const products = [
   // --- KATEGORIA: MOTO ---
   {
     id: 1,
-    name: "Kierunkowskazy LED Dynamiczne (Pływające)",
+    name: "Kierunkowskazy LED",
     category: "moto",
     price: 89.00,
     oldPrice: 119.00,
     // ZMIANA NA PNG
     image: "/assets/migacz1.png",
     images: ["/assets/migacz1.png", "/assets/migacz2.png"],
-    description: "Nowoczesne kierunkowskazy LED z efektem dynamicznym (pływającym).",
+    description: "Minimalistyczne kierunkowskazy LED przyciemniane ",
     features: [
       "Technologia LED - wysoka jasność",
-      "Efekt pływającego światła (Audi style)",
+      "Homologowane certyfikowane światło",
       "Elastyczne ramię odporne na złamania",
       "Wodoodporność IP67",
       "Kompatybilne z naszymi mocowaniami 3D"
@@ -22,7 +22,7 @@ export const products = [
   },
   {
     id: 2,
-    name: "Lampa LED STOP Płaska (Przyciemniana)",
+    name: "Lampa LED STOP Płaska Przyciemniana",
     category: "moto",
     price: 69.00,
     // ZMIANA NA PNG
@@ -46,28 +46,29 @@ export const products = [
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/mocowanie1.jpg",
     images: ["/assets/mocowanie1.jpg", "/assets/mocowanie2.jpg", "/assets/mocowanie3.jpg"],
-    description: "Wytrzymały uchwyt tablicy rejestracyjnej drukowany w 3D (PETG/ASA).",
+    description: "Wytrzymały kompletny uchwyt tablicy rejestracyjnej drukowany w 3D (PETG/ASA).",
     features: [
-      "Materiał klasy przemysłowej",
-      "Regulowany kąt nachylenia",
+      "Materiał klasy premium",
+      "Zgodny z przepisami kąt nachylenia tablicy",
       "Gotowe otwory pod kierunkowskazy",
-      "Miejsce na podświetlenie tablicy",
-      "Lekka i sztywna konstrukcja"
+      "Miejsce na światło stop oraz kierunkowskazy",
+      "Lekka i sztywna konstrukcja potwierdzona crash testami",
+      "Uchwyt mocujący tablice w zestawie",
     ],
     stock: 10,
   },
   {
     id: 4,
-    name: "Lampka Uniwersalna LED (Oświetlenie Tablicy)",
+    name: "Lampa STOP Uniwersalna LED",
     category: "moto",
     price: 39.00,
     // ZMIANA NA PNG
     image: "/assets/stop1.png",
     images: ["/assets/stop1.png", "/assets/stop2.png"],
-    description: "Mała, ale potężna lampka LED o wszechstronnym zastosowaniu.",
+    description: "Uniwersalna lampa LED - światło stop",
     features: [
       "Kompaktowe wymiary",
-      "Barwa światła: Zimna biała",
+      "Barwa światła: Homologowana czerwona",
       "Wodoodporna obudowa",
       "Pasuje idealnie do Mocowania Tablicy 3D"
     ],
@@ -77,18 +78,18 @@ export const products = [
   // --- KATEGORIA: BRELOKI ---
   {
     id: 5,
-    name: "Brelok 3D / Osłona Kluczyka - Custom Design",
-    category: "keychains",
+    name: "Uchwyt tablicy - część mocowania 3D",
+    category: "moto",
     price: 49.00,
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/klucz1.jpg",
     images: ["/assets/klucz1.jpg", "/assets/klucz2.jpg", "/assets/klucz3.jpg"],
-    description: "Unikalna nakładka na kluczyk lub brelok wykonany w technologii druku 3D.",
+    description: "Uchwyt do zamocowania tablicy rejestracyjnej - Klucz mocowania tablicy 3D",
     features: [
-      "Wytrzymały materiał",
-      "Unikalny wzór",
+      "Wytrzymały materiał 3D",
+      "Wzór dopasowany do mocowania oraz powierzchni tablicy rejestracyjnej",
       "Lekki i poręczny",
-      "Oczko na kółko do kluczy w zestawie"
+      "Posiada mechanizm wysuwający tablice z mocowania 3D"
     ],
     stock: 30,
     featured: true,
@@ -104,7 +105,7 @@ export const products = [
     image: "/assets/sczarne.png",
     images: ["/assets/sczarne.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja w klasycznej czerni.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw rozmiarów",],
     stock: 100,
     color: "Czarny",
   },
@@ -117,7 +118,7 @@ export const products = [
     image: "/assets/szlote.png",
     images: ["/assets/szlote.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja złota.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw rozmiarów"],
     stock: 100,
     color: "Złoty",
   },
@@ -130,7 +131,7 @@ export const products = [
     image: "/assets/sfioletowe.png",
     images: ["/assets/sfioletowe.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja fioletowa.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw rozmiarów"],
     stock: 100,
     color: "Fioletowy",
   },
@@ -143,7 +144,7 @@ export const products = [
     image: "/assets/srebrne.png",
     images: ["/assets/srebrne.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja srebrna.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw rozmiarów"],
     stock: 100,
     color: "Srebrny",
   },
@@ -156,7 +157,7 @@ export const products = [
     image: "/assets/srozowe.png",
     images: ["/assets/srozowe.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja różowa.",
-    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw 2 rozmiarów", "Aluminiowe etui"],
+    features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw rozmiarów"],
     stock: 100,
     color: "Różowy",
   },
