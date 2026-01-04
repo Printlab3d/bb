@@ -4,8 +4,8 @@ export const products = [
     id: 1,
     name: "Kierunkowskazy LED",
     category: "moto",
-    price: 89.00,
-    oldPrice: 119.00,
+    price: 45.00,
+    oldPrice: 59.00,
     // ZMIANA NA PNG
     image: "/assets/migacz1.png",
     images: ["/assets/migacz1.png", "/assets/migacz2.png"],
@@ -15,7 +15,8 @@ export const products = [
       "Homologowane certyfikowane światło",
       "Elastyczne ramię odporne na złamania",
       "Wodoodporność IP67",
-      "Kompatybilne z naszymi mocowaniami 3D"
+      "Kompatybilne z naszymi mocowaniami 3D",
+      "Ogłoszenie dotyczy jednego kierunkowskazu"
     ],
     stock: 20,
     featured: true,
@@ -42,7 +43,8 @@ export const products = [
     id: 3,
     name: "Uniwersalne Mocowanie Tablicy Rejestracyjnej 3D",
     category: "moto",
-    price: 149.00,
+    price: 159.00,
+    oldPrice: 290.00,
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/mocowanie1.jpg",
     images: ["/assets/mocowanie1.jpg", "/assets/mocowanie2.jpg", "/assets/mocowanie3.jpg"],
@@ -51,17 +53,19 @@ export const products = [
       "Materiał klasy premium",
       "Zgodny z przepisami kąt nachylenia tablicy",
       "Gotowe otwory pod kierunkowskazy",
-      "Miejsce na światło stop oraz kierunkowskazy",
+      "Miejsce na światło stop",
       "Lekka i sztywna konstrukcja potwierdzona crash testami",
       "Uchwyt mocujący tablice w zestawie",
     ],
     stock: 10,
+    featured: true,
   },
   {
     id: 4,
     name: "Lampa STOP Uniwersalna LED",
     category: "moto",
-    price: 39.00,
+    price: 49.00,
+    oldPrice: 69.00,
     // ZMIANA NA PNG
     image: "/assets/stop1.png",
     images: ["/assets/stop1.png", "/assets/stop2.png"],
@@ -73,6 +77,7 @@ export const products = [
       "Pasuje idealnie do Mocowania Tablicy 3D"
     ],
     stock: 50,
+    featured: true,
   },
 
   // --- KATEGORIA: BRELOKI ---
@@ -80,7 +85,8 @@ export const products = [
     id: 5,
     name: "Uchwyt tablicy - część mocowania 3D",
     category: "moto",
-    price: 49.00,
+    price: 39.00,
+    oldPrice: 49.00,
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/klucz1.jpg",
     images: ["/assets/klucz1.jpg", "/assets/klucz2.jpg", "/assets/klucz3.jpg"],
@@ -92,7 +98,6 @@ export const products = [
       "Posiada mechanizm wysuwający tablice z mocowania 3D"
     ],
     stock: 30,
-    featured: true,
   },
 
   // --- KATEGORIA: ZATYCZKI (WSZYSTKIE NA PNG) ---
@@ -100,7 +105,7 @@ export const products = [
     id: 101,
     name: "Zatyczki Motocyklowe VibeRush - Czarne (Black)",
     category: "accessories",
-    price: 59.00,
+    price: 49.00,
     // ZMIANA NA PNG
     image: "/assets/sczarne.png",
     images: ["/assets/sczarne.png", "/assets/srozmiary.png"],
@@ -113,7 +118,7 @@ export const products = [
     id: 102,
     name: "Zatyczki Motocyklowe VibeRush - Złote (Gold)",
     category: "accessories",
-    price: 59.00,
+    price: 49.00,
     // ZMIANA NA PNG
     image: "/assets/szlote.png",
     images: ["/assets/szlote.png", "/assets/srozmiary.png"],
@@ -126,7 +131,7 @@ export const products = [
     id: 103,
     name: "Zatyczki Motocyklowe VibeRush - Fioletowe (Purple)",
     category: "accessories",
-    price: 59.00,
+    price: 49.00,
     // ZMIANA NA PNG
     image: "/assets/sfioletowe.png",
     images: ["/assets/sfioletowe.png", "/assets/srozmiary.png"],
@@ -139,7 +144,7 @@ export const products = [
     id: 104,
     name: "Zatyczki Motocyklowe VibeRush - Srebrne (Silver)",
     category: "accessories",
-    price: 59.00,
+    price: 49.00,
     // ZMIANA NA PNG
     image: "/assets/srebrne.png",
     images: ["/assets/srebrne.png", "/assets/srozmiary.png"],
@@ -152,7 +157,7 @@ export const products = [
     id: 105,
     name: "Zatyczki Motocyklowe VibeRush - Różowe (Pink)",
     category: "accessories",
-    price: 59.00,
+    price: 49.00,
     // ZMIANA NA PNG
     image: "/assets/srozowe.png",
     images: ["/assets/srozowe.png", "/assets/srozmiary.png"],
