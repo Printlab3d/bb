@@ -1,40 +1,41 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// Layout jest folder wyżej (w src), więc musimy wyjść ".."
+import Layout from "../Layout"; 
 
-// NAPRAWA: Zmieniamy "../Layout.jsx" na "./Layout.jsx"
-// (kropka oznacza "ten sam folder", bo plik jest obok)
-import Layout from "./Layout.jsx"; 
-
-// Importy podstron (są w tym samym folderze, więc ./ jest ok)
+// Importy stron z tego samego folderu (pages)
 import Home from "./Home";
-import Moto from "./Moto"; 
-import Keychains from "./CustomKeychains"; 
-import Okazje from "./Okazje"; 
-import Cart from "./Cart"; 
-import ProductDetails from "./ProductDetails"; 
+import Moto from "./Moto";
+import CustomKeychains from "./CustomKeychains";
+import Okazje from "./Okazje";
+import ProductDetails from "./ProductDetails"; // lub ProductPage, zależnie jak nazwałeś plik
+import Cart from "./Cart";
+import Checkout from "./Checkout"; // Jeśli używasz
+
+// --- NOWE STRONY (Tego brakowało) ---
+import Regulamin from "./Regulamin";
+import Zwroty from "./Zwroty";
+import PolitykaPrywatnosci from "./PolitykaPrywatnosci";
 
 const Pages = () => {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          {/* Strona główna */}
-          <Route path="/" element={<Home />} />
-          <Route path="/Home" element={<Home />} />
-          
-          {/* Kategorie */}
-          <Route path="/Moto" element={<Moto />} />
-          <Route path="/CustomKeychains" element={<Keychains />} />
-          <Route path="/Okazje" element={<Okazje />} />
-          
-          {/* Koszyk */}
-          <Route path="/Cart" element={<Cart />} />
+      <Routes>
+        <Route path="/" element={<Layout currentPageName="Home"><Home /></Layout>} />
+        <Route path="/Home" element={<Layout currentPageName="Home"><Home /></Layout>} />
+        <Route path="/Moto" element={<Layout currentPageName="Moto"><Moto /></Layout>} />
+        <Route path="/CustomKeychains" element={<Layout currentPageName="CustomKeychains"><CustomKeychains /></Layout>} />
+        <Route path="/Okazje" element={<Layout currentPageName="Okazje"><Okazje /></Layout>} />
+        
+        <Route path="/product/:id" element={<Layout currentPageName="Produkt"><ProductDetails /></Layout>} />
+        <Route path="/Cart" element={<Layout currentPageName="Koszyk"><Cart /></Layout>} />
+        {/* <Route path="/Checkout" element={<Layout currentPageName="Zamowienie"><Checkout /></Layout>} /> */}
 
-          {/* Strona produktu */}
-          <Route path="/product/:id" element={<ProductDetails />} />
-          
-        </Routes>
-      </Layout>
+        {/* --- TUTAJ DODAJEMY REGULAMIN --- */}
+        <Route path="/Regulamin" element={<Layout currentPageName="Regulamin"><Regulamin /></Layout>} />
+        <Route path="/Zwroty" element={<Layout currentPageName="Zwroty"><Zwroty /></Layout>} />
+        <Route path="/PolitykaPrywatnosci" element={<Layout currentPageName="Polityka"><PolitykaPrywatnosci /></Layout>} />
+      </Routes>
     </Router>
   );
 };
