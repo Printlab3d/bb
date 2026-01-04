@@ -1,11 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// ZMIANA: Usuwamy .jsx i używamy @ (kieruje do folderu src)
-// Vite sam dopasuje czy to Layout.jsx czy layout.jsx
-import Layout from "@/Layout"; 
+// NAPRAWA: Kropka (.) oznacza "szukaj w tym samym folderze" (src/pages)
+import Layout from "./Layout.jsx"; 
 
-// Importy stron
 import Home from "./Home";
 import Moto from "./Moto";
 import CustomKeychains from "./CustomKeychains";
