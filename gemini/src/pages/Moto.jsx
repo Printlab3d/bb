@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { products } from "@/data/products"; // Poprawny import z pliku .js
+// Upewnij się, że ścieżka do products jest dobra. 
+// Jeśli masz plik w src/products.js, to zostaw "@/products".
+// Jeśli w src/data/products.js, zmień na "@/data/products".
+import { products } from "@/products"; 
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Search, Package, Bike } from "lucide-react";
 import ProductCard from "@/components/products/ProductCard";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
 
 export default function Moto() {
   const [searchTerm, setSearchTerm] = useState("");
   const [allProducts, setAllProducts] = useState([]);
-  const isLoading = false;
   const { toast } = useToast();
 
   useEffect(() => {
-    // Używamy zaimportowanej stałej products
     setAllProducts(products);
   }, []);
 
-  // Filtruj tylko produkty z kategorii "moto" lub "accessories" (jeśli zatyczki są w accessories)
-  // Możesz dostosować ten warunek
+  // --- ZMIANA: TYLKO KATEGORIA MOTO ---
   const motoProducts = allProducts.filter(product => 
-      product.category === 'moto' || product.category === 'accessories'
+      product.category === 'moto'
   );
 
   const filteredProducts = motoProducts.filter(product =>
@@ -51,62 +50,45 @@ export default function Moto() {
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Hero Header with Motorcycle Background */}
-      <div className="relative overflow-hidden border-b border-white/10">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <img 
-            src="/assets/moto-bg.jpg"
-            alt="Motocykl"
-            className="w-full h-full object-cover opacity-70"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+      {/* Header */}
+      <div className="relative bg-gradient-to-br from-orange-900/20 via-black to-black border-b border-white/10 pt-32 pb-12 px-4">
+        <div className="max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-6 md:mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 mb-6"
           >
-            <div className="inline-flex items-center gap-2 bg-orange-600/20 border border-orange-500/30 rounded-full px-4 py-2 mb-4 backdrop-blur-sm">
-              <Bike className="w-4 h-4 text-orange-400" />
-              <span className="text-xs md:text-sm font-medium text-orange-300 elegant-text">MOTO PARTS</span>
-            </div>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 md:mb-4 elegant-text" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.6)' }}>
-              Akcesoria do Moto
-            </h1>
-            <p className="text-sm md:text-lg text-white font-medium elegant-text max-w-2xl mx-auto" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.7)' }}>
-              Premium akcesoria dla motocykli enduro i dirtbike
-            </p>
+            <Bike className="w-4 h-4" />
+            <span className="text-sm font-medium tracking-wide">STREFA MOTOCYKLISTY</span>
           </motion.div>
+          
+          <h1 className="text-4xl md:text-6xl font-light text-white mb-6 tracking-tight elegant-text">
+            Części <span className="text-orange-600 font-normal">Moto</span>
+          </h1>
+          
+          {/* Search Bar */}
+          <div className="max-w-md mx-auto relative group">
+            <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5 group-focus-within:text-orange-500 transition-colors" />
+              <Input 
+                type="text" 
+                placeholder="Szukaj części..." 
+                className="w-full pl-12 h-12 bg-white/5 border-white/10 text-white placeholder:text-gray-500 rounded-full focus:bg-white/10 focus:border-orange-500/50 transition-all"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Products Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
-        <div className="mb-6 md:mb-8">
-          <p className="text-white font-medium text-lg md:text-xl elegant-text">
-            {filteredProducts.length} {filteredProducts.length === 1 ? 'Produkt' : 'Produktów'}
-          </p>
-          <p className="text-gray-500 text-sm elegant-text">Akcesoria dla motocykli</p>
-        </div>
-
-        {/* Products Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-            {Array(8).fill(0).map((_, i) => (
-              <div key={i} className="bg-white/5 rounded-2xl p-4 animate-pulse">
-                <Skeleton className="w-full h-48 rounded-xl bg-white/10 mb-4" />
-                <Skeleton className="h-6 w-3/4 bg-white/10 mb-2" />
-                <Skeleton className="h-10 w-full bg-white/10" />
-              </div>
-            ))}
-          </div>
-        ) : filteredProducts.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+      {/* Produkty */}
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        {filteredProducts.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="text-center py-20"
           >
             <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
