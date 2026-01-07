@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+// NAPRAWA: Kropka (.) oznacza "szukaj w tym samym folderze" (src/pages)
 import Layout from "./Layout.jsx"; 
 
 import Home from "./Home";
@@ -9,8 +10,7 @@ import CustomKeychains from "./CustomKeychains";
 import Okazje from "./Okazje";
 import ProductDetails from "./ProductDetails"; 
 import Cart from "./Cart";
-
-// USUNĄŁEM IMPORT CHECKOUT - TO NAPRAWIA BŁĄD BUILDA
+// import Checkout from "./Checkout"; 
 
 // Stopka
 import Regulamin from "./Regulamin";
@@ -29,9 +29,9 @@ const Pages = () => {
         
         <Route path="/product/:id" element={<Layout currentPageName="Produkt"><ProductDetails /></Layout>} />
         <Route path="/Cart" element={<Layout currentPageName="Koszyk"><Cart /></Layout>} />
-
-        {/* USUNĄŁEM TRASĘ /Checkout BO ROBIMY TO W KOSZYKU */}
         
+        {/* <Route path="/Checkout" element={<Layout currentPageName="Zamowienie"><Checkout /></Layout>} /> */}
+
         <Route path="/Regulamin" element={<Layout currentPageName="Regulamin"><Regulamin /></Layout>} />
         <Route path="/Zwroty" element={<Layout currentPageName="Zwroty"><Zwroty /></Layout>} />
         <Route path="/PolitykaPrywatnosci" element={<Layout currentPageName="Polityka"><PolitykaPrywatnosci /></Layout>} />
