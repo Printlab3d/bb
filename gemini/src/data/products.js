@@ -46,8 +46,8 @@ export const products = [
     price: 159.00,
     oldPrice: 290.00,
     // WYJĄTEK: ZOSTAJE JPG
-    image: "/assets/mocowanie1.jpg",
-    images: ["/assets/mocowanie1.jpg", "/assets/mocowanie2.jpg", "/assets/mocowanie3.jpg"],
+    image: "/assets/mocowanie1.png",
+    images: ["/assets/mocowanie1.png", "/assets/mocowanie2.png", "/assets/mocowanie3.png", "/assets/mocowanie4.png", "/assets/mocowanie5.png", "/assets/mocowanie6.png", "/assets/mocowanie7.png"],
     description: "Wytrzymały kompletny uchwyt tablicy rejestracyjnej drukowany w 3D (PETG/ASA).",
     features: [
       "Materiał klasy premium",
@@ -88,8 +88,8 @@ export const products = [
     price: 39.00,
     oldPrice: 49.00,
     // WYJĄTEK: ZOSTAJE JPG
-    image: "/assets/klucz1.jpg",
-    images: ["/assets/klucz1.jpg", "/assets/klucz2.jpg", "/assets/klucz3.jpg"],
+    image: "/assets/klucz1.png",
+    images: ["/assets/klucz1.png", "/assets/klucz2.png", "/assets/klucz3.png", "/assets/klucz4.png"],
     description: "Uchwyt do zamocowania tablicy rejestracyjnej - Klucz mocowania tablicy 3D",
     features: [
       "Wytrzymały materiał 3D",
@@ -106,8 +106,8 @@ export const products = [
     price: 290.00,
     oldPrice: 388.00,
     // WYJĄTEK: ZOSTAJE JPG
-    image: "/assets/mocowanie1.jpg",
-    images: ["/assets/mocowanie1.jpg", "/assets/mocowanie2.jpg", "/assets/mocowanie3.jpg"],
+    image: "/assets/custom1.jpg",
+    images: ["/assets/mocowanie1.png", "/assets/stop1.png", "/assets/migacz2.png"],
     description: "Zestaw promocyjny, który posiada:",
     features: [
       "4 przyciemniane minimalistyczne kierunkowskazy ",
@@ -181,6 +181,19 @@ export const products = [
     images: ["/assets/srozowe.png", "/assets/srozmiary.png"],
     description: "Profesjonalne zatyczki do uszu. Wersja różowa.",
     features: ["Filtr akustyczny", "Hipoalergiczny silikon", "Zestaw rozmiarów"],
+    stock: 100,
+    color: "Różowy",
+  },
+   {
+    id: 201,
+    name: "Brelok skrab.exc",
+    category: "accessories",
+    price: 12.00,
+    // ZMIANA NA PNG
+    image: "/assets/skrab1.png",
+    images: ["/assets/skrab1.png"],
+    description: "Zawieszka do kluczy skrab.exc",
+    features: ["Idealny brelok do kluczy", "wysoka jakość wykonania"],
     stock: 100,
     color: "Różowy",
   },
