@@ -58,7 +58,7 @@ exports.handler = async (event) => {
     // 3. Tworzenie sesji Stripe
     const session = await stripe.checkout.sessions.create({
       // ZMIANA 2: Na start tylko karta. Jak zadziała, dopiszemy 'blik', 'p24'
-      payment_method_types: ['card', 'blik'], 
+      payment_method_types: ['card', 'blik', 'p24'], 
       line_items,
       mode: 'payment',
       success_url: `${site_url}/Home`,
