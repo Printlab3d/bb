@@ -1,17 +1,20 @@
-import React from "react";
-import { products } from "@/data/products"; // Poprawny import z pliku .js
+import React, { useState, useEffect } from "react";
+// Upewnij się co do ścieżki importu (tak samo jak w Moto.jsx)
+import { products } from "@/products"; 
+
 import { motion, AnimatePresence } from "framer-motion";
-import { Tag, Zap } from "lucide-react";
+import { Tag, Zap, ShoppingBag } from "lucide-react";
 import ProductCard from "@/components/products/ProductCard";
 import { useToast } from "@/components/ui/use-toast";
 import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
 
 export default function Okazje() {
   const { toast } = useToast();
-  const isLoading = false;
   
-  // Zostawiamy puste zgodnie z życzeniem, żeby wyświetlił się ekran "Brak okazji"
-  const promoProducts = []; 
+  // --- ZMIANA: FILTRUJEMY TYLKO AKCESORIA (Zatyczki, breloki itp.) ---
+  const accessoryProducts = products.filter(product => 
+    product.category === 'accessories'
+  );
 
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -35,52 +38,41 @@ export default function Okazje() {
   return (
     <div className="min-h-screen bg-black">
       {/* Hero Header */}
-      <div className="relative bg-gradient-to-br from-purple-600/10 via-black to-black border-b border-white/10">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl" />
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+      <div className="relative bg-gradient-to-br from-purple-900/20 via-black to-black border-b border-white/10 pt-32 pb-12 px-4">
+        <div className="max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 mb-6"
           >
-            <div className="inline-flex items-center gap-2 bg-purple-600/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
-              <Tag className="w-4 h-4 text-purple-500" />
-              <span className="text-xs md:text-sm font-medium text-purple-400 elegant-text">OKAZJE</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-light text-white mb-6 elegant-text">
-              Lifestyle & Akcesoria
-            </h1>
-            <p className="text-lg md:text-xl text-gray-400 mb-8 max-w-3xl mx-auto elegant-text">
-              Wyjątkowe produkty w promocyjnych cenach
-            </p>
+            <Tag className="w-4 h-4" />
+            <span className="text-sm font-medium tracking-wide">GADŻETY I DODATKI</span>
           </motion.div>
+          
+          <h1 className="text-4xl md:text-6xl font-light text-white mb-6 tracking-tight elegant-text">
+            Akcesoria <span className="text-purple-500 font-normal">VibeRush</span>
+          </h1>
+          
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto font-light leading-relaxed">
+            Zatyczki motocyklowe, breloki i wszystko, co ułatwia życie w trasie.
+          </p>
         </div>
       </div>
 
-      {/* Products Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-        {isLoading ? (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
-          </div>
-        ) : promoProducts.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+      {/* Lista produktów */}
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        {accessoryProducts.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <div className="w-24 h-24 bg-purple-600/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-purple-500/20">
-              <Tag className="w-12 h-12 text-purple-500" />
+            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
+              <ShoppingBag className="w-10 h-10 text-gray-500" />
             </div>
-            <h3 className="text-3xl md:text-4xl font-light text-white mb-4 elegant-text">
-              Brak okazji w tym momencie
+            <h3 className="text-2xl font-light text-white mb-2 elegant-text">
+              Brak produktów w tej kategorii
             </h3>
-            <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto elegant-text">
-              Aktualnie nie mamy aktywnych promocji, ale wkrótce pojawią się nowe okazje!
-            </p>
           </motion.div>
         ) : (
           <>
@@ -88,9 +80,8 @@ export default function Okazje() {
               <div>
                 <p className="text-white font-medium text-xl elegant-text flex items-center gap-2">
                   <Zap className="w-5 h-5 text-purple-500" />
-                  {promoProducts.length} {promoProducts.length === 1 ? 'Produkt' : 'Produktów'} w promocji
+                  {accessoryProducts.length} {accessoryProducts.length === 1 ? 'Produkt' : 'Produktów'}
                 </p>
-                <p className="text-gray-500 text-sm elegant-text">Oferta ograniczona czasowo</p>
               </div>
             </div>
 
@@ -102,7 +93,7 @@ export default function Okazje() {
                 exit={{ opacity: 0 }}
                 className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6"
               >
-                {promoProducts.map((product, index) => (
+                {accessoryProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -112,7 +103,6 @@ export default function Okazje() {
                     <ProductCard 
                       product={product} 
                       onAddToCart={addToCart}
-                      showHotBadge={true}
                     />
                   </motion.div>
                 ))}
