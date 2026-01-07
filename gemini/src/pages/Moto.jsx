@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-// Upewnij się, że ścieżka do products jest dobra. 
-// Jeśli masz plik w src/products.js, to zostaw "@/products".
-// Jeśli w src/data/products.js, zmień na "@/data/products".
-import { products } from "@/products"; 
+// POPRAWKA: Dodano "/data" do ścieżki
+import { products } from "@/data/products"; 
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Search, Package, Bike } from "lucide-react";
@@ -19,7 +17,7 @@ export default function Moto() {
     setAllProducts(products);
   }, []);
 
-  // --- ZMIANA: TYLKO KATEGORIA MOTO ---
+  // Filtrowanie: Tylko kategoria 'moto'
   const motoProducts = allProducts.filter(product => 
       product.category === 'moto'
   );
