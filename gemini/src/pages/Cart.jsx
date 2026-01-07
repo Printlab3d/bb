@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Trash2, ArrowRight, ShoppingBag, CreditCard, ShieldCheck, Truck } from "lucide-react";
+import { Trash2, ShoppingBag, CreditCard, ShieldCheck, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -56,7 +55,7 @@ export default function Cart() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // --- LOGIKA PŁATNOŚCI (Przywrócona i połączona z formularzem) ---
+  // --- LOGIKA PŁATNOŚCI ---
   const handlePayment = async () => {
     // 1. Walidacja: Czy koszyk nie jest pusty?
     if (cart.length === 0) return;
