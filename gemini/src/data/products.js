@@ -47,7 +47,7 @@ export const products = [
     oldPrice: 290.00,
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/mocowanie1.png",
-    images: ["/assets/mocowanie1.png", "/assets/mocowanie2.png", "/assets/mocowanie3.png", "/assets/mocowanie4.png", "/assets/mocowanie5.png", "/assets/mocowanie6.png", "/assets/mocowanie7.png"],
+    images: ["/assets/mocowanie1.png", "/assets/mocowanie2.png", "/assets/mocowanie3.png", "/assets/mocowanie5.png", "/assets/mocowanie6.png", "/assets/mocowanie7.png"],
     description: "Wytrzymały kompletny uchwyt tablicy rejestracyjnej drukowany w 3D (PETG/ASA).",
     features: [
       "Materiał klasy premium",
