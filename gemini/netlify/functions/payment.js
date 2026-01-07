@@ -11,15 +11,13 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Pobieramy koszyk i dane klienta z requestu
-    const { cart, customer } = JSON.parse(event.body);
-    const site_url = process.env.URL || 'https://viberush.pl'; // Podmień na swój adres
+    const { cart } = JSON.parse(event.body);
+    const site_url = process.env.URL || 'http://localhost:5173';
 
     const line_items = cart.map((item) => {
-      // Budowanie URL obrazka
       const imageUrl = item.image 
-        ? (item.image.startsWith('http') ? item.image : `${site_url}${item.image}`)
-        : '';
+        ? `${site_url}${item.image}` 
+        : (item.images && item.images[0] ? `${site_url}${item.images[0]}` : '');
 
       return {
         price_data: {
@@ -38,19 +36,16 @@ exports.handler = async (event) => {
       payment_method_types: ['card', 'blik', 'p24'],
       line_items,
       mode: 'payment',
-      success_url: `${site_url}/success`,
+      success_url: `${site_url}/Home`,
       cancel_url: `${site_url}/Cart`,
-      // Przekazujemy email klienta do formularza Stripe
-      customer_email: customer ? customer.email : undefined,
     });
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ id: session.id }),
+      body: JSON.stringify({ url: session.url }),
     };
   } catch (error) {
-    console.error('Stripe error:', error);
     return {
       statusCode: 500,
       headers,
