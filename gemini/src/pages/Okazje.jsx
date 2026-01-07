@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-// Upewnij się co do ścieżki importu (tak samo jak w Moto.jsx)
-import { products } from "@/products"; 
+// POPRAWKA: Dodano "/data" do ścieżki
+import { products } from "@/data/products"; 
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Tag, Zap, ShoppingBag } from "lucide-react";
@@ -11,7 +11,7 @@ import { AddToCartToast } from "@/components/ui/add-to-cart-toast";
 export default function Okazje() {
   const { toast } = useToast();
   
-  // --- ZMIANA: FILTRUJEMY TYLKO AKCESORIA (Zatyczki, breloki itp.) ---
+  // Filtrujemy tylko akcesoria
   const accessoryProducts = products.filter(product => 
     product.category === 'accessories'
   );
