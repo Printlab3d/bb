@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Trash2, ShoppingBag, CreditCard, Truck } from "lucide-react";
+import { Trash2, ArrowRight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { products } from "@/data/products";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-
-  // Dane klienta (dodane do tego samego pliku, żeby nie mieszać z routingiem)
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    zipCode: "",
-  });
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -50,158 +38,136 @@ export default function Cart() {
     updateCart(newCart);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  // --- LOGIKA PŁATNOŚCI (TA SAMA CO DZIAŁAŁA WCZEŚNIEJ + DANE) ---
-  const handlePayment = async () => {
-    if (cart.length === 0) return;
-
-    // Prosta walidacja - czy klient wpisał cokolwiek
-    if (!formData.email || !formData.address || !formData.city) {
-      toast({
-        variant: "destructive",
-        title: "Brak danych",
-        description: "Uzupełnij adres wysyłki poniżej.",
-      });
-      return;
-    }
-
+  // --- POPRAWKA ADRESU ---
+  const handleCheckout = async () => {
     setIsLoading(true);
-
+    
     try {
+      // ZMIANA: Usunąłem "s" z końca. Teraz łączy się z plikiem payment.js
       const response = await fetch('/.netlify/functions/payment', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          cart,
-          customer: formData // Dorzucamy dane, backend je odbierze
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cart }),
       });
 
-      if (!response.ok) throw new Error('Błąd połączenia');
+      if (!response.ok) {
+        throw new Error(`Błąd serwera: ${response.status}`);
+      }
 
-      const { id } = await response.json();
-      
-      // Klucz publiczny - upewnij się, że jest w Netlify Environment Variables
-      const stripe = await window.Stripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-      
-      const { error } = await stripe.redirectToCheckout({ sessionId: id });
-      if (error) throw error;
+      const data = await response.json();
 
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("Brak URL płatności");
+      }
+      
     } catch (error) {
-      console.error("Payment error:", error);
+      console.error("Checkout Error:", error);
       toast({
         variant: "destructive",
-        title: "Błąd płatności",
-        description: "Spróbuj ponownie później.",
+        title: "Błąd połączenia",
+        description: "Nie znaleziono pliku payment.js w folderze funkcji.",
       });
-    } finally {
       setIsLoading(false);
     }
   };
 
+  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  if (cart.length === 0) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+        <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mb-6 text-orange-600">
+          <ShoppingBag className="w-10 h-10" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Twój koszyk jest pusty</h2>
+        <Link to="/Moto">
+          <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white">
+            Wróć do sklepu
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-white pt-32 pb-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-light mb-8 text-gray-900 elegant-text">Twój koszyk</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Twój Koszyk</h1>
 
-        {cart.length === 0 ? (
-          <div className="text-center py-20 bg-gray-50 rounded-2xl">
-            <ShoppingBag className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-            <p className="text-xl text-gray-500 mb-6">Pusty koszyk</p>
-            <Link to="/Moto">
-              <Button className="bg-orange-600 hover:bg-orange-700 text-white">Wróć do sklepu</Button>
-            </Link>
-          </div>
-        ) : (
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* Lista produktów */}
-            <div className="lg:col-span-2 space-y-8">
-              <div className="space-y-6">
-                {cart.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
-                    <div className="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
-                       <img src={item.image || (item.images && item.images[0]) || ""} alt={item.name} className="w-full h-full object-contain p-1"/>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-900">{item.name}</h3>
-                      <p className="text-orange-600 font-bold">{item.price.toFixed(2)} zł</p>
-                      <div className="flex items-center gap-3 mt-2">
-                        <button onClick={() => updateQuantity(item.id, -1)} className="px-2 bg-gray-100 rounded">-</button>
-                        <span>{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, 1)} className="px-2 bg-gray-100 rounded">+</button>
-                        <button onClick={() => removeFromCart(item.id)} className="ml-auto text-red-500"><Trash2 className="w-4 h-4" /></button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="lg:col-span-2 space-y-6">
+          {cart.map((item) => {
+            const liveProduct = products.find(p => p.id === item.id);
+            const imageSrc = liveProduct ? liveProduct.image : (item.image || (item.images && item.images[0]));
 
-              {/* FORMULARZ (Wstawiony tutaj na sztywno, żeby działał) */}
-              <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Truck className="w-5 h-5" /> Adres wysyłki
-                </h2>
-                <div className="grid gap-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label>Imię</Label>
-                      <Input name="firstName" value={formData.firstName} onChange={handleInputChange} className="bg-white"/>
-                    </div>
-                    <div>
-                      <Label>Nazwisko</Label>
-                      <Input name="lastName" value={formData.lastName} onChange={handleInputChange} className="bg-white"/>
-                    </div>
+            return (
+              <div key={item.id} className="flex gap-4 p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-24 h-24 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
+                  {imageSrc ? (
+                    <img src={imageSrc} alt={item.name} className="w-full h-full object-contain" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">Brak foto</div>
+                  )}
+                </div>
+
+                <div className="flex-grow flex flex-col justify-between">
+                  <div className="flex justify-between items-start">
+                    <Link to={`/product/${item.id}`} className="font-bold text-gray-900 hover:text-orange-600 line-clamp-2">
+                      {item.name}
+                    </Link>
+                    <button onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-red-500 transition-colors p-1">
+                      <Trash2 className="w-5 h-5" />
+                    </button>
                   </div>
-                  <div>
-                    <Label>Email</Label>
-                    <Input name="email" value={formData.email} onChange={handleInputChange} className="bg-white"/>
-                  </div>
-                  <div>
-                    <Label>Adres (Ulica i numer)</Label>
-                    <Input name="address" value={formData.address} onChange={handleInputChange} className="bg-white"/>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label>Kod pocztowy</Label>
-                      <Input name="zipCode" value={formData.zipCode} onChange={handleInputChange} className="bg-white"/>
+                  
+                  <div className="flex justify-between items-end mt-2">
+                    <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1">
+                      <button onClick={() => updateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-md transition-colors font-bold text-gray-600">-</button>
+                      <span className="text-sm font-semibold w-4 text-center">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-md transition-colors font-bold text-gray-600">+</button>
                     </div>
-                    <div>
-                      <Label>Miasto</Label>
-                      <Input name="city" value={formData.city} onChange={handleInputChange} className="bg-white"/>
+                    <div className="text-right">
+                      <p className="font-bold text-lg text-gray-900">{(item.price * item.quantity).toFixed(2)} zł</p>
                     </div>
-                  </div>
-                  <div>
-                    <Label>Telefon</Label>
-                    <Input name="phone" value={formData.phone} onChange={handleInputChange} className="bg-white"/>
                   </div>
                 </div>
               </div>
-            </div>
+            );
+          })}
+        </div>
 
-            {/* Podsumowanie */}
-            <div className="lg:col-span-1">
-              <div className="bg-gray-900 text-white p-6 rounded-xl sticky top-24">
-                <h3 className="text-xl font-bold mb-4">Razem</h3>
-                <div className="flex justify-between text-2xl font-bold text-orange-500 mb-6">
-                  {total.toFixed(2)} zł
-                </div>
-                <Button 
-                  onClick={handlePayment} 
-                  disabled={isLoading}
-                  className="w-full bg-orange-600 hover:bg-orange-700 h-12 text-lg"
-                >
-                  {isLoading ? "Przetwarzanie..." : <><CreditCard className="mr-2 h-5 w-5"/> Zapłać teraz</>}
-                </Button>
+        <div className="lg:col-span-1">
+          <div className="bg-gray-50 p-6 rounded-2xl sticky top-24">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Podsumowanie</h3>
+            <div className="space-y-3 text-sm text-gray-600 mb-6 border-b border-gray-200 pb-6">
+              <div className="flex justify-between">
+                <span>Wartość produktów</span>
+                <span>{total.toFixed(2)} zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Dostawa</span>
+                <span className="text-green-600 font-medium">Darmowa</span>
               </div>
             </div>
+            <div className="flex justify-between items-center mb-8">
+              <span className="text-lg font-bold text-gray-900">Do zapłaty</span>
+              <span className="text-2xl font-bold text-orange-600">{total.toFixed(2)} zł</span>
+            </div>
+            
+            <Button 
+              onClick={handleCheckout}
+              disabled={isLoading}
+              className="w-full bg-gray-900 hover:bg-orange-600 text-white h-12 text-lg shadow-lg"
+            >
+              {isLoading ? "Przetwarzanie..." : (
+                <>Przejdź do płatności <ArrowRight className="ml-2 w-5 h-5" /></>
+              )}
+            </Button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
