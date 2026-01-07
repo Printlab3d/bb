@@ -12,13 +12,11 @@ exports.handler = async (event) => {
 
   try {
     const { cart, customer, shipping } = JSON.parse(event.body);
-    
-    // ZMIANA 1: Upewnij się, że ten adres to TWOJA domena na Netlify (bez ukośnika na końcu)
-    // Jeśli environment variable nie zadziała, ten string uratuje sytuację.
-    const site_url = process.env.URL || 'https://viberush.netlify.app'; 
+    const site_url = process.env.URL || 'http://localhost:5173';
 
     // 1. Produkty
     const line_items = cart.map((item) => {
+      // Budowanie URL obrazka
       const imageUrl = item.image 
         ? (item.image.startsWith('http') ? item.image : `${site_url}${item.image}`)
         : '';
@@ -37,9 +35,10 @@ exports.handler = async (event) => {
     });
 
     // 2. Logika Kosztów Wysyłki
+    // Sprawdzamy wartość koszyka
     const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const SHIPPING_PRICE = 1350; 
-    const FREE_SHIPPING_THRESHOLD = 150; 
+    const SHIPPING_PRICE = 1350; // 13.50 PLN w groszach
+    const FREE_SHIPPING_THRESHOLD = 150; // 150 PLN
 
     if (cartTotal < FREE_SHIPPING_THRESHOLD) {
       line_items.push({
@@ -57,18 +56,17 @@ exports.handler = async (event) => {
 
     // 3. Tworzenie sesji Stripe
     const session = await stripe.checkout.sessions.create({
-      // ZMIANA 2: Na start tylko karta. Jak zadziała, dopiszemy 'blik', 'p24'
-      payment_method_types: ['card'], 
+      payment_method_types: ['card', 'blik', 'p24'],
       line_items,
       mode: 'payment',
-      success_url: `${site_url}/Home`,
-      cancel_url: `${site_url}/Cart`,
+      success_url: `${site_url}/Home`, // Po sukcesie
+      cancel_url: `${site_url}/Cart`,  // Po anulowaniu
       customer_email: customer.email,
       metadata: {
         customer_name: `${customer.firstName} ${customer.lastName}`,
         phone: customer.phone,
         shipping_method: shipping.method,
-        paczkomat_code: customer.paczkomatCode || 'N/A',
+        paczkomat_code: customer.paczkomatCode || 'N/A', // Kod paczkomatu w panelu Stripe
         address: `${customer.address}, ${customer.zipCode} ${customer.city}`
       }
     });
@@ -80,14 +78,11 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
-    // ZMIANA 3: Lepsze logowanie błędu, żebyś widział przyczynę w konsoli Netlify
-    console.error('Payment Error Message:', error.message);
-    console.error('Payment Error Type:', error.type);
-    
+    console.error('Payment Error:', error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: error.message }), // Zwracamy treść błędu do przeglądarki
+      body: JSON.stringify({ error: error.message }),
     };
   }
 };
