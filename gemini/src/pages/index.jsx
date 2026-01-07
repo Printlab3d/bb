@@ -10,8 +10,7 @@ import Okazje from "./Okazje";
 import ProductDetails from "./ProductDetails"; 
 import Cart from "./Cart";
 
-// NOWY IMPORT - CHECKOUT
-import Checkout from "./Checkout"; 
+// USUNĄŁEM IMPORT CHECKOUT - TO NAPRAWIA BŁĄD BUILDA
 
 // Stopka
 import Regulamin from "./Regulamin";
@@ -31,8 +30,7 @@ const Pages = () => {
         <Route path="/product/:id" element={<Layout currentPageName="Produkt"><ProductDetails /></Layout>} />
         <Route path="/Cart" element={<Layout currentPageName="Koszyk"><Cart /></Layout>} />
 
-        {/* NOWA TRASA - CHECKOUT */}
-        <Route path="/Checkout" element={<Layout currentPageName="Zamowienie"><Checkout /></Layout>} />
+        {/* USUNĄŁEM TRASĘ /Checkout BO ROBIMY TO W KOSZYKU */}
         
         <Route path="/Regulamin" element={<Layout currentPageName="Regulamin"><Regulamin /></Layout>} />
         <Route path="/Zwroty" element={<Layout currentPageName="Zwroty"><Zwroty /></Layout>} />
