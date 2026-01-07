@@ -11,7 +11,7 @@ export default function Cart() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  // Stan formularza
+  // DANE FORMULARZA
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -55,19 +55,28 @@ export default function Cart() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // --- LOGIKA PŁATNOŚCI ---
+  // --- OBLICZENIA (NAPRAWIONE) ---
+  const productsTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const SHIPPING_COST = 15.00; // Koszt wysyłki jeśli poniżej 150 zł
+  const FREE_SHIPPING_THRESHOLD = 150.00;
+  
+  // Czy darmowa dostawa?
+  const isFreeShipping = productsTotal >= FREE_SHIPPING_THRESHOLD;
+  const currentShippingCost = isFreeShipping ? 0 : SHIPPING_COST;
+  
+  // Ostateczna suma
+  const finalTotal = productsTotal + currentShippingCost;
+
   const handlePayment = async () => {
-    // 1. Walidacja: Czy koszyk nie jest pusty?
     if (cart.length === 0) return;
 
-    // 2. Walidacja: Czy dane są wpisane?
+    // Walidacja formularza
     if (!formData.firstName || !formData.email || !formData.address || !formData.city || !formData.zipCode) {
       toast({
         variant: "destructive",
         title: "Brak danych",
         description: "Proszę wypełnić dane do wysyłki przed płatnością.",
       });
-      // Scroll do formularza
       document.getElementById('shipping-form')?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
@@ -77,12 +86,12 @@ export default function Cart() {
     try {
       const response = await fetch('/.netlify/functions/payment', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           cart,
-          customer: formData // Wysyłamy dane klienta razem z koszykiem
+          customer: formData,
+          // Wysyłamy obliczony koszt wysyłki do backendu, żeby Stripe wiedział
+          shippingCost: currentShippingCost 
         }),
       });
 
@@ -92,7 +101,6 @@ export default function Cart() {
       const stripe = await window.Stripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
       
       const { error } = await stripe.redirectToCheckout({ sessionId: id });
-      
       if (error) throw error;
 
     } catch (error) {
@@ -106,8 +114,6 @@ export default function Cart() {
       setIsLoading(false);
     }
   };
-
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
     <div className="min-h-screen bg-white pt-32 pb-12 px-4">
@@ -127,10 +133,8 @@ export default function Cart() {
         ) : (
           <div className="grid lg:grid-cols-3 gap-12">
             
-            {/* LEWA KOLUMNA: PRODUKTY + FORMULARZ */}
+            {/* LEWA STRONA: PRODUKTY + FORMULARZ */}
             <div className="lg:col-span-2 space-y-12">
-              
-              {/* Lista produktów */}
               <div className="space-y-6">
                 {cart.map((item) => (
                   <div key={item.id} className="flex gap-6 p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
@@ -161,12 +165,11 @@ export default function Cart() {
                 ))}
               </div>
 
-              {/* FORMULARZ DANYCH (Teraz tutaj, żeby nie zmieniać stron) */}
+              {/* FORMULARZ DANYCH */}
               <div id="shipping-form" className="bg-gray-50 p-8 rounded-2xl border border-gray-100">
                 <h2 className="text-2xl font-light text-gray-900 mb-6 flex items-center gap-2">
                   <Truck className="w-6 h-6 text-orange-600" /> Dane do wysyłki
                 </h2>
-                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">Imię</Label>
@@ -176,17 +179,14 @@ export default function Cart() {
                     <Label htmlFor="lastName">Nazwisko</Label>
                     <Input id="lastName" name="lastName" placeholder="Kowalski" value={formData.lastName} onChange={handleInputChange} className="bg-white" />
                   </div>
-                  
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="email">Email</Label>
                     <Input id="email" name="email" type="email" placeholder="jan@example.com" value={formData.email} onChange={handleInputChange} className="bg-white" />
                   </div>
-                  
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="address">Ulica i numer</Label>
                     <Input id="address" name="address" placeholder="ul. Długa 5/10" value={formData.address} onChange={handleInputChange} className="bg-white" />
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="zipCode">Kod pocztowy</Label>
                     <Input id="zipCode" name="zipCode" placeholder="00-000" value={formData.zipCode} onChange={handleInputChange} className="bg-white" />
@@ -195,17 +195,15 @@ export default function Cart() {
                     <Label htmlFor="city">Miasto</Label>
                     <Input id="city" name="city" placeholder="Warszawa" value={formData.city} onChange={handleInputChange} className="bg-white" />
                   </div>
-                  
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="phone">Telefon</Label>
                     <Input id="phone" name="phone" placeholder="+48 123 456 789" value={formData.phone} onChange={handleInputChange} className="bg-white" />
                   </div>
                 </div>
               </div>
-
             </div>
 
-            {/* PRAWA KOLUMNA: PODSUMOWANIE */}
+            {/* PRAWA STRONA: PODSUMOWANIE */}
             <div className="lg:col-span-1">
               <div className="bg-gray-900 text-white p-6 rounded-2xl sticky top-24 shadow-xl">
                 <h3 className="text-xl font-bold mb-6">Podsumowanie</h3>
@@ -213,17 +211,26 @@ export default function Cart() {
                 <div className="space-y-3 text-sm text-gray-400 mb-6 border-b border-gray-700 pb-6">
                   <div className="flex justify-between">
                     <span>Wartość produktów</span>
-                    <span>{total.toFixed(2)} zł</span>
+                    <span>{productsTotal.toFixed(2)} zł</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span>Dostawa</span>
-                    <span className="text-green-400 font-medium">Gratis</span>
+                    {isFreeShipping ? (
+                      <span className="text-green-400 font-medium">Gratis</span>
+                    ) : (
+                      <span className="text-gray-200">{SHIPPING_COST.toFixed(2)} zł</span>
+                    )}
                   </div>
+                  {!isFreeShipping && (
+                    <div className="text-xs text-gray-500 text-right">
+                      Brakuje {(FREE_SHIPPING_THRESHOLD - productsTotal).toFixed(2)} zł do darmowej dostawy
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex justify-between items-center mb-8">
                   <span className="text-lg font-bold">Do zapłaty</span>
-                  <span className="text-3xl font-bold text-orange-500">{total.toFixed(2)} zł</span>
+                  <span className="text-3xl font-bold text-orange-500">{finalTotal.toFixed(2)} zł</span>
                 </div>
                 
                 <Button 
