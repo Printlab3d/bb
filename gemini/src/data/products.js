@@ -108,7 +108,7 @@ export const products = [
     oldPrice: 388.00,
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/custom1.jpg",
-    images: ["/assets/mocowanie1.png", "/assets/stop1.png", "/assets/migacz2.png"],
+    images: ["/assets/mocowanie2.png", "/assets/stop1.png", "/assets/migacz2.png"],
     description: "Zestaw promocyjny, który posiada:",
     features: [
       "4 przyciemniane minimalistyczne kierunkowskazy ",
