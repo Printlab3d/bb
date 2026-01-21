@@ -81,6 +81,28 @@ export const products = [
     featured: true,
   },
 
+    {
+    id: 9,
+    name: "Lusterka okrągłe",
+    category: "moto",
+    price: 67.00,
+    oldPrice: 79.00,
+    // ZMIANA NA PNG
+    image: "/assets/lusterka1.png",
+    images: ["/assets/lusterka1.png", "/assets/lusterka2.png", "/assets/lusterka3.png", "/assets/lusterka4.png"],
+    description: "Okrągłe lusterka pod kierownicę ",
+    features: [
+      "Możliwość montażu z boku jak i pod kierownicą",
+      "Lusterka z możliwością regulacji kąta widzenia",
+      "Elastyczne ramię odporne na złamania",
+      "Średnica lusterka 8cm",
+      "Kompatybilne z kierownicami 22mm",
+      "Ogłoszenie dotyczy kompletu lusterek"
+    ],
+    stock: 5,
+    featured: true,
+  },
+
   // --- KATEGORIA: BRELOKI ---
   {
     id: 5,
