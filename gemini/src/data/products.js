@@ -43,8 +43,7 @@ export const products = [
     id: 3,
     name: "Uniwersalne Mocowanie Tablicy Rejestracyjnej 3D",
     category: "moto",
-    price: 159.00,
-    oldPrice: 290.00,
+    price: 290.00,
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/mocowanie2.png",
     images: [ "/assets/mocowanie2.png", "/assets/mocowanie3.png", "/assets/mocowanie5.png", "/assets/mocowanie6.png", "/assets/mocowanie7.png"],
@@ -108,8 +107,7 @@ export const products = [
     id: 5,
     name: "Uchwyt tablicy - część mocowania 3D",
     category: "moto",
-    price: 39.00,
-    oldPrice: 49.00,
+    price: 49.00,
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/klucz1.png",
     images: ["/assets/klucz1.png", "/assets/klucz2.png", "/assets/klucz3.png", "/assets/klucz4.png"],
@@ -126,8 +124,7 @@ export const products = [
     id: 6,
     name: "Zestaw Homologacyjny do motocykla",
     category: "moto",
-    price: 290.00,
-    oldPrice: 388.00,
+    price: 390.00,
     // WYJĄTEK: ZOSTAJE JPG
     image: "/assets/custom1.jpg",
     images: ["/assets/mocowanie2.png", "/assets/stop1.png", "/assets/migacz2.png"],
