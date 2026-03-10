@@ -6,8 +6,8 @@ export const products = [
     category: "accessories",
     price: 29.00,
     // ZMIANA NA PNG
-    image: "/assets/kot1.png",
-    images: ["/assets/kot1.png", "/assets/kot2.png", "/assets/kot3.png"],
+    image: "/assets/kot1.jpg",
+    images: ["/assets/kot1.jpg", "/assets/kot2.jpg", "/assets/kot3.jpg"],
     description: "Figurka kota z ruchomą głową.",
     features: ["Wielkość około 20cm", 
       "Ruchoma głowa",
