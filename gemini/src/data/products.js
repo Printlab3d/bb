@@ -1,5 +1,21 @@
 export const products = [
   // --- KATEGORIA: MOTO ---
+    {
+    id: 1000000,
+    name: "Kot figurka",
+    category: "accessories",
+    price: 29.00,
+    // ZMIANA NA PNG
+    image: "/assets/kot1.png",
+    images: ["/assets/kot1.png", "/assets/kot2.png", "/assets/kot3.png"],
+    description: "Figurka kota z ruchomą głową.",
+    features: ["Wielkość około 20cm", 
+      "Ruchoma głowa",
+      "Ściągane słuchawki"
+    ],
+    stock: 100,
+    color: "Brązowy",
+  },
   {
     id: 1,
     name: "Kierunkowskazy LED",
